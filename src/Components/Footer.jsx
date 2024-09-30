@@ -13,7 +13,7 @@ const Footer = () => {
           >
             <img
               className="d-block mx-auto "
-              src="./src/assets/icon.png"
+              src="../icon.png"
               alt=""
               width="40"
               height=""
