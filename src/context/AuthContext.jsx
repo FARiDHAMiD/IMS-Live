@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }) => {
     e.preventDefault();
 
     let response = await fetch(
-      // "https://ims-backend.up.railway.app/api/auth/token/",
-      "api/auth/token/", // local test ...
+      "https://ims-backend.up.railway.app/api/auth/token/",
+      // "api/auth/token/", // local test ...
       {
         method: "POST",
         headers: {
