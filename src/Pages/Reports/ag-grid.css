@@ -1,0 +1,9 @@
+
+  /* custom font style  */
+.ag-theme-quartz,
+.ag-theme-quartz-dark {
+
+    --ag-font-size: 16px;
+    /* --ag-font-family: monospace; */
+    --ag-font-weight: bold;
+}
