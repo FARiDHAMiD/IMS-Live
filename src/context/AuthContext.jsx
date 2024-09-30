@@ -25,16 +25,19 @@ export const AuthProvider = ({ children }) => {
   let loginUser = async (e) => {
     e.preventDefault();
 
-    let response = await fetch("api/auth/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: e.target.username.value.toLowerCase(),
-        password: e.target.password.value,
-      }),
-    });
+    let response = await fetch(
+      "https://ims-backend.up.railway.app/api/auth/token/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: e.target.username.value.toLowerCase(),
+          password: e.target.password.value,
+        }),
+      }
+    );
 
     if (response.status === 500) toast.error(`خطأ بإعدادات السيرفر`); // check vite config
 

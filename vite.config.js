@@ -10,7 +10,6 @@ export default defineConfig({
     port:3000,
     proxy:{
       '/api':{
-        // target:'http://192.168.8.14:8000',
         // target:'http://localhost:8000',
         target:'https://ims-backend.up.railway.app:8080',
         changeOrigin: true,
