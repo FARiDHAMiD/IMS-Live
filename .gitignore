@@ -2,3 +2,4 @@ node_modules
 vite.config.js
 src/Components/AxiosInstance.jsx
 vite.config.js
+src/context/AuthContext.jsx
