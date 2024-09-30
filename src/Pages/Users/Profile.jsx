@@ -39,7 +39,7 @@ const Profile = () => {
                   <div className="user-profile">
                     <div className="user-avatar">
                       <img
-                        src={`http://127.0.0.1:8000${profile.image}`}
+                        src={`https://ims-backend.up.railway.app${profile.image}`}
                         alt="Profile Pic"
                       />
                     </div>
@@ -137,7 +137,11 @@ const Profile = () => {
                             type="button"
                             className="btn btn-sm  fs-6 text-decoration-none col-3 m-0 rounded-0"
                           >
-                            <strong>{stock.credit.total && (stock.credit.total).toLocaleString()} EGP</strong>
+                            <strong>
+                              {stock.credit.total &&
+                                stock.credit.total.toLocaleString()}{" "}
+                              EGP
+                            </strong>
                           </div>
                         </Link>
                       ))}
