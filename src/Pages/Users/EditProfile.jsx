@@ -31,7 +31,7 @@ const EditProfile = () => {
         }
       })
       .catch((error) => {
-        toast.error(`خطأ بالتعديل ` + error.response.data['password']);
+        toast.error(`خطأ بالتعديل ` + error.response.data["password"]);
       });
   };
 
@@ -54,6 +54,12 @@ const EditProfile = () => {
   } = useForm({
     defaultValues: defaultValues,
   });
+
+  // Use Form hook
+  const { handleSubmit: handleSubmitPassword, register: registerPassword } =
+    useForm({
+      changePassword: changePassword,
+    });
 
   // retrieve profile by id
   let getProfile = async () => {
@@ -108,7 +114,7 @@ const EditProfile = () => {
                       <div className="user-profile">
                         <div className="user-avatar">
                           <img
-                            src={`http://127.0.0.1:8000${profile.image}`}
+                            src={`https://ims-backend.up.railway.app${profile.image}`}
                             alt="Profile Pic"
                           />
                         </div>
@@ -282,7 +288,7 @@ const EditProfile = () => {
                               name="password"
                               className="form-control"
                               placeholder="كلمة المرور الجديدة"
-                              {...register("password", {
+                              {...registerPassword("password", {
                                 required: "حقل مطلوب",
                               })}
                             />
@@ -293,7 +299,7 @@ const EditProfile = () => {
                               name="password2"
                               className="form-control"
                               placeholder="تأكيد كلمة المرور"
-                              {...register("password2", {
+                              {...registerPassword("password2", {
                                 required: "حقل مطلوب",
                               })}
                             />
@@ -303,7 +309,7 @@ const EditProfile = () => {
                       <div className="card-footer d-flex justify-content-end">
                         <button
                           className="btn btn-outline-info"
-                          onClick={handleSubmit(changePassword)}
+                          onClick={handleSubmitPassword(changePassword)}
                         >
                           تغيير كلمة المرور
                         </button>
