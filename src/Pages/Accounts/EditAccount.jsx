@@ -107,7 +107,7 @@ const EditAccount = () => {
         } else {
           toast.error(`خطأ بالتعديل`);
         }
-        navigate(`/control/account`);
+        navigate(-1);
       })
       .catch(() => {
         toast.error(`خطأ أثناء العملية`);
@@ -134,7 +134,7 @@ const EditAccount = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تعطيل الحساب بنجاح`);
-          navigate(`/control/account`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -164,7 +164,7 @@ const EditAccount = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تفعيل الحساب بنجاح`);
-          navigate(`/control/account`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -183,7 +183,7 @@ const EditAccount = () => {
       } else {
         toast.error(`خطأ أثناء الحذف`);
       }
-      navigate("/control/account");
+      navigate(-1);
     }
   };
 

@@ -101,10 +101,10 @@ const EditStock = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تعديل المخزن بنجاح`);
-          navigate(`/control/stock`);
         } else {
           toast.error(`خطأ بالتعديل`);
         }
+        navigate(-1);
       })
       .catch(() => {
         toast.error(`خطأ بالتعديل`);
@@ -126,7 +126,7 @@ const EditStock = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تعطيل المخزن بنجاح`);
-          navigate(`/control/stock`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -147,7 +147,7 @@ const EditStock = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تفعيل المخزن بنجاح`);
-          navigate(`/control/stock`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -166,7 +166,7 @@ const EditStock = () => {
       } else {
         toast.error(`خطأ أثناء الحذف`);
       }
-      navigate("/control/stock");
+      navigate(-1);
     }
   };
 
@@ -184,7 +184,10 @@ const EditStock = () => {
                   <div className="modal-content rounded-4 shadow">
                     <div className="p-3 pb-4 border-bottom-0 text-center">
                       <h1 className="fw-bold mb-0 fs-2">
-                        {stock.name} | {stock.credit.total && (stock.credit.total).toLocaleString()} EGP
+                        {stock.name} |{" "}
+                        {stock.credit.total &&
+                          stock.credit.total.toLocaleString()}{" "}
+                        EGP
                       </h1>
                       {stock.isActive == false && (
                         <h2 className="text-danger mt-1">مخزن غير مفعل</h2>

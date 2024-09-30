@@ -84,7 +84,8 @@ const InvoicePreview = () => {
                                 </p>
                                 <p className="mb-0">
                                   <span>
-                                    {invoice.user_phone} | {invoice.username}@
+                                    {invoice.user_phone || ""} |{" "}
+                                    {invoice.username}@
                                   </span>
                                 </p>
                               </div>
@@ -94,18 +95,20 @@ const InvoicePreview = () => {
                           {/* account / client  */}
                           <div className="col-sm-4 ">
                             <div className="invoice-number">
-                              {invoice.account_data && (
+                              {invoice.account_data.name && (
                                 <>
                                   <h4 className="inv-title-1 mt-5">العميل</h4>
                                   <h4 className="name text-nowrap">
                                     {invoice.account_data.name}
                                   </h4>
                                   <p className="invo-addr-0 ">
-                                    {invoice.account_data.company +
-                                      ` | ` +
-                                      invoice.account_data.phone1}
+                                    {invoice.account_data.company ||
+                                      "" +
+                                        ` | ` +
+                                        invoice.account_data.phone1 ||
+                                      ""}
                                     <br />
-                                    {invoice.account_data.address}
+                                    {invoice.account_data.address || ""}
                                   </p>
                                 </>
                               )}
@@ -257,69 +260,76 @@ const InvoicePreview = () => {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td className="text-start f-w-600 text-nowrap">
-                                  <strong>
-                                    الرصيد السابق{" "}
-                                    {invoice.prevCredit < 0 ? (
-                                      <span
-                                        className="text-muted"
-                                        style={{ fontSize: "small" }}
-                                      >
-                                        (عليه)
+                                {invoice.account_data.name && (
+                                  <>
+                                    <td className="text-start f-w-600 text-nowrap">
+                                      <strong>
+                                        الرصيد السابق{" "}
+                                        {invoice.prevCredit < 0 ? (
+                                          <span
+                                            className="text-muted"
+                                            style={{ fontSize: "small" }}
+                                          >
+                                            (عليه)
+                                          </span>
+                                        ) : (
+                                          <span
+                                            className="text-muted"
+                                            style={{ fontSize: "small" }}
+                                          >
+                                            (له)
+                                          </span>
+                                        )}
+                                      </strong>
+                                      <br />
+                                      <strong>
+                                        المدفوع{" "}
+                                        <span
+                                          className="text-muted"
+                                          style={{ fontSize: "small" }}
+                                        >
+                                          (وقت تحصيل الفاتورة)
+                                        </span>
+                                      </strong>
+                                      <br />
+                                      <span className="text-muted">
+                                        وسيلة الدفع
                                       </span>
-                                    ) : (
-                                      <span
-                                        className="text-muted"
-                                        style={{ fontSize: "small" }}
-                                      >
-                                        (له)
-                                      </span>
-                                    )}
-                                  </strong>
-                                  <br />
-                                  <strong>
-                                    المدفوع{" "}
-                                    <span
-                                      className="text-muted"
-                                      style={{ fontSize: "small" }}
-                                    >
-                                      (وقت تحصيل الفاتورة)
-                                    </span>
-                                  </strong>
-                                  <br />
-                                  <span className="text-muted">
-                                    وسيلة الدفع
-                                  </span>
 
-                                  <br />
-                                  <strong>
-                                    المتبقى{" "}
-                                    {invoice.remain > 0
-                                      ? `له `
-                                      : invoice.remain < 0
-                                      ? `عليه `
-                                      : ``}
-                                    <span
-                                      className="text-muted"
-                                      style={{ fontSize: "small" }}
-                                    >
-                                      (حتى تاريخ الفاتورة)
-                                    </span>
-                                  </strong>
-                                </td>
-                                <td className="f-w-200 text-end">
-                                  {parseFloat(-invoice.prevCredit).toFixed(2)}{" "}
-                                  <br />
-                                  {parseFloat(invoice.paid).toFixed(2)} <br />
-                                  <span
-                                    className="text-muted"
-                                    style={{ fontWeight: "lighter" }}
-                                  >
-                                    {invoice.payMethod}
-                                  </span>
-                                  <br />
-                                  {parseFloat(-invoice.remain).toFixed(2)}
-                                </td>
+                                      <br />
+                                      <strong>
+                                        المتبقى{" "}
+                                        {invoice.remain > 0
+                                          ? `له `
+                                          : invoice.remain < 0
+                                          ? `عليه `
+                                          : ``}
+                                        <span
+                                          className="text-muted"
+                                          style={{ fontSize: "small" }}
+                                        >
+                                          (حتى تاريخ الفاتورة)
+                                        </span>
+                                      </strong>
+                                    </td>
+                                    <td className="f-w-200 text-end">
+                                      {parseFloat(-invoice.prevCredit).toFixed(
+                                        2
+                                      )}{" "}
+                                      <br />
+                                      {parseFloat(invoice.paid).toFixed(2)}{" "}
+                                      <br />
+                                      <span
+                                        className="text-muted"
+                                        style={{ fontWeight: "lighter" }}
+                                      >
+                                        {invoice.payMethod}
+                                      </span>
+                                      <br />
+                                      {parseFloat(-invoice.remain).toFixed(2)}
+                                    </td>
+                                  </>
+                                )}
                               </tr>
                             </tbody>
                           </table>

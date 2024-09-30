@@ -186,7 +186,7 @@ const EditItem = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تعديل الصنف بنجاح`);
-          navigate(`/control/item`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالتعديل`);
         }
@@ -207,7 +207,7 @@ const EditItem = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تعطيل الصنف بنجاح`);
-          navigate(`/control/item`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -228,7 +228,7 @@ const EditItem = () => {
       .then((res) => {
         if (res.status === 200) {
           toast.success(`تم تفعيل الصنف بنجاح`);
-          navigate(`/control/item`);
+          navigate(-1);
         } else {
           toast.error(`خطأ بالعملية`);
         }
@@ -298,453 +298,470 @@ const EditItem = () => {
                     </div>
                     <div className="modal-body p-5 pt-0">
                       <form>
-                      <div className="row">
-                      {/* item name */}
-                      <div className="form-group col-md-4 col-8 mb-2">
-                        <label className="text-warning" htmlFor="name">
-                          إسم الصنف *
-                        </label>
-                        <input
-                          type="text"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.name && "is-invalid"
-                          }`}
-                          id="name"
-                          name="name"
-                          {...register("name", {
-                            required: true,
-                            maxLength: {
-                              value: 60,
-                              message: "أقصى حد 60 حرف",
-                            },
-                          })}
-                        />
-                        {errors.name && (
-                          <div role="alert" className="text-danger">
-                            {errors.name.message}
+                        <div className="row">
+                          {/* item name */}
+                          <div className="form-group col-md-4 col-8 mb-2">
+                            <label className="text-warning" htmlFor="name">
+                              إسم الصنف *
+                            </label>
+                            <input
+                              type="text"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.name && "is-invalid"
+                              }`}
+                              id="name"
+                              name="name"
+                              {...register("name", {
+                                required: true,
+                                maxLength: {
+                                  value: 60,
+                                  message: "أقصى حد 60 حرف",
+                                },
+                              })}
+                            />
+                            {errors.name && (
+                              <div role="alert" className="text-danger">
+                                {errors.name.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* qty  */}
-                      <div className="form-group col-md-2 col-4 mb-2">
-                        <label className="text-warning" htmlFor="qty">
-                          الكمية *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.qty && "is-invalid"
-                          }`}
-                          id="qty"
-                          name="qty"
-                          {...register("qty", {
-                            required: true,
-                            validate: (value) => value > 0,
-                          })}
-                        />
-                        {errors.qty && (
-                          <div role="alert" className="text-danger">
-                            {errors.qty.message}
+                          {/* qty  */}
+                          <div className="form-group col-md-2 col-4 mb-2">
+                            <label className="text-warning" htmlFor="qty">
+                              الكمية *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.qty && "is-invalid"
+                              }`}
+                              id="qty"
+                              name="qty"
+                              {...register("qty", {
+                                required: true,
+                                validate: (value) => value > 0,
+                              })}
+                            />
+                            {errors.qty && (
+                              <div role="alert" className="text-danger">
+                                {errors.qty.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* scale unit */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label className="text-warning" htmlFor="scale_unit">
-                          الوحدة الكبرى *
-                        </label>
-                        <select
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.scale_unit && "is-invalid"
-                          }`}
-                          id="scale_unit"
-                          name="scale_unit"
-                          {...register("scale_unit", {
-                            required: true,
-                          })}
-                        >
-                          {errors.scale_unit && (
-                            <div role="alert" className="text-danger">
-                              {errors.scale_unit.message}
-                            </div>
-                          )}
-                          <option></option>
-                          {unit.map((unit) => (
-                            <option key={unit.id}>{unit.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* small unit  */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label className="text-warning" htmlFor="small_unit">
-                          الوحدة الصغرى *
-                        </label>
-                        <select
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.small_unit && "is-invalid"
-                          }`}
-                          id="small_unit"
-                          name="small_unit"
-                          {...register("small_unit", {
-                            required: true,
-                          })}
-                        >
-                          {errors.small_unit && (
-                            <div role="alert" className="text-danger">
-                              {errors.small_unit.message}
-                            </div>
-                          )}
-                          <option></option>
-                          {unit.map((unit) => (
-                            <option key={unit.id}>{unit.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* small in large */}
-                      <div className="form-group col-md-4 mb-2">
-                        <label
-                          className="text-warning"
-                          htmlFor="small_in_large"
-                        >
-                          نسبة الوحدة الكبرى للصغرى *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.small_in_large && "is-invalid"
-                          }`}
-                          id="small_in_large"
-                          name="small_in_large"
-                          {...register("small_in_large", {
-                            required: true,
-                            min: {
-                              value: 1,
-                              message: "أدخل رقم صحيح",
-                            },
-                          })}
-                        />
-                        {errors.small_in_large && (
-                          <div role="alert" className="text-danger">
-                            {errors.small_in_large.message}
+                          {/* scale unit */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="scale_unit"
+                            >
+                              الوحدة الكبرى *
+                            </label>
+                            <select
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.scale_unit && "is-invalid"
+                              }`}
+                              id="scale_unit"
+                              name="scale_unit"
+                              {...register("scale_unit", {
+                                required: true,
+                              })}
+                            >
+                              {errors.scale_unit && (
+                                <div role="alert" className="text-danger">
+                                  {errors.scale_unit.message}
+                                </div>
+                              )}
+                              <option></option>
+                              {unit.map((unit) => (
+                                <option key={unit.id}>{unit.name}</option>
+                              ))}
+                            </select>
                           </div>
-                        )}
-                      </div>
 
-                      {/* barcode  */}
-                      <div className="form-group col-md-5 col-6 mb-2">
-                        <label className="text-warning" htmlFor="barcode">
-                          باركود *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.barcode && "is-invalid"
-                          }`}
-                          id="barcode"
-                          name="barcode"
-                          {...register("barcode", {
-                            required: true,
-                            min: {
-                              value: 1,
-                              message: "أدخل رقم صحيح",
-                            },
-                            valueAsNumber: {
-                              value: true,
-                              message: "أدخل رقم صحيح",
-                            },
-                            unique: true,
-                          })}
-                        />
-                        {errors.barcode && (
-                          <div role="alert" className="text-danger">
-                            {errors.barcode.message}
+                          {/* small unit  */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="small_unit"
+                            >
+                              الوحدة الصغرى *
+                            </label>
+                            <select
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.small_unit && "is-invalid"
+                              }`}
+                              id="small_unit"
+                              name="small_unit"
+                              {...register("small_unit", {
+                                required: true,
+                              })}
+                            >
+                              {errors.small_unit && (
+                                <div role="alert" className="text-danger">
+                                  {errors.small_unit.message}
+                                </div>
+                              )}
+                              <option></option>
+                              {unit.map((unit) => (
+                                <option key={unit.id}>{unit.name}</option>
+                              ))}
+                            </select>
                           </div>
-                        )}
-                      </div>
 
-                      {/* generate barcode button */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <button
-                          type="button"
-                          className="btn btn-lg btn-outline-light w-100 text-nowrap"
-                          style={{ marginTop: "28px" }}
-                          onClick={handleClick}
-                        >
-                          إنشاء باركود
-                        </button>
-                      </div>
-
-                      {/* type  */}
-                      <div className="form-group col-md-4 col-6 mb-2">
-                        <label className="text-warning" htmlFor="type">
-                          النوع *
-                        </label>
-                        <select
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.type && "is-invalid"
-                          }`}
-                          id="type"
-                          name="type"
-                          {...register("type", {
-                            required: true,
-                          })}
-                        >
-                          {errors.type && (
-                            <div role="alert" className="text-danger">
-                              {errors.type.message}
-                            </div>
-                          )}
-                          <option></option>
-                          {type.map((itemType) => (
-                            <option key={itemType.id}>{itemType.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* cat  */}
-                      <div className="form-group col-md-4 col-6 mb-2">
-                        <label className="text-warning" htmlFor="cat">
-                          الفئة *
-                        </label>
-                        <select
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.cat && "is-invalid"
-                          }`}
-                          id="cat"
-                          name="cat"
-                          {...register("cat", {
-                            required: true,
-                          })}
-                        >
-                          {errors.cat && (
-                            <div role="alert" className="text-danger">
-                              {errors.cat.message}
-                            </div>
-                          )}
-                          <option></option>
-                          {cat.map((itemCat) => (
-                            <option key={itemCat.id}>{itemCat.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* expire date */}
-                      <div className="form-group col-md-4 mb-2">
-                        <label className="text-warning" htmlFor="expire">
-                          تاريخ الصلاحية
-                        </label>
-                        <input
-                          type="date"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.expire && "is-invalid"
-                          }`}
-                          id="expire"
-                          name="expire"
-                          {...register("expire", {
-                            max: dayjs().add(5, "year").format(),
-                            min: dayjs().subtract(1, "day").format(),
-                          })}
-                        />
-                        {errors.expire && (
-                          <div role="alert" className="text-danger">
-                            {errors.expire.message}
+                          {/* small in large */}
+                          <div className="form-group col-md-4 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="small_in_large"
+                            >
+                              نسبة الوحدة الكبرى للصغرى *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.small_in_large && "is-invalid"
+                              }`}
+                              id="small_in_large"
+                              name="small_in_large"
+                              {...register("small_in_large", {
+                                required: true,
+                                min: {
+                                  value: 1,
+                                  message: "أدخل رقم صحيح",
+                                },
+                              })}
+                            />
+                            {errors.small_in_large && (
+                              <div role="alert" className="text-danger">
+                                {errors.small_in_large.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* purchase price */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label
-                          className="text-warning"
-                          htmlFor="purchasing_price"
-                        >
-                          سعر الشراء *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.purchasing_price && "is-invalid"
-                          }`}
-                          id="purchasing_price"
-                          name="purchasing_price"
-                          {...register("purchasing_price", {
-                            required: true,
-                            min: 1,
-                          })}
-                        />
-                        {errors.purchasing_price && (
-                          <div role="alert" className="text-danger">
-                            {errors.purchasing_price.message}
+                          {/* barcode  */}
+                          <div className="form-group col-md-5 col-6 mb-2">
+                            <label className="text-warning" htmlFor="barcode">
+                              باركود *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.barcode && "is-invalid"
+                              }`}
+                              id="barcode"
+                              name="barcode"
+                              {...register("barcode", {
+                                required: true,
+                                min: {
+                                  value: 1,
+                                  message: "أدخل رقم صحيح",
+                                },
+                                valueAsNumber: {
+                                  value: true,
+                                  message: "أدخل رقم صحيح",
+                                },
+                                unique: true,
+                              })}
+                            />
+                            {errors.barcode && (
+                              <div role="alert" className="text-danger">
+                                {errors.barcode.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* lowest price */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label className="text-warning" htmlFor="lowest_price">
-                          أقل سعر بيع *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.lowest_price && "is-invalid"
-                          }`}
-                          id="lowest_price"
-                          name="lowest_price"
-                          {...register("lowest_price", {
-                            required: true,
-                            validate: {
-                              max: (value) => {
-                                if (value > getValues("selling_price"))
-                                  return "تأكد من سعر الجملة";
-                                return true;
-                              },
-                            },
-                            min: 1,
-                          })}
-                        />
-                        {errors.lowest_price && (
-                          <div role="alert" className="text-danger">
-                            {errors.lowest_price.message}
+                          {/* generate barcode button */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <button
+                              type="button"
+                              className="btn btn-lg btn-outline-light w-100 text-nowrap"
+                              style={{ marginTop: "28px" }}
+                              onClick={handleClick}
+                            >
+                              إنشاء باركود
+                            </button>
                           </div>
-                        )}
-                      </div>
 
-                      {/* selling price */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label className="text-warning" htmlFor="selling_price">
-                          البيع جملة *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.selling_price && "is-invalid"
-                          }`}
-                          id="selling_price"
-                          name="selling_price"
-                          {...register("selling_price", {
-                            required: true,
-                            min: 1,
-                          })}
-                        />
-                        {errors.selling_price && (
-                          <div role="alert" className="text-danger">
-                            {errors.selling_price.message}
+                          {/* type  */}
+                          <div className="form-group col-md-4 col-6 mb-2">
+                            <label className="text-warning" htmlFor="type">
+                              النوع *
+                            </label>
+                            <select
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.type && "is-invalid"
+                              }`}
+                              id="type"
+                              name="type"
+                              {...register("type", {
+                                required: true,
+                              })}
+                            >
+                              {errors.type && (
+                                <div role="alert" className="text-danger">
+                                  {errors.type.message}
+                                </div>
+                              )}
+                              <option></option>
+                              {type.map((itemType) => (
+                                <option key={itemType.id}>
+                                  {itemType.name}
+                                </option>
+                              ))}
+                            </select>
                           </div>
-                        )}
-                      </div>
 
-                      {/* retail price */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label className="text-warning" htmlFor="retail_price">
-                          البيع قطاعى *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.retail_price && "is-invalid"
-                          }`}
-                          id="retail_price"
-                          name="retail_price"
-                          {...register("retail_price", {
-                            required: true,
-                            validate: {
-                              min: (value) => {
-                                if (value < getValues("selling_price"))
-                                  return "تأكد من سعر الجملة";
-                                return true;
-                              },
-                            },
-                          })}
-                        />
-                        {errors.retail_price && (
-                          <div role="alert" className="text-danger">
-                            {errors.retail_price.message}
+                          {/* cat  */}
+                          <div className="form-group col-md-4 col-6 mb-2">
+                            <label className="text-warning" htmlFor="cat">
+                              الفئة *
+                            </label>
+                            <select
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.cat && "is-invalid"
+                              }`}
+                              id="cat"
+                              name="cat"
+                              {...register("cat", {
+                                required: true,
+                              })}
+                            >
+                              {errors.cat && (
+                                <div role="alert" className="text-danger">
+                                  {errors.cat.message}
+                                </div>
+                              )}
+                              <option></option>
+                              {cat.map((itemCat) => (
+                                <option key={itemCat.id}>{itemCat.name}</option>
+                              ))}
+                            </select>
                           </div>
-                        )}
-                      </div>
 
-                      {/* minimum limit of qty in stock */}
-                      <div className="form-group col-md-3 col-6 mb-2">
-                        <label
-                          className="text-warning text-nowrap"
-                          htmlFor="min_limit"
-                        >
-                          أقل كمية *
-                        </label>
-                        <input
-                          type="number"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.min_limit && "is-invalid"
-                          }`}
-                          id="min_limit"
-                          name="min_limit"
-                          {...register("min_limit", {
-                            required: true,
-                            min: 0,
-                            max: 1000,
-                          })}
-                        />
-                        {errors.min_limit && (
-                          <div role="alert" className="text-danger">
-                            {errors.min_limit.message}
+                          {/* expire date */}
+                          <div className="form-group col-md-4 mb-2">
+                            <label className="text-warning" htmlFor="expire">
+                              تاريخ الصلاحية
+                            </label>
+                            <input
+                              type="date"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.expire && "is-invalid"
+                              }`}
+                              id="expire"
+                              name="expire"
+                              {...register("expire", {
+                                max: dayjs().add(5, "year").format(),
+                                min: dayjs().subtract(1, "day").format(),
+                              })}
+                            />
+                            {errors.expire && (
+                              <div role="alert" className="text-danger">
+                                {errors.expire.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
 
-                      {/* stock  */}
-                      <div className="form-group col-md-9 col-6 mb-2">
-                        <label className="text-warning" htmlFor="stock">
-                          متواجد بأي مخزن
-                        </label>
-                        <select
-                          multiple
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.stock && "is-invalid"
-                          }`}
-                          id="stock"
-                          name="stock"
-                          {...register("stock", {
-                            required: true,
-                          })}
-                        >
-                          {stock.map((stock) => (
-                            <option key={stock.id}>{stock.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* notes */}
-                      <div className="form-group col-md-12 mb-2">
-                        <label className="text-warning" htmlFor="notes">
-                          ملاحظات
-                        </label>
-                        <textarea
-                          rows={4}
-                          type="text"
-                          className={`form-control form-control-lg rounded-3 mt-1 ${
-                            errors.notes && "is-invalid"
-                          }`}
-                          id="notes"
-                          name="notes"
-                          {...register("notes", {
-                            maxLength: {
-                              value: 100,
-                              message: "أقصى حد 100 حرف",
-                            },
-                          })}
-                        />
-                        {errors.notes && (
-                          <div role="alert" className="text-danger">
-                            {errors.notes.message}
+                          {/* purchase price */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="purchasing_price"
+                            >
+                              سعر الشراء *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.purchasing_price && "is-invalid"
+                              }`}
+                              id="purchasing_price"
+                              name="purchasing_price"
+                              {...register("purchasing_price", {
+                                required: true,
+                                min: 1,
+                              })}
+                            />
+                            {errors.purchasing_price && (
+                              <div role="alert" className="text-danger">
+                                {errors.purchasing_price.message}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </div>
+
+                          {/* lowest price */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="lowest_price"
+                            >
+                              أقل سعر بيع *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.lowest_price && "is-invalid"
+                              }`}
+                              id="lowest_price"
+                              name="lowest_price"
+                              {...register("lowest_price", {
+                                required: true,
+                                validate: {
+                                  max: (value) => {
+                                    if (value > getValues("selling_price"))
+                                      return "تأكد من سعر الجملة";
+                                    return true;
+                                  },
+                                },
+                                min: 1,
+                              })}
+                            />
+                            {errors.lowest_price && (
+                              <div role="alert" className="text-danger">
+                                {errors.lowest_price.message}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* selling price */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="selling_price"
+                            >
+                              البيع جملة *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.selling_price && "is-invalid"
+                              }`}
+                              id="selling_price"
+                              name="selling_price"
+                              {...register("selling_price", {
+                                required: true,
+                                min: 1,
+                              })}
+                            />
+                            {errors.selling_price && (
+                              <div role="alert" className="text-danger">
+                                {errors.selling_price.message}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* retail price */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning"
+                              htmlFor="retail_price"
+                            >
+                              البيع قطاعى *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.retail_price && "is-invalid"
+                              }`}
+                              id="retail_price"
+                              name="retail_price"
+                              {...register("retail_price", {
+                                required: true,
+                                validate: {
+                                  min: (value) => {
+                                    if (value < getValues("selling_price"))
+                                      return "تأكد من سعر الجملة";
+                                    return true;
+                                  },
+                                },
+                              })}
+                            />
+                            {errors.retail_price && (
+                              <div role="alert" className="text-danger">
+                                {errors.retail_price.message}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* minimum limit of qty in stock */}
+                          <div className="form-group col-md-3 col-6 mb-2">
+                            <label
+                              className="text-warning text-nowrap"
+                              htmlFor="min_limit"
+                            >
+                              أقل كمية *
+                            </label>
+                            <input
+                              type="number"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.min_limit && "is-invalid"
+                              }`}
+                              id="min_limit"
+                              name="min_limit"
+                              {...register("min_limit", {
+                                required: true,
+                                min: 0,
+                                max: 1000,
+                              })}
+                            />
+                            {errors.min_limit && (
+                              <div role="alert" className="text-danger">
+                                {errors.min_limit.message}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* stock  */}
+                          <div className="form-group col-md-9 col-6 mb-2">
+                            <label className="text-warning" htmlFor="stock">
+                              متواجد بأي مخزن
+                            </label>
+                            <select
+                              multiple
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.stock && "is-invalid"
+                              }`}
+                              id="stock"
+                              name="stock"
+                              {...register("stock", {
+                                required: true,
+                              })}
+                            >
+                              {stock.map((stock) => (
+                                <option key={stock.id}>{stock.name}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* notes */}
+                          <div className="form-group col-md-12 mb-2">
+                            <label className="text-warning" htmlFor="notes">
+                              ملاحظات
+                            </label>
+                            <textarea
+                              rows={4}
+                              type="text"
+                              className={`form-control form-control-lg rounded-3 mt-1 ${
+                                errors.notes && "is-invalid"
+                              }`}
+                              id="notes"
+                              name="notes"
+                              {...register("notes", {
+                                maxLength: {
+                                  value: 100,
+                                  message: "أقصى حد 100 حرف",
+                                },
+                              })}
+                            />
+                            {errors.notes && (
+                              <div role="alert" className="text-danger">
+                                {errors.notes.message}
+                              </div>
+                            )}
+                          </div>
+                        </div>
 
                         <hr className="my-4" />
                         <div className="d-flex justify-content-center">

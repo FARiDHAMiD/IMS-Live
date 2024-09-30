@@ -311,7 +311,11 @@ const BillInvoice = () => {
       subCredit: data.subCredit,
       paid: paid,
       prevCredit: initCredit,
-      remain: parseFloat(setAccountData["credit"]).toFixed(2),
+      remain:
+        setAccountData["credit"] &&
+        parseFloat(setAccountData["credit"]).toFixed(2) != NaN
+          ? parseFloat(setAccountData["credit"]).toFixed(2)
+          : null,
       notes: data.notes,
       account: accountData.id || null,
     };
