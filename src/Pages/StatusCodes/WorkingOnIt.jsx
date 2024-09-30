@@ -23,7 +23,7 @@ const WorkingOnIt = () => {
                 width: "70%",
                 height: "auto",
               }}
-              src="src\assets\working.jpg"
+              src="../working.jpg"
               alt=""
               width={400}
             />
