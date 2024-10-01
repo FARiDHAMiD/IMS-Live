@@ -28,11 +28,8 @@ const WorkingOnIt = () => {
               width={400}
             />
             <div className="my-2">
-              <button
-                className="btn btn-outline-light"
-                onClick={() => navigate(-1)}
-              >
-                عودة ...
+              <button className="btn btn-outline" onClick={() => navigate(-1)}>
+                عودة
               </button>
             </div>
           </div>

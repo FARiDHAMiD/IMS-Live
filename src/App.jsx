@@ -55,6 +55,7 @@ import CashInvoice from "./Pages/Invoices/CashOutInvoice";
 import CashOutInvoice from "./Pages/Invoices/CashOutInvoice";
 import CashInInvoice from "./Pages/Invoices/CashInInvoice";
 import InvoicePreview from "./Pages/Invoices/InvoicePreview";
+import SystemInfo from "./Pages/SystemInfo";
 
 const App = () => {
   const controlData = [
@@ -74,6 +75,7 @@ const App = () => {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/" element={<MainLayout />}>
               <Route index element={<WelcomePage />} />
+              <Route path="/systeminfo" element={<SystemInfo />} />
 
               {/* // private routes - must be logged in */}
               <Route element={<PrivateRoute />}>

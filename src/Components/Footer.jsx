@@ -1,4 +1,7 @@
+import { useTheme } from "../context/ThemeProvider";
+
 const Footer = () => {
+  const { theme } = useTheme();
   return (
     <>
       <div className="container" dir="ltr">
@@ -13,7 +16,7 @@ const Footer = () => {
           >
             <img
               className="d-block mx-auto "
-              src="../icon.png"
+              src={theme == "dark" ? `../icon.png` : `../icon_light.png`}
               alt=""
               width="40"
               height=""
@@ -27,7 +30,10 @@ const Footer = () => {
                 href="https://www.linkedin.com/in/farid-7amid"
                 className="nav-link px-2 text-muted"
               >
-                Designed By <span className="text-info">Farid A. Hamid</span>
+                Designed By{" "}
+                <span className={theme == "dark" ? `text-info` : `text-navy`}>
+                  Farid A. Hamid
+                </span>
               </a>
             </li>
           </ul>

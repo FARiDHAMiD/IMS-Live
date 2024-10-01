@@ -126,6 +126,7 @@
     display: flex;
     justify-content: flex-end;
 }
+
 .custom-actions-btns .btn {
     margin: .3rem 0 .3rem .3rem;
-} */
+}

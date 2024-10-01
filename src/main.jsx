@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import updateLocale from "dayjs/plugin/updateLocale";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ar";
+import { ThemeProvider } from "./context/ThemeProvider.jsx";
 dayjs.locale("ar");
 
 dayjs.extend(relativeTime);
@@ -41,6 +42,8 @@ dayjs.updateLocale("ar", {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );

@@ -9,9 +9,11 @@ import Spinner from "../../Components/Spinner";
 import dayjs from "dayjs";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { FaRegSave } from "react-icons/fa";
+import { useTheme } from "../../context/ThemeProvider";
 
 const BillInvoice = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [oneItem, setOneItem] = useState([]);
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
@@ -408,7 +410,13 @@ const BillInvoice = () => {
           <div className="modal-content rounded-4 shadow">
             <div className="container-fluid row mb-2">
               <div className="p-3 pb-4 border-bottom-0 text-center">
-                <h3 className="fw-bold mb-0 fs-2 text-green ">فاتورة بيع</h3>
+                <h3
+                  className={`fw-bold mb-0 fs-2 ${
+                    theme == `dark` ? `text-green` : `text-navy`
+                  }`}
+                >
+                  فاتورة بيع
+                </h3>
               </div>
 
               {/* account data */}
@@ -425,19 +433,19 @@ const BillInvoice = () => {
                   styles={{
                     control: (baseStyles, state) => ({
                       ...baseStyles,
-                      backgroundColor: "#212529",
-                      borderColor: "#32373c",
+                      backgroundColor: `${theme == "dark" ? "#212529" : ""}`,
+                      borderColor: "navy",
                       fontSize: "18px",
                       width: "100%",
                     }),
                     singleValue: (provided) => ({
                       ...provided,
-                      color: "white",
+                      color: `${theme == "dark" ? "white" : "black"}`,
                     }),
                     menu: (provided) => ({
                       ...provided,
-                      background: "#212529",
-                      color: "white",
+                      background: "",
+                      color: "black",
                     }),
                   }}
                   menuPosition="fixed"
@@ -455,9 +463,14 @@ const BillInvoice = () => {
                         `EGP ` + accountData.credit.toLocaleString()
                   }
                   className="form-control"
-                  style={{
-                    backgroundColor: setAccountData["credit"] < 0 && `red`,
-                  }}
+                  style={
+                    theme == "dark"
+                      ? {
+                          backgroundColor:
+                            setAccountData["credit"] < 0 && `red`,
+                        }
+                      : { borderColor: setAccountData["credit"] < 0 && `red` }
+                  }
                   disabled
                   hidden={hideAccountDetails}
                 />
@@ -621,7 +634,12 @@ const BillInvoice = () => {
                 <div key={i} className="container-fluid row">
                   {/* item name */}
                   <div className="col-md-3 col-8 mb-1">
-                    <label style={{ fontSize: "small" }}>الصنف</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      الصنف
+                    </label>
                     {/* <Select
                         id={item.id}
                         name="name"
@@ -665,7 +683,7 @@ const BillInvoice = () => {
                       id={item.id}
                       onChange={onItemizedItemEdit}
                       value={item.name}
-                      className="form-control form-control-sm text-warning"
+                      className="form-control form-control-sm"
                     >
                       <option value="" disabled>
                         --- إختر صنف ---
@@ -680,7 +698,12 @@ const BillInvoice = () => {
 
                   {/* item unit */}
                   <div className="col-md-1 col-4">
-                    <label style={{ fontSize: "small" }}>الوحدة</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      الوحدة
+                    </label>
                     <select
                       ref={unitSelectRef}
                       name="unitSelect"
@@ -696,7 +719,12 @@ const BillInvoice = () => {
 
                   {/* item qty */}
                   <div className="col-md-2 col-4 mb-1">
-                    <label style={{ fontSize: "small" }}>الكمية</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      الكمية
+                    </label>
                     <input
                       ref={qtyRef}
                       type="number"
@@ -720,7 +748,12 @@ const BillInvoice = () => {
 
                   {/* item price */}
                   <div className="col-md-2 col-4">
-                    <label style={{ fontSize: "small" }}>السعر</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      السعر
+                    </label>
                     <input
                       type="number"
                       className="form-control form-control-sm"
@@ -753,7 +786,12 @@ const BillInvoice = () => {
 
                   {/* item sub total */}
                   <div className="col-md-1 col-4">
-                    <label style={{ fontSize: "small" }}>إجمالى</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      إجمالى
+                    </label>
                     <input
                       type="text"
                       className="form-control form-control-sm"
@@ -774,10 +812,21 @@ const BillInvoice = () => {
 
                   {/* item last price */}
                   <div className="col-md-2 col-5">
-                    <label style={{ fontSize: "small" }}>آخر سعر للعميل</label>
+                    <label
+                      style={{ fontSize: "small" }}
+                      className={theme == "dark" ? "text-info" : "text-navy"}
+                    >
+                      آخر سعر للعميل
+                    </label>
                     <br />
                     <label
-                      className={item.last_price != 0 ? `text-info` : ``}
+                      className={
+                        item.last_price != 0
+                          ? theme == `dark`
+                            ? `text-info`
+                            : `text-success`
+                          : ``
+                      }
                       style={{ fontSize: "small" }}
                     >
                       {item.last_price
@@ -809,17 +858,25 @@ const BillInvoice = () => {
                       style={{ float: "left" }}
                       onClick={() => handleRowDel(item)}
                     >
-                      -
+                      x
                     </button>
                   </div>
-                  <hr className="my-1 text-warning mt-3" />
+                  <hr
+                    className={`my-1 ${
+                      theme == "dark" ? "text-warning" : ""
+                    } mt-3`}
+                  />
                 </div>
               ))}
 
               {/* add row button  */}
               <div className=" mb-1 d-flex justify-content-center mt-1">
                 <button
-                  className="btn btn-outline-light"
+                  className={
+                    theme == `dark`
+                      ? "btn btn-outline-light"
+                      : "btn btn-outline-dark"
+                  }
                   onClick={handleAddEvent}
                 >
                   <FaPlus />
@@ -829,7 +886,9 @@ const BillInvoice = () => {
               {/* Invoice Total */}
               <hr />
               <div
-                className="col-md-6 col-12 text-warning m-1"
+                className={`col-md-6 col-12 ${
+                  theme == "dark" ? "text-warning" : ""
+                } m-1`}
                 style={{ float: "left" }}
               >
                 <div className="d-flex flex-row align-items-start justify-content-between">
@@ -874,10 +933,20 @@ const BillInvoice = () => {
                       className="d-flex flex-row align-items-start justify-content-between"
                       style={{ fontSize: "1.125rem" }}
                     >
-                      <span className="fw-bold text-light">
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
                         حساب سابق:{" "}
                         {accountData.credit > 0 ? (
-                          <span className="text-info">له</span>
+                          <span
+                            className={
+                              theme == `dark` ? "text-info" : "text-muted"
+                            }
+                          >
+                            له
+                          </span>
                         ) : (
                           accountData.credit && (
                             <span className={`text-danger`}>عليه</span>
@@ -887,7 +956,9 @@ const BillInvoice = () => {
                       <span
                         className={`fw-bold ${
                           accountData.credit > 0
-                            ? `text-info`
+                            ? theme == `dark`
+                              ? "text-info"
+                              : "text-muted"
                             : accountData.credit
                             ? `text-danger`
                             : `text-light`
@@ -903,8 +974,20 @@ const BillInvoice = () => {
                       className="d-flex flex-row align-items-start justify-content-between"
                       style={{ fontSize: "1.125rem" }}
                     >
-                      <span className="fw-bold text-light">إجمالى الحساب:</span>
-                      <span className="fw-bold text-warning">
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
+                        إجمالى الحساب:
+                      </span>
+                      <span
+                        className={
+                          theme == `dark`
+                            ? "fw-bold text-warning"
+                            : "fw-bold text-muted"
+                        }
+                      >
                         EGP{" "}
                         {(accountData.credit || accountData.credit == 0) &&
                           (+total - accountData.credit).toLocaleString()}
@@ -914,8 +997,18 @@ const BillInvoice = () => {
                       className="d-flex flex-row align-items-start justify-content-between"
                       style={{ fontSize: "1.125rem" }}
                     >
-                      <span className="fw-bold text-light">مدفوع: </span>
-                      <span className="fw-bold text-light">
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
+                        مدفوع:{" "}
+                      </span>
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
                         EGP {paid || 0}
                       </span>
                     </div>
@@ -923,8 +1016,18 @@ const BillInvoice = () => {
                       className="d-flex flex-row align-items-start justify-content-between"
                       style={{ fontSize: "1.125rem" }}
                     >
-                      <span className="fw-bold text-light">متبقى: </span>
-                      <span className="fw-bold text-light">
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
+                        متبقى:{" "}
+                      </span>
+                      <span
+                        className={`fw-bold ${
+                          theme == "dark" ? "text-light" : "text-muted"
+                        }`}
+                      >
                         EGP{" "}
                         {(accountData.credit || accountData.credit == 0) &&
                           (total - accountData.credit - paid).toLocaleString()}
@@ -934,10 +1037,11 @@ const BillInvoice = () => {
                 )}
               </div>
             </div>
+
             {/* save invoice  */}
             <div className="d-flex justify-content-center my-2">
               <button
-                className="btn btn-info"
+                className={theme == `dark` ? `btn btn-info` : "btn btn-success"}
                 onClick={handleSubmit(createInvoice)}
               >
                 حفظ <FaRegSave />

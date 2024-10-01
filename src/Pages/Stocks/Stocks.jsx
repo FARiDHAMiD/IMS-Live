@@ -7,9 +7,11 @@ import Spinner from "../../Components/Spinner";
 import { Link, NavLink } from "react-router-dom";
 import { FaStore, FaStoreSlash } from "react-icons/fa6";
 import AuthContext from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeProvider";
 
 const Stocks = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [stocks, setStocks] = useState([]);
   let [input, setInput] = useState([]);
   let [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ const Stocks = () => {
                 <div className={`card ${!stock.isActive && active_style}`}>
                   <div className="card-header">
                     {stock.isActive ? (
-                      <FaStore className="text-light" size={30} />
+                      <FaStore size={30} />
                     ) : (
                       <FaStoreSlash size={30} />
                     )}
@@ -71,7 +73,7 @@ const Stocks = () => {
                   </div>
                   <div className="card-body">
                     <h3
-                      className={`card-title text-light ${
+                      className={`card-title ${
                         !stock.isActive && "text-muted"
                       }`}
                     >
@@ -84,7 +86,11 @@ const Stocks = () => {
                     {user && (user.is_superuser || user.is_staff) && (
                       <Link
                         to={`/control/stock/${stock.id}`}
-                        className="btn btn-sm btn-outline-info"
+                        className={`btn btn-sm ${
+                          theme == "dark"
+                            ? "btn-outline-info"
+                            : "btn-outline-dark"
+                        }`}
                         style={{ float: "left" }}
                       >
                         عرض التفاصيل

@@ -7,9 +7,11 @@ import { toast } from "react-toastify";
 import Spinner from "../../Components/Spinner";
 import AuthContext from "../../context/AuthContext";
 import RequestDeleteModal from "../../Components/RequestDeleteModal";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditProfile = () => {
   let { user, logoutUser } = useContext(AuthContext);
+  let { theme } = useTheme();
   const { id } = useParams();
   let [profile, setProfile] = useState([]);
   let [loading, setLoading] = useState(true);
@@ -107,7 +109,7 @@ const EditProfile = () => {
           <div className="container mt-4">
             <div className="row gutters">
               {/* Profile Card Info  */}
-              <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+              <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 mb-2">
                 <div className="card h-100">
                   <div className="card-body">
                     <div className="account-settings">
@@ -118,31 +120,15 @@ const EditProfile = () => {
                             alt="Profile Pic"
                           />
                         </div>
-                        <h5 className="user-name">{profile.full_name}</h5>
-                        <h6 className="">{profile.credit} EGP</h6>
-                        <h6 className="user-email">{user.username}@</h6>
-                      </div>
-                      <div className="text-center">
-                        <div className="row">
-                          <div className="col-6">
-                            <button
-                              className="btn btn-success w-100"
-                              onClick={handleSubmit(update)}
-                            >
-                              حفظ
-                            </button>
-                          </div>
-                          <div className="col-6">
-                            <button
-                              className="btn btn-danger w-100"
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#requestDeleteModal"
-                            >
-                              حذف
-                            </button>
-                          </div>
-                        </div>
+                        <h3 className="user-name">{profile.full_name}</h3>
+                        <h4
+                          className={
+                            theme == `dark` ? "text-info" : "text-navy"
+                          }
+                        >
+                          {profile.credit.toLocaleString()} EGP
+                        </h4>
+                        <h5 className="user-email">{user.username}@</h5>
                       </div>
                     </div>
                   </div>
@@ -155,13 +141,24 @@ const EditProfile = () => {
                   <div className="card-body">
                     <div className="row gutters">
                       <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <h5 className="mb-3 text-primary">البيانات الأساسية</h5>
+                        <h5
+                          className={
+                            theme == `dark`
+                              ? `mb-3 text-info`
+                              : `mb-3 text-navy`
+                          }
+                        >
+                          البيانات الأساسية
+                        </h5>
                       </div>
 
                       <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div className="form-group">
-                          <label htmlFor="full_name" className="text-warning">
-                            الإسم بالكامل *
+                          <label
+                            htmlFor="full_name"
+                            className={theme == `dark` && `text-warning`}
+                          >
+                            الإسم بالكامل <span className="text-danger">*</span>
                           </label>
                           <input
                             type="text"
@@ -185,7 +182,10 @@ const EditProfile = () => {
                       </div>
                       <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div className="form-group">
-                          <label htmlFor="address" className="text-warning">
+                          <label
+                            htmlFor="address"
+                            className={theme == `dark` && `text-warning`}
+                          >
                             العنوان
                           </label>
                           <input
@@ -209,7 +209,10 @@ const EditProfile = () => {
                       </div>
                       <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div className="form-group">
-                          <label htmlFor="phone" className="text-warning">
+                          <label
+                            htmlFor="phone"
+                            className={theme == `dark` && `text-warning`}
+                          >
                             التليفون
                           </label>
                           <input
@@ -233,7 +236,10 @@ const EditProfile = () => {
                       </div>
                       <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div className="form-group">
-                          <label htmlFor="image" className="text-warning">
+                          <label
+                            htmlFor="image"
+                            className={theme == `dark` && `text-warning`}
+                          >
                             صورة شخصية
                           </label>
                           <input
@@ -253,7 +259,10 @@ const EditProfile = () => {
                       </div>
                       <div className="col-12">
                         <div className="form-group">
-                          <label htmlFor="notes" className="text-warning">
+                          <label
+                            htmlFor="notes"
+                            className={theme == `dark` && `text-warning`}
+                          >
                             ملاحظات
                           </label>
                           <input
@@ -276,42 +285,93 @@ const EditProfile = () => {
                           )}
                         </div>
                       </div>
-                    </div>
-                    {/* edit password  */}
-                    <div className="card my-2">
-                      <div className="card-header">تعديل كلمة المرور</div>
-                      <div className="card-body">
-                        <div className="row">
-                          <div className="col-md-6 col-12 my-1">
-                            <input
-                              type="password"
-                              name="password"
-                              className="form-control"
-                              placeholder="كلمة المرور الجديدة"
-                              {...registerPassword("password", {
-                                required: "حقل مطلوب",
-                              })}
-                            />
-                          </div>
-                          <div className="col-md-6 col-12 my-1">
-                            <input
-                              type="password"
-                              name="password2"
-                              className="form-control"
-                              placeholder="تأكيد كلمة المرور"
-                              {...registerPassword("password2", {
-                                required: "حقل مطلوب",
-                              })}
-                            />
+
+                      <div className="text-center my-1">
+                        <div className="row d-flex justify-content-end">
+                          <div className="col-md-3 col-6">
+                            <button
+                              className="btn btn-success w-100"
+                              onClick={handleSubmit(update)}
+                            >
+                              حفظ
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <div className="card-footer d-flex justify-content-end">
-                        <button
-                          className="btn btn-outline-info"
-                          onClick={handleSubmitPassword(changePassword)}
+                    </div>
+                    {/* edit password  */}
+                    <div className="accordion" id="accordionExample">
+                      <div className="accordion-item">
+                        <h4 className="accordion-header" id="headingOne">
+                          <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne"
+                            aria-expanded="false"
+                            aria-controls="collapseOne"
+                          >
+                            تغيير كلمة المرور
+                          </button>
+                        </h4>
+                        <div
+                          id="collapseOne"
+                          className="accordion-collapse collapse"
+                          aria-labelledby="headingOne"
+                          data-bs-parent="#accordionExample"
                         >
-                          تغيير كلمة المرور
+                          <div className="card my-2">
+                            <div className="card-body">
+                              <div className="row">
+                                <div className="col-md-6 col-12 my-1">
+                                  <input
+                                    type="password"
+                                    name="password"
+                                    className="form-control"
+                                    placeholder="كلمة المرور الجديدة"
+                                    {...registerPassword("password", {
+                                      required: "حقل مطلوب",
+                                    })}
+                                  />
+                                </div>
+                                <div className="col-md-6 col-12 my-1">
+                                  <input
+                                    type="password"
+                                    name="password2"
+                                    className="form-control"
+                                    placeholder="تأكيد كلمة المرور"
+                                    {...registerPassword("password2", {
+                                      required: "حقل مطلوب",
+                                    })}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="card-footer d-flex justify-content-end">
+                              <button
+                                className={
+                                  theme == `dark`
+                                    ? `btn btn-outline-info`
+                                    : `btn btn-outline-danger`
+                                }
+                                onClick={handleSubmitPassword(changePassword)}
+                              >
+                                تغيير كلمة المرور
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-end mt-5">
+                      <div className="col-md-3 col-6">
+                        <button
+                          className="btn btn-danger w-100"
+                          type="button"
+                          data-bs-toggle="modal"
+                          data-bs-target="#requestDeleteModal"
+                        >
+                          حذف نهائى
                         </button>
                       </div>
                     </div>

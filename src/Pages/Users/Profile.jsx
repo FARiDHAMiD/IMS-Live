@@ -5,9 +5,11 @@ import { Link, useParams } from "react-router-dom";
 import AxiosInstance from "../../Components/AxiosInstance";
 import { FaFileInvoice, FaMoneyBillTransfer, FaStore } from "react-icons/fa6";
 import UserInvoices from "./UserInvoices";
+import { useTheme } from "../../context/ThemeProvider";
 
 const Profile = () => {
   let { user, logoutUser } = useContext(AuthContext);
+  let { theme } = useTheme();
   let { id } = useParams();
   let [profile, setProfile] = useState([]);
   let [userStocks, setUserStocks] = useState([]);
@@ -45,31 +47,38 @@ const Profile = () => {
                     </div>
                     <h5 className="user-name">{profile.full_name}</h5>
                     <h6 className="user-name">{user.username}@</h6>
-                    <h6 className="">
+                    <h6 className={theme == `dark` ? "text-info" : "text-navy"}>
                       {profile.credit && profile.credit.toLocaleString()} EGP
                     </h6>
                     <h6 className="user-name">{profile.phone}</h6>
                   </div>
                   <div className="about">
-                    <h5 className="mb-2 text-primary  text-center">Notes</h5>
                     <p>{profile.notes}</p>
                   </div>
                   <div className="text-center">
                     <div className="row">
                       <div className="col-6">
                         <Link
-                          className="btn btn-outline-info w-100"
+                          className={`btn ${
+                            theme == "dark"
+                              ? `btn-outline-info`
+                              : `btn-outline-primary`
+                          } w-100`}
                           to={`/profile/${user.profile}/edit`}
                         >
-                          Edit
+                          تعديل
                         </Link>
                       </div>
                       <div className="col-6">
                         <Link
-                          className="btn btn-outline-light w-100"
+                          className={`btn ${
+                            theme == "dark"
+                              ? `btn-outline-light`
+                              : `btn-outline-dark`
+                          } w-100`}
                           onClick={logoutUser}
                         >
-                          Logout
+                          خروج
                         </Link>
                       </div>
                     </div>
@@ -86,7 +95,11 @@ const Profile = () => {
                 {/* user stocks  */}
                 <div className="row gutters">
                   <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h5 className="mb-3 text-info  text-center">
+                    <h5
+                      className={`mb-3 ${
+                        theme == `dark` ? `text-info` : `text-navy`
+                      } text-center`}
+                    >
                       المخازن <FaStore size={25} />
                     </h5>
                   </div>
@@ -159,7 +172,9 @@ const Profile = () => {
                 <div className="d-flex justify-content-center">
                   <Link
                     to={`/userInvoices/${user.user_id}`}
-                    className="btn btn-sm btn-outline-primary text-center"
+                    className={`btn btn-sm ${
+                      theme == `dark` ? `btn-outline-info` : `btn-outline-dark`
+                    } text-center`}
                   >
                     المزيد ...
                   </Link>
@@ -169,26 +184,55 @@ const Profile = () => {
                 {/* user credit changes */}
                 <div className="row gutters">
                   <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h5 className="mb-3 text-info  text-center">
+                    <h5
+                      className={`mb-3 ${
+                        theme == `dark` ? `text-info` : `text-navy`
+                      } text-center`}
+                    >
                       حركات الرصيد <FaMoneyBillTransfer size={25} />
                     </h5>
                   </div>
                   <table className="table table-hover">
                     <thead>
                       <tr>
-                        <th scope="col" className="text-warning">
+                        <th
+                          scope="col"
+                          className={
+                            theme == `dark` ? `text-warning` : `text-primary`
+                          }
+                        >
                           #
                         </th>
-                        <th scope="col" className="text-warning">
+                        <th
+                          scope="col"
+                          className={
+                            theme == `dark` ? `text-warning` : `text-primary`
+                          }
+                        >
                           الرصيد
                         </th>
-                        <th scope="col" className="text-warning">
+                        <th
+                          scope="col"
+                          className={
+                            theme == `dark` ? `text-warning` : `text-primary`
+                          }
+                        >
                           تاريخ
                         </th>
-                        <th scope="col" className="text-warning">
+                        <th
+                          scope="col"
+                          className={
+                            theme == `dark` ? `text-warning` : `text-primary`
+                          }
+                        >
                           قبل التغيير
                         </th>
-                        <th scope="col" className="text-warning">
+                        <th
+                          scope="col"
+                          className={
+                            theme == `dark` ? `text-warning` : `text-primary`
+                          }
+                        >
                           لحساب
                         </th>
                       </tr>
@@ -211,7 +255,13 @@ const Profile = () => {
                     </tbody>
                   </table>
                   <div className="d-flex justify-content-center">
-                    <button className="btn btn-sm btn-outline-primary text-center">
+                    <button
+                      className={`btn btn-sm ${
+                        theme == `dark`
+                          ? `btn-outline-info`
+                          : `btn-outline-dark`
+                      } text-center`}
+                    >
                       المزيد ...
                     </button>
                   </div>

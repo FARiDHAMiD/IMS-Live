@@ -9,9 +9,11 @@ import Spinner from "../../Components/Spinner";
 import dayjs from "dayjs";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { FaRegSave } from "react-icons/fa";
+import { useTheme } from "../../context/ThemeProvider";
 
 const PurchaseInvoice = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [oneItem, setOneItem] = useState([]);
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
@@ -35,21 +37,7 @@ const PurchaseInvoice = () => {
   const [discountRate, setDiscountRate] = useState("");
   const [discountAmount, setDiscountAmount] = useState("0.00");
 
-  const [invoiceItems, setInvoiceItems] = useState([
-    {
-      id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
-      item_name: "",
-      name: "", // use id
-      main_qty: "",
-      qty: 1,
-      purchasing_price: "0.00",
-      itemSubTotal: "",
-      scale_unit: "",
-      small_unit: "",
-      last_price: "",
-      unitRef: 1,
-    },
-  ]);
+  const [invoiceItems, setInvoiceItems] = useState([]);
 
   let getUserProfile = async () => {
     let response = await AxiosInstance.get(`profile/${user.profile}`);
@@ -288,7 +276,7 @@ const PurchaseInvoice = () => {
       total: total,
       tax: taxAmount,
       discount: discountAmount,
-      paid: paid,
+      paid: `${paid < 0 ? NaN : paid}`,
       prevCredit: initCredit,
       remain: setAccountData["credit"],
       notes: data.notes,
@@ -383,7 +371,11 @@ const PurchaseInvoice = () => {
             <div className="modal-content rounded-4 shadow">
               <div className="container-fluid row mb-2">
                 <div className="p-3 pb-4 border-bottom-0 text-center">
-                  <h3 className="fw-bold mb-0 fs-2 text-info ">
+                  <h3
+                    className={`fw-bold mb-0 fs-2 ${
+                      theme == "dark" ? "text-info" : "text-navy"
+                    }`}
+                  >
                     فاتورة شراء - {user.username}
                   </h3>
                 </div>
@@ -402,19 +394,19 @@ const PurchaseInvoice = () => {
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
-                        backgroundColor: "#212529",
-                        borderColor: "#32373c",
+                        backgroundColor: `${theme == "dark" ? "#212529" : ""}`,
+                        borderColor: "navy",
                         fontSize: "18px",
                         width: "100%",
                       }),
                       singleValue: (provided) => ({
                         ...provided,
-                        color: "yellow",
+                        color: `${theme == "dark" ? "white" : "black"}`,
                       }),
                       menu: (provided) => ({
                         ...provided,
-                        background: "#212529",
-                        color: "yellow",
+                        background: "",
+                        color: "black",
                       }),
                     }}
                     menuPosition="fixed"
@@ -432,12 +424,14 @@ const PurchaseInvoice = () => {
                           `EGP ` + accountData.credit.toLocaleString()
                     }
                     className="form-control"
-                    style={{
-                      backgroundColor:
-                        setAccountData["credit"] > 0
-                          ? `green`
-                          : setAccountData["credit"] < 0 && `red`,
-                    }}
+                    style={
+                      theme == "dark"
+                        ? {
+                            backgroundColor:
+                              setAccountData["credit"] < 0 && `red`,
+                          }
+                        : { borderColor: setAccountData["credit"] < 0 && `red` }
+                    }
                     disabled
                     hidden={hideAccountDetails}
                   />
@@ -531,33 +525,6 @@ const PurchaseInvoice = () => {
                   </div>
                 </div> */}
 
-                {/* paid */}
-                <div className="col-md-2 col-6 mb-2">
-                  <input
-                    hidden={hideAccountDetails}
-                    type="text"
-                    name="paid"
-                    id="paid"
-                    className="form-control"
-                    placeholder="المدفوع ..."
-                    {...register("paid")}
-                    onChange={(e) =>
-                      handleCalculateTotal(setPaid(e.target.value))
-                    }
-                  />
-                </div>
-                {/* notes */}
-                <div className="col-md-4 col-6 mb-2">
-                  <input
-                    type="text"
-                    name="notes"
-                    id="notes"
-                    className="form-control"
-                    placeholder="ملاحظات الفاتورة ..."
-                    {...register("notes")}
-                  />
-                </div>
-
                 {/* discount by amount - خصم بالمبلغ  */}
                 <div className="col-md-2 col-6  mb-2">
                   <input
@@ -577,28 +544,49 @@ const PurchaseInvoice = () => {
                     }
                   />
                 </div>
+
+                {/* notes */}
+                <div className="col-md-4 col-6 mb-2">
+                  <input
+                    type="text"
+                    name="notes"
+                    id="notes"
+                    className="form-control"
+                    placeholder="ملاحظات الفاتورة ..."
+                    {...register("notes")}
+                  />
+                </div>
+
+                {/* paid */}
+                <div className="col-md-2 col-6 mb-2">
+                  <input
+                    hidden={hideAccountDetails}
+                    type="text"
+                    name="paid"
+                    id="paid"
+                    className="form-control"
+                    placeholder="المدفوع ..."
+                    {...register("paid")}
+                    onChange={(e) =>
+                      handleCalculateTotal(setPaid(e.target.value))
+                    }
+                  />
+                </div>
                 <hr />
               </div>
 
               {/* Invoice Items rows  */}
-              <div className="modal-body p-1 pt-0">
+              <div className="modal-body">
                 {invoiceItems.map((item, i) => (
-                  <div key={i} className="row mt-1">
-                    {/* item barcode */}
-                    <div className="col-md-2 col-3 mb-1">
-                      <input
-                        type="text"
-                        // name="barcode"
-                        id={item.id}
-                        className="form-control form-control-sm"
-                        placeholder="باركود..."
-                        // value={val.barcode}
-                        // onChange={(e) => handleChange(e, i)}
-                        defaultValue={item.barcode}
-                        disabled
-                      />
-                    </div>
-                    <div className="col-md-3 col-6 mb-1">
+                  <div key={i} className="container-fluid row">
+                    {/* item name */}
+                    <div className="col-md-3 col-8 mb-1">
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        الصنف
+                      </label>
                       {/* <Select
                         id={item.id}
                         name="name"
@@ -642,7 +630,7 @@ const PurchaseInvoice = () => {
                         id={item.id}
                         onChange={onItemizedItemEdit}
                         value={item.name}
-                        className="form-control form-control-sm text-warning"
+                        className="form-control form-control-sm"
                       >
                         <option value="" disabled>
                           ---
@@ -656,7 +644,13 @@ const PurchaseInvoice = () => {
                     </div>
 
                     {/* item unit */}
-                    <div className="col-md-1 col-3">
+                    <div className="col-md-1 col-4">
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        الوحدة
+                      </label>
                       <select
                         ref={unitSelectRef}
                         name="unitSelect"
@@ -671,7 +665,13 @@ const PurchaseInvoice = () => {
                     </div>
 
                     {/* item qty */}
-                    <div className="col-md-1 col-3 mb-1">
+                    <div className="col-md-2 col-4 mb-1">
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        الكمية
+                      </label>
                       <input
                         ref={qtyRef}
                         type="number"
@@ -687,7 +687,13 @@ const PurchaseInvoice = () => {
                     </div>
 
                     {/* item price */}
-                    <div className="col-md-1 col-3">
+                    <div className="col-md-2 col-4">
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        السعر
+                      </label>
                       <input
                         type="number"
                         className="form-control form-control-sm"
@@ -702,19 +708,48 @@ const PurchaseInvoice = () => {
                       />
                     </div>
 
+                    {/* item subtotal */}
+                    <div className="col-md-1 col-4">
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        إجمالى
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control form-control-sm"
+                        placeholder="قيمة..."
+                        name="itemSubTotal"
+                        defaultValue={item.itemSubTotal}
+                        id={item.id}
+                        disabled
+                      />
+                    </div>
+
                     {/* item last price */}
                     <div className="col-md-2 col-5">
-                      <span
-                        className={item.last_price != 0 ? `text-warning` : ``}
+                      <label
+                        style={{ fontSize: "small" }}
+                        className={theme == "dark" ? "text-info" : "text-navy"}
+                      >
+                        آخر سعر للعميل
+                      </label>
+                      <br />
+                      <label
+                        className={
+                          item.last_price != 0
+                            ? theme == `dark`
+                              ? `text-info`
+                              : `text-success`
+                            : ``
+                        }
                         style={{ fontSize: "small" }}
                       >
                         {item.last_price
-                          ? `آخر سعر ` +
-                            item.last_price +
-                            ` لل` +
-                            item.scale_unit
+                          ? item.last_price + ` لل` + item.scale_unit
                           : ""}
-                      </span>
+                      </label>
                       <input
                         type="text"
                         className="form-control form-control-sm"
@@ -732,23 +767,15 @@ const PurchaseInvoice = () => {
                         hidden
                       />
                     </div>
-                    <div className="col-md-1 col-4">
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        placeholder="قيمة..."
-                        name="itemSubTotal"
-                        defaultValue={item.itemSubTotal}
-                        id={item.id}
-                        disabled
-                      />
-                    </div>
-                    <div className="col-md-1 col-2 d-flex justify-content-end">
+
+                    {/* Delete row  */}
+                    <div className="col-md-1 col-7">
                       <button
                         className="btn btn-sm btn-outline-danger"
+                        style={{ float: "left" }}
                         onClick={() => handleRowDel(item)}
                       >
-                        <FaTrash />
+                        x
                       </button>
                     </div>
                   </div>
@@ -756,20 +783,16 @@ const PurchaseInvoice = () => {
 
                 {/* buttons  */}
                 <div className="row">
-                  <div className=" mb-1 d-flex justify-content-end mt-1">
+                  <div className=" mb-1 d-flex justify-content-center mt-1">
                     <button
-                      className="btn btn-outline-light"
+                      className={
+                        theme == "dark"
+                          ? "btn btn-outline-light"
+                          : "btn btn-outline-dark"
+                      }
                       onClick={handleAddEvent}
                     >
                       <FaPlus />
-                    </button>
-                  </div>
-                  <div className="">
-                    <button
-                      className="btn btn-info"
-                      onClick={handleSubmit(createInvoice)}
-                    >
-                      حفظ <FaRegSave />
                     </button>
                   </div>
                 </div>
@@ -778,7 +801,9 @@ const PurchaseInvoice = () => {
                 {/* Invoice Total */}
                 <hr />
                 <div
-                  className="col-md-6 col-12 text-warning m-1"
+                  className={`col-md-6 col-12 ${
+                    theme == "dark" && "text-warning"
+                  } m-1`}
                   style={{ float: "left" }}
                 >
                   <div className="d-flex flex-row align-items-start justify-content-between">
@@ -824,10 +849,18 @@ const PurchaseInvoice = () => {
                         className="d-flex flex-row align-items-start justify-content-between"
                         style={{ fontSize: "1.125rem" }}
                       >
-                        <span className="fw-bold text-light">
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
                           حساب سابق:{" "}
                           {accountData.credit > 0 ? (
-                            <span className="text-info">له</span>
+                            <span className={theme == "dark" && `text-info`}>
+                              له
+                            </span>
                           ) : (
                             accountData.credit && (
                               <span className={`text-danger`}>عليه</span>
@@ -837,7 +870,9 @@ const PurchaseInvoice = () => {
                         <span
                           className={`fw-bold ${
                             accountData.credit > 0
-                              ? `text-info`
+                              ? theme == "dark"
+                                ? `text-info`
+                                : "text-muted"
                               : accountData.credit
                               ? `text-danger`
                               : `text-light`
@@ -853,10 +888,20 @@ const PurchaseInvoice = () => {
                         className="d-flex flex-row align-items-start justify-content-between"
                         style={{ fontSize: "1.125rem" }}
                       >
-                        <span className="fw-bold text-light">
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
                           إجمالى الحساب:
                         </span>
-                        <span className="fw-bold text-warning">
+                        <span
+                          className={
+                            theme == "dark" ? "fw-bold text-warning" : "fw-bold"
+                          }
+                        >
                           EGP{" "}
                           {(accountData.credit || accountData.credit == 0) &&
                             +total + accountData.credit}
@@ -866,8 +911,22 @@ const PurchaseInvoice = () => {
                         className="d-flex flex-row align-items-start justify-content-between"
                         style={{ fontSize: "1.125rem" }}
                       >
-                        <span className="fw-bold text-light">مدفوع: </span>
-                        <span className="fw-bold text-light">
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
+                          مدفوع:{" "}
+                        </span>
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
                           EGP {paid || 0}
                         </span>
                       </div>
@@ -875,8 +934,22 @@ const PurchaseInvoice = () => {
                         className="d-flex flex-row align-items-start justify-content-between"
                         style={{ fontSize: "1.125rem" }}
                       >
-                        <span className="fw-bold text-light">متبقى:</span>
-                        <span className="fw-bold text-light">
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
+                          متبقى:
+                        </span>
+                        <span
+                          className={
+                            theme == "dark"
+                              ? "fw-bold text-light"
+                              : `fw-bold text-muted`
+                          }
+                        >
                           EGP{" "}
                           {(accountData.credit || accountData.credit == 0) &&
                             (
@@ -889,6 +962,17 @@ const PurchaseInvoice = () => {
                     </>
                   )}
                 </div>
+              </div>
+              {/* save invoice  */}
+              <div className="d-flex justify-content-center my-2">
+                <button
+                  className={
+                    theme == `dark` ? `btn btn-info` : "btn btn-success"
+                  }
+                  onClick={handleSubmit(createInvoice)}
+                >
+                  حفظ <FaRegSave />
+                </button>
               </div>
             </div>
           </div>

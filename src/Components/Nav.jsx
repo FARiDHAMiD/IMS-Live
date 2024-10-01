@@ -5,18 +5,23 @@ import {
   FaFileInvoiceDollar,
   FaGear,
   FaHouse,
+  FaMoon,
+  FaSun,
   FaUserLarge,
   FaUsers,
 } from "react-icons/fa6";
 
 import AuthContext from "../context/AuthContext";
-import { BiSolidReport, BiStore } from "react-icons/bi";
+import { BiSolidReport, BiStore, BiSun } from "react-icons/bi";
 
 import { BsBagFill } from "react-icons/bs";
+import { useTheme } from "../context/ThemeProvider";
 
 const Nav = () => {
   const { pathname } = useLocation();
   const [collapse, setCollapse] = useState("");
+
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setCollapse("collapse");
@@ -36,6 +41,15 @@ const Nav = () => {
           <FaHouse size={30} />
           <p style={{ marginBottom: "auto" }}>الرئيسية</p>
         </NavLink>
+        {theme === "dark" ? (
+          <button className="btn btn-sm" onClick={toggleTheme}>
+            <BiSun size={25} />
+          </button>
+        ) : (
+          <button className="btn btn-sm" onClick={toggleTheme}>
+            <FaMoon size={25} />
+          </button>
+        )}
         <button
           className="navbar-toggler"
           to="#"
@@ -44,7 +58,6 @@ const Nav = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div
           className={`${collapse} navbar-collapse`}
           style={

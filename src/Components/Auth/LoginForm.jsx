@@ -41,11 +41,7 @@ const LoginForm = () => {
             تأكيد
           </button>
           <p className="mt-4 mb-3 text-muted">
-            <Link
-              className="btn btn-outline-dark"
-              target="_blank"
-              to="/register"
-            >
+            <Link className="btn btn-outline" to="/working">
               <span>طلب مستخدم</span>
             </Link>
             <a target="_blank" href="https://www.linkedin.com/in/farid-7amid">
