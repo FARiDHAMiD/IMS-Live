@@ -15,9 +15,11 @@ import {
 import ConfirmDeleteModal from "../../Components/ConfirmDeleteModal";
 import DeleteModal from "../../Components/DeleteModal";
 import Invoices from "../Invoices/Invoices";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditAccount = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   const { id } = useParams();
   let [account, setAccount] = useState([]);
   let [accountType, setAccountType] = useState([]);
@@ -213,10 +215,12 @@ const EditAccount = () => {
                         <div className="row">
                           <div className="form-group col-md-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="account_type"
                             >
-                              نوع الحساب
+                              نوع الحساب <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -242,7 +246,12 @@ const EditAccount = () => {
                             </select>
                           </div>
                           <div className="form-group col-md-6 mb-2">
-                            <label className="text-warning" htmlFor="percent">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="percent"
+                            >
                               نسبة الخصم (%)
                             </label>
                             <input
@@ -268,8 +277,13 @@ const EditAccount = () => {
                           </div>
                         </div>
                         <div className="form-group mb-2">
-                          <label className="text-warning" htmlFor="name">
-                            الإسم
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="name"
+                          >
+                            الإسم <span className="text-danger">*</span>
                           </label>
                           <input
                             type="text"
@@ -294,7 +308,12 @@ const EditAccount = () => {
                           )}
                         </div>
                         <div className="form-group mb-2">
-                          <label className="text-warning" htmlFor="company">
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="company"
+                          >
                             الشركة
                           </label>
                           <select
@@ -313,8 +332,13 @@ const EditAccount = () => {
                           </select>
                         </div>
                         <div className="form-group mb-2">
-                          <label className="text-warning" htmlFor="address">
-                            العنوان
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="address"
+                          >
+                            العنوان <span className="text-danger">*</span>
                           </label>
                           <input
                             type="text"
@@ -340,8 +364,13 @@ const EditAccount = () => {
                         </div>
                         <div className="row">
                           <div className="form-group mb-2 col-md-6">
-                            <label className="text-warning" htmlFor="phone1">
-                              تليفون 1
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="phone1"
+                            >
+                              تليفون 1 <span className="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -366,7 +395,12 @@ const EditAccount = () => {
                             )}
                           </div>
                           <div className="form-group mb-2 col-md-6">
-                            <label className="text-warning" htmlFor="phone2">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="phone2"
+                            >
                               تليفون 2
                             </label>
                             <input
@@ -382,7 +416,9 @@ const EditAccount = () => {
                         <div className="row">
                           <div className="form-group col-md-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="init_credit"
                             >
                               رصيد أول المدة
@@ -397,7 +433,12 @@ const EditAccount = () => {
                             />
                           </div>
                           <div className="form-group col-md-6 mb-2">
-                            <label className="text-warning" htmlFor="credit">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="credit"
+                            >
                               الرصيد الحالى
                             </label>
                             <input
@@ -413,7 +454,12 @@ const EditAccount = () => {
                           </div>
                         </div>
                         <div>
-                          <label className="text-warning" htmlFor="notes">
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="notes"
+                          >
                             ملاحظات
                           </label>
                           <input

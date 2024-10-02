@@ -30,16 +30,19 @@ const Stocks = () => {
 
   return (
     <>
+      {/* search box and add button  */}
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-8 d-flex justify-content-right">
-            <SearchBox searchTxt={input} setSearchTxt={setInput} width={12} />
+          <div className="col-md-8 col-8">
+            <SearchBox searchTxt={input} setSearchTxt={setInput} width={10} />
           </div>
-          <div className="col-md-4">
-            {(user.is_superuser || user.is_staff) && (
+          <div className="col-md-4 col-4 mt-2 d-flex justify-content-end">
+            {user.is_superuser && (
               <Link
-                className="btn btn-lg btn-outline-light rounded-pill mt-2"
-                style={{ float: "left", fontWeight: "bolder" }}
+                className={`btn btn-lg ${
+                  theme == "dark" ? "btn-outline-light" : "btn-outline-dark"
+                } rounded-pill`}
+                style={{ fontWeight: "bolder" }}
                 to="/control/stock/create"
               >
                 +
@@ -83,13 +86,13 @@ const Stocks = () => {
                   </div>
 
                   <div className="card-footer text-muted">
-                    {user && (user.is_superuser || user.is_staff) && (
+                    {user && user.is_superuser && (
                       <Link
                         to={`/control/stock/${stock.id}`}
                         className={`btn btn-sm ${
                           theme == "dark"
                             ? "btn-outline-info"
-                            : "btn-outline-dark"
+                            : "btn-outline-primary"
                         }`}
                         style={{ float: "left" }}
                       >

@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import { FaFileCsv, FaPrint } from "react-icons/fa6";
+import { useTheme } from "../context/ThemeProvider";
 
 const ReportHeader = (props) => {
   let { reportTitle, gridRef } = props;
+  let {theme} = useTheme()
   let [printing, setPrinting] = useState(false);
 
   // global filter searching ...
@@ -53,7 +55,7 @@ const ReportHeader = (props) => {
         {reportTitle}
       </h2>
       <div className="col-6 my-2">
-        <h3 className="text-warning">{reportTitle}</h3>
+        <h3 className={theme == 'dark' ? 'text-warning' : 'text-navy'}>{reportTitle}</h3>
       </div>
       <div className="col-5 d-flex justify-content-end">
         <input

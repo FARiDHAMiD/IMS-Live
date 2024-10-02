@@ -6,9 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../../Components/Spinner";
 import { FaStore } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
 
 const CreateStock = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [users, setUsers] = useState([]);
   const [checked, setChecked] = useState(true);
   let [loading, setLoading] = useState(true);
@@ -82,7 +84,11 @@ const CreateStock = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content rounded-4 shadow">
             <div className="p-3 pb-4 border-bottom-0 text-center">
-              <h1 className="fw-bold mb-0 fs-2 text-green">
+              <h1
+                className={`fw-bold mb-0 fs-2 ${
+                  theme == "dark" ? "text-green" : "text-navy"
+                }`}
+              >
                 تسجيل مخزن لأول مرة <FaStore size={30} />
               </h1>
             </div>
@@ -93,8 +99,13 @@ const CreateStock = () => {
                 <form>
                   <div className="row">
                     <div className="form-group mb-2 col-md-4">
-                      <label className="text-warning" htmlFor="name">
-                        إسم المخزن *
+                      <label
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                        htmlFor="name"
+                      >
+                        إسم المخزن <span className="text-danger">*</span>
                       </label>
                       <input
                         type="text"
@@ -118,8 +129,14 @@ const CreateStock = () => {
                       )}
                     </div>
                     <div className="form-group mb-2 col-md-5">
-                      <label className="text-warning" htmlFor="location">
-                        مكان المخزن (العنوان) *
+                      <label
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                        htmlFor="location"
+                      >
+                        مكان المخزن (العنوان){" "}
+                        <span className="text-danger">*</span>
                       </label>
                       <input
                         type="text"
@@ -143,8 +160,13 @@ const CreateStock = () => {
                       )}
                     </div>
                     <div className="form-group mb-2 col-md-3">
-                      <label className="text-warning mb-1" htmlFor="keeper">
-                        أمين المخزن *
+                      <label
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                        htmlFor="keeper"
+                      >
+                        أمين المخزن <span className="text-danger">*</span>
                       </label>
                       <select
                         className="form-select form-select-lg"
@@ -166,19 +188,23 @@ const CreateStock = () => {
                       )}
                     </div>
                     <div className="form-group mb-2 col-md-5">
-                      <label className="text-warning" htmlFor="credit">
+                      <label
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                        htmlFor="credit"
+                      >
                         الرصيد
                       </label>
                       <input
                         type="number"
-                        placeholder="Later will be calculated automatically"
+                        placeholder="إضافة رصيد بداية المدة"
                         className={`form-control form-control-lg rounded-3 mt-1 ${
                           errors.credit && "is-invalid"
                         }`}
                         id="credit"
                         name="credit"
                         {...register("credit", {
-                          required: "حقل مطلوب",
                           maxLength: {
                             value: 60,
                             message: "أقصى حد 60 حرف",
@@ -193,7 +219,12 @@ const CreateStock = () => {
                     </div>
 
                     <div className="form-group mb-2 col-md-7">
-                      <label className="text-warning" htmlFor="notes">
+                      <label
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                        htmlFor="notes"
+                      >
                         ملاحظات
                       </label>
                       <input

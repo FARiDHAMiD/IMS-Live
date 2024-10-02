@@ -7,9 +7,11 @@ import { FaRegSave } from "react-icons/fa";
 import { FaPrint, FaTrash, FaTriangleExclamation } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import AuthContext from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditInvoice = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let { id } = useParams();
   let [loading, setLoading] = useState(true);
   let [invoice, setInvoice] = useState([]);
@@ -154,7 +156,11 @@ const EditInvoice = () => {
         <Spinner />
       ) : (
         <div className="container">
-          <h3 className="text-green text-center my-2">
+          <h3
+            className={`${
+              theme == "dark" ? "text-green" : "text-navy"
+            } text-center my-2`}
+          >
             تعديل فاتورة {invoice.invoiceType}
           </h3>
           <div className="container">
@@ -275,7 +281,12 @@ const EditInvoice = () => {
                 )}
 
                 {/* items  */}
-                <div className="row text-warning" style={{ fontSize: "small" }}>
+                <div
+                  className={`row ${
+                    theme == "dark" ? "text-warning" : "text-navy"
+                  }`}
+                  style={{ fontSize: "small" }}
+                >
                   <div className="col-5">
                     <label>الصنف</label>
                   </div>
@@ -327,7 +338,9 @@ const EditInvoice = () => {
 
                 {/* total  */}
                 <div
-                  className="col-md-6 col-12 text-warning m-1"
+                  className={`col-md-6 col-12 ${
+                    theme == "dark" ? "text-warning" : ""
+                  } m-1`}
                   style={{ float: "left" }}
                 >
                   <div className="d-flex flex-row align-items-start justify-content-between">
@@ -371,15 +384,15 @@ const EditInvoice = () => {
               </div>
               {/* save invoice  */}
               <div className="d-flex justify-content-end">
-                <button className="btn btn-info col-md-3 col-5 m-1">
-                  حفظ التعديلات <FaRegSave />
+                <button className={`btn ${theme == 'dark' ? 'btn-info' : 'btn-success'} col-md-3 col-5 m-1`}>
+                  حفظ  <FaRegSave />
                 </button>
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#confirmDeleteModal"
                   className="btn btn-danger col-md-3 col-5 m-1"
                 >
-                  حذف الفاتورة بالكامل <FaTrash />
+                  حذف <FaTrash />
                 </button>
               </div>
               {/* delete modal  */}
@@ -401,8 +414,14 @@ const EditInvoice = () => {
                       <div className="modal-body">
                         <p className="mb-0">
                           - هذا الإجراء على مسئولية المستخدم الحالى للنظام{" "}
-                          <span className="text-info">{user.username}</span> ,
-                          لا يمكن العودة فى هذا الإجراء
+                          <span
+                            className={
+                              theme == "dark" ? "text-info" : "text-navy"
+                            }
+                          >
+                            {user.username}
+                          </span>{" "}
+                          , لا يمكن العودة فى هذا الإجراء
                           <br />
                           - سيم تعديل رصيد كلاً من العميل والمستخدم المسجل
                           بالفاتورة
@@ -421,7 +440,9 @@ const EditInvoice = () => {
                       </button>
                       <button
                         type="button"
-                        className="btn btn-sm btn-link fs-6 text-decoration-none text-light col-6 m-0 rounded-0"
+                        className={`btn btn-sm btn-link fs-6 text-decoration-none ${
+                          theme == "dark" ? "text-light" : "text-dark"
+                        } col-6 m-0 rounded-0`}
                         data-bs-dismiss="modal"
                       >
                         إلغاء

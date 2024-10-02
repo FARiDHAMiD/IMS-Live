@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import AxiosInstance from "../../Components/AxiosInstance";
 import UseDebounce from "../../hooks/UseDebounce";
 import SearchBox from "../../Components/SearchBox";
 import Spinner from "../../Components/Spinner";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../context/ThemeProvider";
+import AuthContext from "../../context/AuthContext";
 
 const Accounts = () => {
   let [input, setInput] = useState([]);
+  let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [accountType, setAccountType] = useState([]);
   let [accounts, setAccounts] = useState([]);
   let [loading, setLoading] = useState(true);
@@ -37,17 +41,21 @@ const Accounts = () => {
     <>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-8 d-flex justify-content-right">
-            <SearchBox searchTxt={input} setSearchTxt={setInput} width={12} />
+          <div className="col-md-8 col-8">
+            <SearchBox searchTxt={input} setSearchTxt={setInput} width={10} />
           </div>
-          <div className="col-md-4">
-            <Link
-              className="btn btn-lg btn-outline-light rounded-pill"
-              style={{ float: "left", fontWeight: "bolder" }}
-              to="/control/account/create"
-            >
-              +
-            </Link>
+          <div className="col-md-4 col-4 mt-2 d-flex justify-content-end">
+            {user.is_superuser && (
+              <Link
+                className={`btn btn-lg ${
+                  theme == "dark" ? "btn-outline-light" : "btn-outline-dark"
+                } rounded-pill`}
+                style={{ fontWeight: "bolder" }}
+                to="/control/account/create"
+              >
+                +
+              </Link>
+            )}
           </div>
         </div>
         <hr />
@@ -60,7 +68,11 @@ const Accounts = () => {
             {accountType.map((type) => (
               <div key={type.id} className="col-md-5 col-lg-4 order-md-last">
                 <h4 className="d-flex justify-content-between align-items-center mb-3">
-                  <span className="text-warning">{type.name}</span>
+                  <span
+                    className={theme == "dark" ? "text-warning" : "text-navy"}
+                  >
+                    {type.name}
+                  </span>
                   <span className="badge bg-secondary rounded-pill">
                     {/* fixed ...  */}
                     {type.active_accounts}
@@ -94,7 +106,7 @@ const Accounts = () => {
                                     account.credit < 0 && "text-danger"
                                   }`}
                                 >
-                                  {parseInt(account.credit)} £
+                                  {account.credit.toLocaleString()} EGP
                                 </span>
                               </li>
                             </Link>
@@ -104,18 +116,27 @@ const Accounts = () => {
                   </div>
                   <br className="mt-2" />
                   <li className="list-group-item d-flex justify-content-between bg-light">
-                    <div className="text-success">
+                    <div
+                      className={
+                        theme == "dark" ? "text-success" : "text-primary"
+                      }
+                    >
                       <h6 className="my-0">
                         <strong>الإجمالى</strong>
                       </h6>
-                      <small>القيمة بالسالب لحساب دائن</small>
                     </div>
                     {type.count_credit >= 0 ? (
-                      <span className="text-success">
-                        {parseInt(type.count_credit)} £
+                      <span
+                        className={
+                          theme == "dark" ? "text-success" : "text-primary"
+                        }
+                      >
+                        {type.count_credit.toLocaleString()} EGP
                       </span>
                     ) : (
-                      <span className="text-danger">{parseInt(type.count_credit)} £</span>
+                      <span className="text-danger">
+                        {type.count_credit.toLocaleString()} EGP
+                      </span>
                     )}
                   </li>
                 </ul>

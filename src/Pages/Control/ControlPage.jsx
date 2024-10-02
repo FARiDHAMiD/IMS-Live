@@ -31,7 +31,7 @@ const ControlPage = () => {
           <Link to="/control/changedControl" style={{ textDecoration: "none" }}>
             <div className="card p-3" style={{ alignItems: "center" }}>
               <FaDatabase size={80} style={{ alignContent: "center" }} />
-              <h3 className="mt-2">البيانات المتغيرة </h3>
+              <h3 className="mt-2">المخازن / الأصناف / العملاء</h3>
             </div>
           </Link>
         </div>

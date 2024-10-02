@@ -20,9 +20,11 @@ import {
   FaArrowLeft,
   FaRepeat,
 } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditItem = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   const { id } = useParams();
   let [item, setItem] = useState([]);
   let [unit, setUnit] = useState([]);
@@ -301,8 +303,13 @@ const EditItem = () => {
                         <div className="row">
                           {/* item name */}
                           <div className="form-group col-md-4 col-8 mb-2">
-                            <label className="text-warning" htmlFor="name">
-                              إسم الصنف *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="name"
+                            >
+                              إسم الصنف <span className="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -328,8 +335,13 @@ const EditItem = () => {
 
                           {/* qty  */}
                           <div className="form-group col-md-2 col-4 mb-2">
-                            <label className="text-warning" htmlFor="qty">
-                              الكمية *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="qty"
+                            >
+                              الكمية <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -353,10 +365,12 @@ const EditItem = () => {
                           {/* scale unit */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="scale_unit"
                             >
-                              الوحدة الكبرى *
+                              الوحدة الكبرى <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -383,10 +397,12 @@ const EditItem = () => {
                           {/* small unit  */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="small_unit"
                             >
-                              الوحدة الصغرى *
+                              الوحدة الصغرى <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -413,10 +429,12 @@ const EditItem = () => {
                           {/* small in large */}
                           <div className="form-group col-md-4 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="small_in_large"
                             >
-                              نسبة الوحدة الكبرى للصغرى *
+                              نسبة الوحدة الكبرى للصغرى <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -442,8 +460,13 @@ const EditItem = () => {
 
                           {/* barcode  */}
                           <div className="form-group col-md-5 col-6 mb-2">
-                            <label className="text-warning" htmlFor="barcode">
-                              باركود *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="barcode"
+                            >
+                              باركود <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -486,8 +509,13 @@ const EditItem = () => {
 
                           {/* type  */}
                           <div className="form-group col-md-4 col-6 mb-2">
-                            <label className="text-warning" htmlFor="type">
-                              النوع *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="type"
+                            >
+                              النوع <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -515,8 +543,13 @@ const EditItem = () => {
 
                           {/* cat  */}
                           <div className="form-group col-md-4 col-6 mb-2">
-                            <label className="text-warning" htmlFor="cat">
-                              الفئة *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="cat"
+                            >
+                              الفئة <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -542,7 +575,12 @@ const EditItem = () => {
 
                           {/* expire date */}
                           <div className="form-group col-md-4 mb-2">
-                            <label className="text-warning" htmlFor="expire">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="expire"
+                            >
                               تاريخ الصلاحية
                             </label>
                             <input
@@ -567,10 +605,12 @@ const EditItem = () => {
                           {/* purchase price */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="purchasing_price"
                             >
-                              سعر الشراء *
+                              سعر الشراء <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -594,10 +634,12 @@ const EditItem = () => {
                           {/* lowest price */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="lowest_price"
                             >
-                              أقل سعر بيع *
+                              أقل سعر بيع <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -628,10 +670,12 @@ const EditItem = () => {
                           {/* selling price */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="selling_price"
                             >
-                              البيع جملة *
+                              البيع جملة <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -655,10 +699,12 @@ const EditItem = () => {
                           {/* retail price */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="retail_price"
                             >
-                              البيع قطاعى *
+                              البيع قطاعى <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -688,10 +734,12 @@ const EditItem = () => {
                           {/* minimum limit of qty in stock */}
                           <div className="form-group col-md-3 col-6 mb-2">
                             <label
-                              className="text-warning text-nowrap"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="min_limit"
                             >
-                              أقل كمية *
+                              أقل كمية <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -715,8 +763,13 @@ const EditItem = () => {
 
                           {/* stock  */}
                           <div className="form-group col-md-9 col-6 mb-2">
-                            <label className="text-warning" htmlFor="stock">
-                              متواجد بأي مخزن
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="stock"
+                            >
+                              متواجد بأي مخزن <span className="text-danger">*</span>
                             </label>
                             <select
                               multiple
@@ -737,7 +790,12 @@ const EditItem = () => {
 
                           {/* notes */}
                           <div className="form-group col-md-12 mb-2">
-                            <label className="text-warning" htmlFor="notes">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="notes"
+                            >
                               ملاحظات
                             </label>
                             <textarea
@@ -839,7 +897,7 @@ const EditItem = () => {
                       )}
                       <div className="d-flex gap-2 w-100 justify-content-center">
                         <div>
-                          <h6 className="mb-0 text-warning">
+                          <h6 className={theme == 'dark' ? 'mb-0 text-warning' : 'mb-0 text-navy'}>
                             {dayjs(item.timestamp).format("YYYY/MM/DD HH:mm")} |{" "}
                             {item.changed_by}
                           </h6>

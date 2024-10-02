@@ -11,13 +11,15 @@ import {
 } from "react-icons/fa6";
 import dayjs from "dayjs";
 import Spinner from "../Spinner";
+import { useTheme } from "../../context/ThemeProvider";
 
-const ItemsLog = ({ limited = false }) => {
+const ItemsLog = ({ limited = false }, { item }) => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [itemsLog, setItemsLog] = useState([]);
   let [loading, setLoading] = useState(true);
 
-  const apiURL = limited ? "itemsLimitedLog/" : "itemsLog";
+  const apiURL = limited ? `itemsLimitedLog/` : "itemsLog";
   // All Items changes log
   let getItemLog = async () => {
     let response = await AxiosInstance.get(apiURL);
@@ -66,7 +68,13 @@ const ItemsLog = ({ limited = false }) => {
 
                   <div className="d-flex gap-2 w-100 justify-content-between">
                     <div>
-                      <h6 className="mb-0 text-warning">{log.object_repr}</h6>
+                      <h6
+                        className={
+                          theme == "dark" ? "mb-0 text-warning" : "mb-0"
+                        }
+                      >
+                        {log.object_repr}
+                      </h6>
                       <p className="mb-0 opacity-75">
                         شراء:{" "}
                         {log.purchase_changes &&

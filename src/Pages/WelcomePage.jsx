@@ -62,7 +62,7 @@ const WelcomePage = () => {
                   } btn-lg animate__animated animate__zoomInLeft animate__slower m-1 col-md-3 col-lg-3 col-sm-5`}
                   style={{ fontSize: "x-large", fontWeight: "bold" }}
                 >
-                  Order Now
+                  {user ? "Upgrade to Pro" : "Order Now"}
                 </Link>
               </div>
             </div>

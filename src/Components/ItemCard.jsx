@@ -4,16 +4,18 @@ import AuthContext from "../context/AuthContext";
 import ProgressBar from "./ProgressBar";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/ThemeProvider";
 
 const ItemCard = ({ item }) => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
 
   return (
     <div className="card">
       <div className="card-header">
         <div className="row">
           <div className="col-9">
-            <h5 className="text-warning">
+            <h5 className={theme == "dark" ? "text-warning" : "text-navy"}>
               {item.name} | إجمالى رصيد الصنف (
               {parseInt(item.selling_price * item.qty).toLocaleString()} EGP)
             </h5>
@@ -34,9 +36,13 @@ const ItemCard = ({ item }) => {
       </div>
       <div className="card-body">
         <p className="card-text">
-          المتاح بالمخزن (<span className="text-warning">{item.qty} {item.scale_unit} /{" "}
-          {parseFloat(item.qty * item.small_in_large).toLocaleString()}{" "}
-          {item.small_unit}</span>) | شراء: EGP{item.purchasing_price} | بيع جملة: EGP{" "}
+          المتاح بالمخزن (
+          <span className={theme == "dark" ? "text-warning" : "text-navy"}>
+            {item.qty} {item.scale_unit} /{" "}
+            {parseFloat(item.qty * item.small_in_large).toLocaleString()}{" "}
+            {item.small_unit}
+          </span>
+          ) | شراء: EGP{item.purchasing_price} | بيع جملة: EGP{" "}
           {item.selling_price} | بيع قطاعى: EGP{item.retail_price}
         </p>
 

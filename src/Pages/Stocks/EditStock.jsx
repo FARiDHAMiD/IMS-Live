@@ -9,9 +9,11 @@ import ConfirmDeleteModal from "../../Components/ConfirmDeleteModal";
 import DeleteModal from "../../Components/DeleteModal";
 import { FaFill, FaMoneyBillTransfer } from "react-icons/fa6";
 import dayjs from "dayjs";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditStock = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   const { id } = useParams();
   let [stock, setStock] = useState([]);
   let [stockItems, setStockItems] = useState([]);
@@ -197,8 +199,13 @@ const EditStock = () => {
                       <form>
                         <div className="row">
                           <div className="form-group col-md-6 col-6 mb-2">
-                            <label className="text-warning" htmlFor="name">
-                              إسم المخزن *
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="name"
+                            >
+                              إسم المخزن <span className="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -224,7 +231,9 @@ const EditStock = () => {
                           </div>
                           <div className="form-group col-md-6 col-6 mb-2">
                             <label
-                              className="text-warning"
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
                               htmlFor="keeper"
                               style={{ fontSize: "small" }}
                             >
@@ -254,7 +263,12 @@ const EditStock = () => {
                             </select>
                           </div>
                           <div className="form-group col-md-12 mb-2">
-                            <label className="text-warning" htmlFor="location">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="location"
+                            >
                               مكان المخزن (العنوان) *
                             </label>
                             <input
@@ -280,7 +294,12 @@ const EditStock = () => {
                             )}
                           </div>
                           <div className="form-group col-md-12 mb-2">
-                            <label className="text-warning" htmlFor="notes">
+                            <label
+                              className={
+                                theme == "dark" ? "text-warning" : "text-navy"
+                              }
+                              htmlFor="notes"
+                            >
                               ملاحظات
                             </label>
                             <input
@@ -380,25 +399,67 @@ const EditStock = () => {
                     محتويات المخزن <FaFill size={30} />
                   </h3>
                   <div className="text-center">
-                    <table className="table table-hover table-bordered">
+                    <table className="table table-hover table-bordered table-striped">
                       <thead>
                         <tr>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             الفئة
                           </th>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             الصنف
                           </th>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             الكمية
                           </th>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             الشراء
                           </th>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             البيع
                           </th>
-                          <th scope="col" className="text-warning">
+                          <th
+                            scope="col"
+                            className={
+                              theme == "dark"
+                                ? "text-warning"
+                                : "text-light bg-primary"
+                            }
+                          >
                             إجمالى
                           </th>
                         </tr>
@@ -406,11 +467,15 @@ const EditStock = () => {
                       <tbody>
                         {stockItems.map((item) => (
                           <tr onClick={() => editItem(item.id)} key={item.id}>
-                            <td className="text-nowrap">{item.cat}</td>
+                            <td className="">{item.cat}</td>
                             <td>{item.name}</td>
                             <td
                               className={
-                                item.qty <= item.min_limit ? `text-warning` : ""
+                                item.qty <= item.min_limit
+                                  ? theme == "dark"
+                                    ? `text-warning`
+                                    : "text-danger"
+                                  : ""
                               }
                             >
                               {item.qty} {item.scale_unit}
@@ -431,7 +496,11 @@ const EditStock = () => {
                       </div>
                       <div className="col-md-4 col-4">
                         <div className="card">
-                          <h5 className="text-warning">
+                          <h5
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                          >
                             {`EGP ` + totalPurchase()}
                           </h5>
                         </div>
@@ -446,7 +515,11 @@ const EditStock = () => {
                       </div>
                       <div className="col-md-4 col-4">
                         <div className="card">
-                          <h5 className="text-warning">
+                          <h5
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                          >
                             {`EGP ` + totalSelling()}
                           </h5>
                         </div>

@@ -6,9 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../../Components/Spinner";
 import { FaPencil } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
 
 const CreateAccount = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [accountType, setAccountType] = useState([]);
   let [company, setCompany] = useState([]);
   let [loading, setLoading] = useState(true);
@@ -88,7 +90,11 @@ const CreateAccount = () => {
       <div className="modal-dialog" role="document">
         <div className="modal-content rounded-4 shadow">
           <div className="p-3 pb-4 border-bottom-0 text-center">
-            <h1 className="fw-bold mb-0 fs-2 text-green">
+            <h1
+              className={`fw-bold mb-0 fs-2 ${
+                theme == "dark" ? "text-green" : "text-navy"
+              }`}
+            >
               تسجيل حساب لأول مرة <FaPencil size={30} />
             </h1>
           </div>
@@ -99,8 +105,11 @@ const CreateAccount = () => {
               <form>
                 <div className="row">
                   <div className="form-group mb-2 col-md-5">
-                    <label className="text-warning" htmlFor="name">
-                      الإسم *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="name"
+                    >
+                      الإسم <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -125,8 +134,11 @@ const CreateAccount = () => {
                   </div>
 
                   <div className="form-group mb-2 col-md-7">
-                    <label className="text-warning" htmlFor="address">
-                      العنوان *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="address"
+                    >
+                      العنوان <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -151,7 +163,10 @@ const CreateAccount = () => {
                   </div>
 
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="company">
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="company"
+                    >
                       الشركة
                     </label>
                     <select
@@ -169,8 +184,11 @@ const CreateAccount = () => {
                     </select>
                   </div>
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="phone1">
-                      تليفون 1 *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="phone1"
+                    >
+                      تليفون 1 <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -194,7 +212,10 @@ const CreateAccount = () => {
                     )}
                   </div>
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="phone2">
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="phone2"
+                    >
                       تليفون 2
                     </label>
                     <input
@@ -212,8 +233,11 @@ const CreateAccount = () => {
                   </div>
 
                   <div className="form-group col-md-4 mb-2">
-                    <label className="text-warning" htmlFor="account_type">
-                      نوع الحساب *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="account_type"
+                    >
+                      نوع الحساب <span className="text-danger">*</span>
                     </label>
                     <select
                       className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -238,8 +262,11 @@ const CreateAccount = () => {
                       </div>
                     )}
                   </div>
-                  <div className="form-group col-md-2 mb-2">
-                    <label className="text-warning" htmlFor="percent">
+                  <div className="form-group col-md-4 mb-2">
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="percent"
+                    >
                       نسبة الخصم (%)
                     </label>
                     <input
@@ -262,8 +289,11 @@ const CreateAccount = () => {
                       </div>
                     )}
                   </div>
-                  <div className="form-group col-md-3 mb-2">
-                    <label className="text-warning" htmlFor="init_credit">
+                  <div className="form-group col-md-4 mb-2">
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="init_credit"
+                    >
                       رصيد أول المدة (بالجنيه)
                     </label>
                     <input
@@ -274,22 +304,11 @@ const CreateAccount = () => {
                       {...register("init_credit")}
                     />
                   </div>
-                  <div className="form-group col-md-3 mb-2">
-                    <label className="text-warning" htmlFor="credit">
-                      الرصيد الفعلى
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control form-control-lg rounded-3 mt-1"
-                      id="credit"
-                      name="credit"
-                      {...register("credit", {
-                        disabled: true,
-                      })}
-                    />
-                  </div>
                   <div>
-                    <label className="text-warning" htmlFor="notes">
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="notes"
+                    >
                       ملاحظات
                     </label>
                     <input

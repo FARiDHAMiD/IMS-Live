@@ -6,19 +6,19 @@ import SearchBox from "../../Components/SearchBox";
 import Spinner from "../../Components/Spinner";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaCheck, FaX } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
 
 const Users = () => {
   let [users, setUsers] = useState([]);
+  let { theme } = useTheme();
   let [input, setInput] = useState([]);
   let [loading, setLoading] = useState(true);
   const debounce = UseDebounce(input, 800);
   let navigate = useNavigate();
 
   let getUsers = async () => {
-    // let response = await AxiosInstance.get(`user?username=${input}`);
-    let response = await AxiosInstance.get(`user/`);
+    let response = await AxiosInstance.get(`user?username=${input}`);
     setUsers(response.data);
-    console.log(response.data);
     setLoading(false);
   };
 
@@ -38,17 +38,19 @@ const Users = () => {
         <>
           <div className="container-fluid">
             <div className="row">
-              <div className="col-md-8 d-flex justify-content-right">
+              <div className="col-md-8 col-8">
                 <SearchBox
                   searchTxt={input}
                   setSearchTxt={setInput}
-                  width={12}
+                  width={10}
                 />
               </div>
-              <div className="col-md-4">
+              <div className="col-md-4 col-4 mt-2 d-flex justify-content-end">
                 <Link
-                  className="btn btn-lg btn-outline-light rounded-pill"
-                  style={{ float: "left", fontWeight: "bolder" }}
+                  className={`btn btn-lg ${
+                    theme == "dark" ? "btn-outline-light" : "btn-outline-dark"
+                  } rounded-pill`}
+                  style={{ fontWeight: "bolder" }}
                   to="/control/user/create"
                 >
                   +
@@ -64,25 +66,74 @@ const Users = () => {
               <table className="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       #
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       إسم المستخدم
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       تاريخ الإنشاء
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       رصيد المستخدم
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       Superuser
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       Staff
                     </th>
-                    <th scope="col" className="text-warning">
+                    <th
+                      scope="col"
+                      className={
+                        theme == "dark"
+                          ? "text-warning"
+                          : "text-light bg-primary"
+                      }
+                    >
                       Active
                     </th>
                   </tr>

@@ -5,9 +5,11 @@ import UseDebounce from "../../hooks/UseDebounce";
 import SearchBox from "../../Components/SearchBox";
 import Spinner from "../../Components/Spinner";
 import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeProvider";
 
 const AccountsArchive = () => {
   let [input, setInput] = useState([]);
+  let { theme } = useTheme();
   let [accounts, setAccounts] = useState([]);
   let [loading, setLoading] = useState(true);
   const debounce = UseDebounce(input, 800);
@@ -49,19 +51,44 @@ const AccountsArchive = () => {
         <table className="table table-hover ">
           <thead>
             <tr>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 #
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 الإسم
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 نوع الحساب
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 تاريخ التعطيل
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 تعطيل بواسطة
               </th>
             </tr>
