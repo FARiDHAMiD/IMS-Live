@@ -6,9 +6,12 @@ import AuthContext from "../../context/AuthContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { FaCircleCheck, FaCircleXmark } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
+
 
 const CashInInvoice = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [loading, setLoading] = useState(true);
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
@@ -117,7 +120,13 @@ const CashInInvoice = () => {
         <div className="modal-content rounded-4 shadow">
           <div className="container-fluid mb-2">
             <div className="p-3 pb-4 border-bottom-0 text-center">
-              <h3 className="fw-bold mb-0 fs-2 text-green ">إستلام نقدية</h3>
+              <h3
+                className={`fw-bold mb-0 fs-2 ${
+                  theme == "dark" ? "text-green" : "text-navy"
+                }`}
+              >
+                إستلام نقدية
+              </h3>
             </div>
             <div className="card">
               <div className="card-header">
@@ -147,7 +156,7 @@ const CashInInvoice = () => {
                   </div>
                   <div className="col-md-3 col-2 d-flex justify-content-end">
                     <button
-                      className="btn btn-outline-light"
+                      className={theme == 'dark' ? 'btn btn-outline-light' : 'btn btn-outline-dark'}
                       onClick={() => searchInvoice(invoiceData)}
                     >
                       بحث

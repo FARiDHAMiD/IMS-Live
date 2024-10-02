@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import AxiosInstance from "../../Components/AxiosInstance";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { useTheme } from "../../context/ThemeProvider";
 
 const CashOutInvoice = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   let [loading, setLoading] = useState(true);
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
@@ -109,7 +111,13 @@ const CashOutInvoice = () => {
         <div className="modal-content rounded-4 shadow">
           <div className="container-fluid mb-2">
             <div className="p-3 pb-4 border-bottom-0 text-center">
-              <h3 className="fw-bold mb-0 fs-2 text-green ">توريد نقدية</h3>
+              <h3
+                className={`fw-bold mb-0 fs-2 ${
+                  theme == "dark" ? "text-green" : "text-navy"
+                }`}
+              >
+                توريد نقدية
+              </h3>
             </div>
             <div className="card">
               <div className="card-body">
