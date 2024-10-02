@@ -344,7 +344,11 @@ const CreateItem = () => {
                       <div className="form-group col-md-3 col-6 mb-2">
                         <button
                           type="button"
-                          className="btn btn-lg btn-outline-light w-100 text-nowrap"
+                          className={`btn btn-lg ${
+                            theme == "dark"
+                              ? "btn-outline-light"
+                              : "btn-outline-dark"
+                          } w-100 text-nowrap`}
                           style={{ marginTop: "28px" }}
                           onClick={handleClick}
                         >

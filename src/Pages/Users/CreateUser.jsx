@@ -5,9 +5,11 @@ import AxiosInstance from "../../Components/AxiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUserCheck } from "react-icons/fa6";
+import { useTheme } from "../../context/ThemeProvider";
 
 const CreateUser = () => {
   let { user } = useContext(AuthContext);
+  let { theme } = useTheme();
   const [is_super, setIs_super] = useState(false);
   const [staff, setStaff] = useState(false);
   const [active, setActive] = useState(true);
@@ -89,7 +91,11 @@ const CreateUser = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content rounded-4 shadow">
             <div className="p-3 pb-4 border-bottom-0 text-center">
-              <h1 className="fw-bold mb-0 fs-2 text-green">
+              <h1
+                className={`fw-bold mb-0 fs-2 ${
+                  theme == "dark" ? "text-green" : "text-navy"
+                }`}
+              >
                 تسجيل مستخدم لأول مرة <FaUserCheck size={40} />
               </h1>
             </div>
@@ -97,8 +103,11 @@ const CreateUser = () => {
               <form>
                 <div className="row">
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="username">
-                      إسم المستخدم *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="username"
+                    >
+                      إسم المستخدم <span className="text-danger">*</span>
                     </label>
 
                     <input
@@ -123,8 +132,11 @@ const CreateUser = () => {
                     )}
                   </div>
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="password">
-                      كلمة المرور *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="password"
+                    >
+                      كلمة المرور <span className="text-danger">*</span>
                     </label>
                     <input
                       type="password"
@@ -148,8 +160,11 @@ const CreateUser = () => {
                     )}
                   </div>
                   <div className="form-group mb-2 col-md-4">
-                    <label className="text-warning" htmlFor="password2">
-                      تأكيد كلمة المرور *
+                    <label
+                      className={theme == "dark" ? "text-warning" : "text-navy"}
+                      htmlFor="password2"
+                    >
+                      تأكيد كلمة المرور <span className="text-danger">*</span>
                     </label>
                     <input
                       type="password"

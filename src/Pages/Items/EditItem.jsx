@@ -370,7 +370,8 @@ const EditItem = () => {
                               }
                               htmlFor="scale_unit"
                             >
-                              الوحدة الكبرى <span className="text-danger">*</span>
+                              الوحدة الكبرى{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -402,7 +403,8 @@ const EditItem = () => {
                               }
                               htmlFor="small_unit"
                             >
-                              الوحدة الصغرى <span className="text-danger">*</span>
+                              الوحدة الصغرى{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -434,7 +436,8 @@ const EditItem = () => {
                               }
                               htmlFor="small_in_large"
                             >
-                              نسبة الوحدة الكبرى للصغرى <span className="text-danger">*</span>
+                              نسبة الوحدة الكبرى للصغرى{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <input
                               type="number"
@@ -499,7 +502,11 @@ const EditItem = () => {
                           <div className="form-group col-md-3 col-6 mb-2">
                             <button
                               type="button"
-                              className="btn btn-lg btn-outline-light w-100 text-nowrap"
+                              className={`btn btn-lg ${
+                                theme == "dark"
+                                  ? "btn-outline-light"
+                                  : "btn-outline-dark"
+                              } w-100 text-nowrap`}
                               style={{ marginTop: "28px" }}
                               onClick={handleClick}
                             >
@@ -769,7 +776,8 @@ const EditItem = () => {
                               }
                               htmlFor="stock"
                             >
-                              متواجد بأي مخزن <span className="text-danger">*</span>
+                              متواجد بأي مخزن{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <select
                               multiple
@@ -897,7 +905,13 @@ const EditItem = () => {
                       )}
                       <div className="d-flex gap-2 w-100 justify-content-center">
                         <div>
-                          <h6 className={theme == 'dark' ? 'mb-0 text-warning' : 'mb-0 text-navy'}>
+                          <h6
+                            className={
+                              theme == "dark"
+                                ? "mb-0 text-warning"
+                                : "mb-0 text-navy"
+                            }
+                          >
                             {dayjs(item.timestamp).format("YYYY/MM/DD HH:mm")} |{" "}
                             {item.changed_by}
                           </h6>

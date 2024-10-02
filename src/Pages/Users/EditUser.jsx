@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 import Spinner from "../../Components/Spinner";
 import AuthContext from "../../context/AuthContext";
 import ConfirmDeleteModal from "../../Components/ConfirmDeleteModal";
+import { useTheme } from "../../context/ThemeProvider";
 
 const EditUser = () => {
   let { user, logoutUser } = useContext(AuthContext);
+  let { theme } = useTheme;
   const { id } = useParams();
   let [updatedUser, setUpdatedUser] = useState([]);
   let [profile, setProfile] = useState([]);
@@ -95,11 +97,10 @@ const EditUser = () => {
 
   return (
     <>
-      <h3 className="text-center text-warnign">{updatedUser.username}</h3>
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container">
+        <div className="container my-2">
           <form className="row">
             {/* password and password 2 hidden for update */}
             {/* <input
@@ -120,8 +121,11 @@ const EditUser = () => {
             /> */}
 
             <div className="form-group col-md-4 mb-2">
-              <label className="text-warning" htmlFor="username">
-                إسم المستخدم *
+              <label
+                className={theme == "dark" ? "text-warning" : "text-navy"}
+                htmlFor="username"
+              >
+                إسم المستخدم <span className="text-danger">*</span>{" "}
               </label>
               <input
                 type="text"
@@ -146,7 +150,10 @@ const EditUser = () => {
             </div>
 
             <div className="form-group col-md-4 mb-2">
-              <label htmlFor="credit" className="text-warning">
+              <label
+                htmlFor="credit"
+                className={theme == "dark" ? "text-warning" : "text-navy"}
+              >
                 الرصيد EGP
               </label>
               <input
@@ -167,12 +174,15 @@ const EditUser = () => {
             </div>
 
             <div className="form-group col-md-4 mb-2">
-              <label htmlFor="" className="text-warning"></label>
+              <label
+                htmlFor=""
+                className={theme == "dark" ? "text-warning" : "text-navy"}
+              ></label>
 
               <Link
                 to={`/userInvoices/${updatedUser.id}`}
                 className={`form-control form-control-lg text-center rounded-3 mt-1`}
-                style={{textDecoration:'none'}}
+                style={{ textDecoration: "none" }}
               >
                 فواتير المستخدم
               </Link>

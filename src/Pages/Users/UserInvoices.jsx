@@ -55,65 +55,78 @@ const UserInvoices = (props) => {
               {!limited && ` | ` + userData.username}
             </h5>
           </div>
-
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  #
-                </th>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  رقم
-                </th>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  نوع الفاتورة
-                </th>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  توقيت الفاتورة
-                </th>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  قيمة الفاتورة
-                </th>
-                <th
-                  scope="col"
-                  className={theme == `dark` ? `text-warning` : `text-primary`}
-                >
-                  لحساب
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((invoice, index) => (
-                <tr onClick={() => getInvoice(invoice.id)} key={invoice.id}>
-                  <th scope="row">{index + 1}</th>
-                  <th scope="row">{invoice.invoice_no}</th>
-                  <td className="text-nowrap">{invoice.type}</td>
-                  <td className="text-nowrap">
-                    {dayjs(invoice.invoice_time).format("YYYY/MM/DD h:mma")}
-                  </td>
-                  <td className="text-nowrap">
-                    EGP {invoice.total.toLocaleString()}
-                  </td>
-                  <td className="text-nowrap">{invoice.account}</td>
+          <div className="container-fluid">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    #
+                  </th>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    رقم
+                  </th>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    نوع الفاتورة
+                  </th>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    توقيت الفاتورة
+                  </th>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    قيمة الفاتورة
+                  </th>
+                  <th
+                    scope="col"
+                    className={
+                      theme == `dark` ? `text-warning` : `text-light bg-primary`
+                    }
+                  >
+                    لحساب
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {invoices.map((invoice, index) => (
+                  <tr onClick={() => getInvoice(invoice.id)} key={invoice.id}>
+                    <th scope="row">{index + 1}</th>
+                    <th scope="row">{invoice.invoice_no}</th>
+                    <td className="text-nowrap">{invoice.type}</td>
+                    <td className="text-nowrap">
+                      {dayjs(invoice.invoice_time).format("YYYY/MM/DD h:mma")}
+                    </td>
+                    <td className="text-nowrap">
+                      EGP {invoice.total.toLocaleString()}
+                    </td>
+                    <td className="text-nowrap">{invoice.account}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {!limited && (
             <div className="d-flex justify-content-center">
               <Link
