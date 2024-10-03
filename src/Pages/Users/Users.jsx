@@ -147,7 +147,7 @@ const Users = () => {
                         <td>{dayjs(user.date_joined).format("YYYY/M/D")}</td>
                         <td
                           className={
-                            user.profile.credit <= 0 ? `text-warning` : ``
+                            user.profile.credit < 0 ? `text-danger` : ``
                           }
                         >
                           {user.profile.credit.toLocaleString()}

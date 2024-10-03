@@ -4,9 +4,11 @@ import AxiosInstance from "../AxiosInstance";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import Spinner from "../Spinner";
+import { useTheme } from "../../context/ThemeProvider";
 
 const DefaultEditForm = (props) => {
   const { control, label } = props;
+  let { theme } = useTheme();
   let [data, setData] = useState([]);
   let [loading, setLoading] = useState(true);
 
@@ -64,14 +66,20 @@ const DefaultEditForm = (props) => {
   return (
     <div className=" mt-2 container">
       <h2 className="text-center">
-        تعديل {label} <strong>({data.name})</strong>
+        تعديل {label}{" "}
+        <strong className={theme == "dark" ? "text-green" : "text-navy"}>
+          ({data.name})
+        </strong>
       </h2>
       {loading ? (
         <Spinner />
       ) : (
         <form onSubmit={handleSubmit(submmision)}>
           <div className="form-group">
-            <label className="text-warning" htmlFor="name">
+            <label
+              className={theme == "dark" ? "text-warning" : "text-navy"}
+              htmlFor="name"
+            >
               تعديل {label}
             </label>
             <input
@@ -95,7 +103,10 @@ const DefaultEditForm = (props) => {
             </small>
           </div>
           <div className="form-group mt-2 mb-2">
-            <label className="text-warning" htmlFor="notes">
+            <label
+              className={theme == "dark" ? "text-warning" : "text-navy"}
+              htmlFor="notes"
+            >
               ملاحظات
             </label>
             <input
@@ -115,10 +126,16 @@ const DefaultEditForm = (props) => {
             )}
           </div>
           <div style={{ textAlignLast: "left" }} className="mb-4">
-            <button type="submit" className="btn btn-primary m-1">
-              تأكيد
-            </button>
-            <Link to="/control/basicControl" className="btn btn-secondary">
+            {control == "invoiceType" ? (
+              <Link to={"/working"} className="btn btn-warning m-1">
+                مراجعة مع الأدمن
+              </Link>
+            ) : (
+              <button type="submit" className="btn btn-primary m-1">
+                تأكيد
+              </button>
+            )}
+            <Link onClick={() => navigate(-1)} className="btn btn-secondary">
               إلغاء
             </Link>
           </div>

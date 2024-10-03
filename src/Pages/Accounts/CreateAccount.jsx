@@ -26,7 +26,7 @@ const CreateAccount = () => {
     phone2: "",
     percent: 0,
     init_credit: 0,
-    credit: "",
+    credit: 0,
     notes: "",
   };
 
@@ -65,7 +65,7 @@ const CreateAccount = () => {
       phone1: data.phone1,
       phone2: data.phone2,
       init_credit: data.init_credit,
-      credit: data.credit,
+      credit: 0,
       percent: data.percent,
       notes: data.notes,
       archived_at: null,

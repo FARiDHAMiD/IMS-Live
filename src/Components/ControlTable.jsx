@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 import Spinner from "./Spinner";
 import { toast } from "react-toastify";
 import UseDebounce from "../hooks/UseDebounce";
+import { useTheme } from "../context/ThemeProvider";
 
 const ControlTable = (props) => {
   let { controlData, label, search } = props;
+  const { theme } = useTheme();
   let [data, setData] = useState([]);
   let [loading, setLoading] = useState(true);
 
@@ -39,19 +41,43 @@ const ControlTable = (props) => {
       {loading ? (
         <Spinner loading={loading} />
       ) : (
-        <table className="table table-hover">
+        <table
+          className={`table table-hover ${
+            theme == "dark" ? "" : "table-bordered"
+          }`}
+        >
           <thead>
             <tr>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 #
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 {label}
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 ملاحظات
               </th>
-              <th scope="col" className="text-warning">
+              <th
+                scope="col"
+                className={
+                  theme == "dark" ? "text-warning" : "text-light bg-primary"
+                }
+              >
                 إجراء
               </th>
             </tr>
@@ -70,12 +96,16 @@ const ControlTable = (props) => {
                   >
                     <FaEdit />
                   </NavLink>
-                  <button
-                    onClick={() => destroy(item.id)}
-                    className="btn btn-sm btn-danger m-1"
-                  >
-                    <FaTrash />
-                  </button>
+                  {controlData == "invoiceType" ? (
+                    <></>
+                  ) : (
+                    <button
+                      onClick={() => destroy(item.id)}
+                      className="btn btn-sm btn-danger m-1"
+                    >
+                      <FaTrash />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

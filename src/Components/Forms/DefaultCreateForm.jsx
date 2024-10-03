@@ -2,8 +2,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import AxiosInstance from "../AxiosInstance";
 import { toast } from "react-toastify";
+import { useTheme } from "../../context/ThemeProvider";
 
 const DefaultCreateForm = () => {
+  let { theme } = useTheme();
   const location = useLocation();
   let navigate = useNavigate();
 
@@ -45,10 +47,18 @@ const DefaultCreateForm = () => {
 
   return (
     <div className=" mt-2 container">
-      <h2 className="text-center">إضافة {label}</h2>
+      <h2 className="text-center">
+        إضافة{" "}
+        <span className={theme == "dark" ? "text-green" : "text-navy"}>
+          {label}
+        </span>
+      </h2>
       <form onSubmit={handleSubmit(submmision)}>
         <div className="form-group">
-          <label className="text-warning" htmlFor="name">
+          <label
+            className={theme == "dark" ? "text-warning" : "text-navy"}
+            htmlFor="name"
+          >
             {label}
           </label>
           <input
@@ -74,7 +84,10 @@ const DefaultCreateForm = () => {
           </small>
         </div>
         <div className="form-group mt-2 mb-2">
-          <label className="text-warning" htmlFor="notes">
+          <label
+            className={theme == "dark" ? "text-warning" : "text-navy"}
+            htmlFor="notes"
+          >
             ملاحظات
           </label>
           <input
@@ -95,12 +108,18 @@ const DefaultCreateForm = () => {
           )}
         </div>
         <div style={{ textAlignLast: "left" }} className="mb-4">
-          <button type="submit" className="btn btn-primary m-1">
-            تأكيد
-          </button>
-          <Link to="/control/basicControl" className="btn btn-secondary">
+          {page == "invoiceType" ? (
+            <Link to={"/working"} className="btn btn-warning m-1">
+              مراجعة مع الأدمن
+            </Link>
+          ) : (
+            <button type="submit" className="btn btn-primary m-1">
+              تأكيد
+            </button>
+          )}
+          <button onClick={() => navigate(-1)} className="btn btn-secondary">
             إلغاء
-          </Link>
+          </button>
         </div>
       </form>
     </div>
