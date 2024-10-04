@@ -61,7 +61,7 @@ const Users = () => {
           </div>
           {/* Users Table  */}
           <div className="container">
-            <h3 className="text-center mb-2">إضغط على المستخدم للتعديل</h3>
+            <h5 className=" mb-2 text-muted">إضغط على المستخدم للتعديل</h5>
             <div className="card mt-2">
               <table className="table table-hover">
                 <thead>

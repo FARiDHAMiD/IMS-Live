@@ -47,7 +47,7 @@ const InvoiceRequest = () => {
                 <Link to="/working" style={{ textDecoration: "none" }}>
                   <div className="card p-3" style={{ alignItems: "center" }}>
                     <FaRepeat size={30} style={{ alignContent: "center" }} />
-                    <h3 className="mt-2">مرتجعات</h3>
+                    <h3 className="mt-2">مرتجع / هالك</h3>
                   </div>
                 </Link>
               </div>

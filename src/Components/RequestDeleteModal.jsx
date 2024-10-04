@@ -1,7 +1,9 @@
 import { FaTriangleExclamation } from "react-icons/fa6";
+import { useTheme } from "../context/ThemeProvider";
 
 const RequestDeleteModal = (props) => {
   let { object, label } = props;
+  let { theme } = useTheme();
   return (
     <div
       className="modal fade"
@@ -57,7 +59,9 @@ const RequestDeleteModal = (props) => {
             </button>
             <button
               type="button"
-              className="btn btn-sm btn-link fs-6 text-decoration-none text-light col-6 m-0 rounded-0"
+              className={`btn btn-sm btn-link fs-6 text-decoration-none ${
+                theme == "dark" ? "text-light" : "text-dark"
+              } col-6 m-0 rounded-0`}
               data-bs-dismiss="modal"
             >
               إلغاء

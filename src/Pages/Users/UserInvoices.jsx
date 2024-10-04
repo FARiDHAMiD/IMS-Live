@@ -52,7 +52,7 @@ const UserInvoices = (props) => {
               } text-center mt-2`}
             >
               الفواتير <FaFileInvoice size={25} />{" "}
-              {!limited && ` | ` + userData.username}
+              {!limited && ` | ` + userData.username + `@`}
             </h5>
           </div>
           <div className="container-fluid">

@@ -277,15 +277,16 @@ const EditItem = () => {
                             />
                           </div>
                           <div className="col-md-6 text-nowrap">
-                            {item.name} |{" "}
+                            {item.name}
+                            <br />
+                            EGP{" "}
                             {(
                               item.purchasing_price * item.qty
-                            ).toLocaleString()}{" "}
-                            EGP
+                            ).toLocaleString()}
                           </div>
                           <div
                             onClick={() => {
-                              alert("try to prine...");
+                              alert("try to print...");
                             }}
                             className="col-md-1"
                             style={{ float: "left" }}
@@ -913,7 +914,7 @@ const EditItem = () => {
                             }
                           >
                             {dayjs(item.timestamp).format("YYYY/MM/DD HH:mm")} |{" "}
-                            {item.changed_by}
+                            {item.changed_by}@
                           </h6>
                           <p className="mb-0 opacity-75">
                             شراء: {item.purchase_changes}

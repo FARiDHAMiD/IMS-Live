@@ -237,7 +237,8 @@ const EditStock = () => {
                               htmlFor="keeper"
                               style={{ fontSize: "small" }}
                             >
-                              المسئول عن المخزن *
+                              المسئول عن المخزن{" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <select
                               className={`form-control form-control-lg rounded-3 mt-1 ${
@@ -269,7 +270,8 @@ const EditStock = () => {
                               }
                               htmlFor="location"
                             >
-                              مكان المخزن (العنوان) *
+                              مكان المخزن (العنوان){" "}
+                              <span className="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -399,7 +401,7 @@ const EditStock = () => {
                     محتويات المخزن <FaFill size={30} />
                   </h3>
                   <div className="text-center">
-                    <table className="table table-hover table-bordered table-striped">
+                    <table className="table table-hover table-bordered">
                       <thead>
                         <tr>
                           <th

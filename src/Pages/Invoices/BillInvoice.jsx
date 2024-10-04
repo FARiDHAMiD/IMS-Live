@@ -621,7 +621,9 @@ const BillInvoice = () => {
                   placeholder="المدفوع ..."
                   {...register("paid")}
                   onChange={(e) =>
-                    handleCalculateTotal(setPaid(e.target.value))
+                    e.target.value <= 0
+                      ? handleCalculateTotal(setPaid(0))
+                      : handleCalculateTotal(setPaid(e.target.value))
                   }
                 />
               </div>

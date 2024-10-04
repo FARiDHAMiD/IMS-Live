@@ -3,7 +3,12 @@ import AuthContext from "../../context/AuthContext";
 import "../Users/profile.css";
 import { Link, useParams } from "react-router-dom";
 import AxiosInstance from "../../Components/AxiosInstance";
-import { FaFileInvoice, FaMoneyBillTransfer, FaStore } from "react-icons/fa6";
+import {
+  FaFileInvoice,
+  FaMoneyBillTransfer,
+  FaMoneyBillTrendUp,
+  FaStore,
+} from "react-icons/fa6";
 import UserInvoices from "./UserInvoices";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -56,7 +61,36 @@ const Profile = () => {
                     <p>{profile.notes}</p>
                   </div>
                   <div className="text-center">
-                    <div className="row">
+                    <div className="row d-flex justify-content-center">
+                      {user.is_superuser ? (
+                        <div className="col-12 my-2">
+                          <Link
+                            className={`btn ${
+                              theme == "dark"
+                                ? `btn-outline-light`
+                                : `btn-outline-dark`
+                            } w-100`}
+                            onClick={`logoutUser`}
+                          >
+                            توريد الرصيد للخزنة الرئيسية
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="col-12 my-2">
+                          <button
+                            className={`btn ${
+                              theme == "dark"
+                                ? `btn-outline-light`
+                                : `btn-outline-dark`
+                            } w-100`}
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#creditOutRequestModal"
+                          >
+                            طلب توريد الرصيد للخزنة الرئيسية
+                          </button>
+                        </div>
+                      )}
                       <div className="col-6">
                         <Link
                           className={`btn ${
@@ -66,7 +100,7 @@ const Profile = () => {
                           } w-100`}
                           to={`/profile/${user.profile}/edit`}
                         >
-                          تعديل
+                          الملف الشخصى
                         </Link>
                       </div>
                       <div className="col-6">
@@ -78,7 +112,7 @@ const Profile = () => {
                           } w-100`}
                           onClick={logoutUser}
                         >
-                          خروج
+                          تسجيل خروج
                         </Link>
                       </div>
                     </div>
@@ -87,7 +121,6 @@ const Profile = () => {
               </div>
             </div>
           </div>
-
           {/* Profile Actions  */}
           <div className="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
             <div className="card h-100">
@@ -192,69 +225,71 @@ const Profile = () => {
                       حركات الرصيد <FaMoneyBillTransfer size={25} />
                     </h5>
                   </div>
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th
-                          scope="col"
-                          className={
-                            theme == `dark` ? `text-warning` : `text-primary`
-                          }
-                        >
-                          #
-                        </th>
-                        <th
-                          scope="col"
-                          className={
-                            theme == `dark` ? `text-warning` : `text-primary`
-                          }
-                        >
-                          الرصيد
-                        </th>
-                        <th
-                          scope="col"
-                          className={
-                            theme == `dark` ? `text-warning` : `text-primary`
-                          }
-                        >
-                          تاريخ
-                        </th>
-                        <th
-                          scope="col"
-                          className={
-                            theme == `dark` ? `text-warning` : `text-primary`
-                          }
-                        >
-                          قبل التغيير
-                        </th>
-                        <th
-                          scope="col"
-                          className={
-                            theme == `dark` ? `text-warning` : `text-primary`
-                          }
-                        >
-                          لحساب
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td className="text-nowrap">بيع</td>
-                        <td className="text-nowrap">22 / 07 / 2024</td>
-                        <td className="">5600 EGP</td>
-                        <td className="text-nowrap">محمد احمد محمود</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td className="text-nowrap">شراء</td>
-                        <td className="text-nowrap">21 / 07 / 2024</td>
-                        <td className="">4200 EGP</td>
-                        <td className="text-nowrap">إسلام مصطفى محمد</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div className="d-flex justify-content-center">
+                  <div className=" d-flex justify-content-center">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th
+                            scope="col"
+                            className={
+                              theme == `dark`
+                                ? `text-warning`
+                                : `text-light bg-primary`
+                            }
+                          >
+                            #
+                          </th>
+                          <th
+                            scope="col"
+                            className={
+                              theme == `dark`
+                                ? `text-warning`
+                                : `text-light bg-primary`
+                            }
+                          >
+                            الرصيد
+                          </th>
+                          <th
+                            scope="col"
+                            className={
+                              theme == `dark`
+                                ? `text-warning`
+                                : `text-light bg-primary`
+                            }
+                          >
+                            تاريخ
+                          </th>
+                          <th
+                            scope="col"
+                            className={
+                              theme == `dark`
+                                ? `text-warning`
+                                : `text-light bg-primary`
+                            }
+                          >
+                            قبل التغيير
+                          </th>
+                          <th
+                            scope="col"
+                            className={
+                              theme == `dark`
+                                ? `text-warning`
+                                : `text-light bg-primary`
+                            }
+                          >
+                            لحساب
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className=" d-flex justify-content-center">
+                    <h4 className="mb-2">...Working on it</h4>
+                  </div>
+                  <div className="d-flex justify-content-center my-1">
                     <button
                       className={`btn btn-sm ${
                         theme == `dark`
@@ -265,6 +300,109 @@ const Profile = () => {
                       المزيد ...
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Credit Out Request Modal - طلب توريد الرصيد للخزينة الرئيسية */}
+          <div
+            className="modal fade modal-lg"
+            id="creditOutRequestModal"
+            tabIndex="-1"
+            aria-labelledby="creditOutRequestModalLabel"
+          >
+            <div className="modal-dialog rounded-3 shadow">
+              <div className="modal-content">
+                <div className="modal-title p-3 text-center">
+                  <div className="row">
+                    <div className="col-md-10">
+                      <h4>
+                        طلب توريد رصيد المستخدم{" "}
+                        <span
+                          className={
+                            theme == "dark" ? "text-warning" : "text-navy"
+                          }
+                        >
+                          {user.username}@
+                        </span>{" "}
+                        للخزينة الرئيسية
+                      </h4>
+                    </div>
+                    <div className="col-md-2">
+                      <FaMoneyBillTrendUp
+                        size={40}
+                        className={theme == "dark" ? "" : "text-navy"}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div className="container">
+                  <p className="text-center">
+                    يتم هذا الطلب نهاية كل يوم بعد مراجعة الفواتير والعهدة
+                    المستلمة من المستخدم ومراجعة أرصدة العملاء وكميات الأصناف
+                    بالمخازن المستلم منها العهدة
+                  </p>
+                  <p
+                    className={
+                      theme == "dark"
+                        ? "text-center text-info"
+                        : "text-center text-navy"
+                    }
+                  >
+                    فى حال عدم توريد رصيد المستخدم نهاية كل يوم سيم ترحيل المبلغ
+                    تلقائياً لليوم التالى
+                  </p>
+                  <div>
+                    <div className="row col-6"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-4 col-6 mb-2">
+                      <label>طلب من مستخدم</label>
+                      <select className="form-select" name="" id="">
+                        <option value="">---</option>
+                      </select>
+                    </div>
+                    <div className="col-md-4 col-6 mb-2">
+                      <label>توريد مبلغ</label>
+                      <input
+                        type="number"
+                        name=""
+                        id=""
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="col-md-4 col-12 mb-2">
+                      <label>ملاحظات</label>
+                      <input
+                        type="text"
+                        name=""
+                        id=""
+                        className="form-control"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="modal-footer flex-nowrap p-0">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-link fs-6 text-decoration-none text-light bg-success col-6 m-0 rounded-0 border-end"
+                    data-bs-dismiss="modal"
+                    onClick={`destroy`}
+                  >
+                    <strong>تأكيد الطلب</strong>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`btn btn-sm btn-link fs-6 text-decoration-none ${
+                      theme == "dark" ? "text-light" : "text-dark"
+                    } col-6 m-0 rounded-0`}
+                    data-bs-dismiss="modal"
+                  >
+                    إلغاء
+                  </button>
                 </div>
               </div>
             </div>

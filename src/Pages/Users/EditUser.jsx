@@ -10,7 +10,7 @@ import { useTheme } from "../../context/ThemeProvider";
 
 const EditUser = () => {
   let { user, logoutUser } = useContext(AuthContext);
-  let { theme } = useTheme;
+  let { theme } = useTheme();
   const { id } = useParams();
   let [updatedUser, setUpdatedUser] = useState([]);
   let [profile, setProfile] = useState([]);
@@ -174,10 +174,7 @@ const EditUser = () => {
             </div>
 
             <div className="form-group col-md-4 mb-2">
-              <label
-                htmlFor=""
-                className={theme == "dark" ? "text-warning" : "text-navy"}
-              ></label>
+              <label id="empty"></label>
 
               <Link
                 to={`/userInvoices/${updatedUser.id}`}
