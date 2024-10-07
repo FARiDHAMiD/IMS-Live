@@ -41,7 +41,7 @@ const Treasury = () => {
                   <FaCoins size={45} style={{ alignContent: "center" }} />
                   <h3 className="mt-2">إجمالى رصيد الخزنة</h3>
                   <br />
-                  <h3>{`EGP 5,600`}</h3>
+                  <h3>{`...Working on it`}</h3>
                 </div>
               </Link>
             </div>
@@ -56,7 +56,7 @@ const Treasury = () => {
                   <FaUsers size={45} style={{ alignContent: "center" }} />
                   <h3 className="mt-2">إجمالى أرصدة العملاء</h3>
                   <br />
-                  <h3>{`EGP 5,600 (مدين)`}</h3>
+                  <h3>{`...Working on it`}</h3>
                 </div>
               </Link>
             </div>
@@ -71,7 +71,7 @@ const Treasury = () => {
                   <FaSitemap size={45} style={{ alignContent: "center" }} />
                   <h3 className="mt-2">إجمالى أرصدة المستخدمين</h3>
                   <br />
-                  <h3>{`EGP 5,600 (دائن)`}</h3>
+                  <h3>{`...Working on it`}</h3>
                 </div>
               </Link>
             </div>
@@ -88,6 +88,7 @@ const Treasury = () => {
                     style={{ alignContent: "center" }}
                   />
                   <h3 className="mt-2">جميع تقارير الخزنة</h3>
+                  <h3>{`...Working on it`}</h3>
                 </div>
               </Link>
             </div>
