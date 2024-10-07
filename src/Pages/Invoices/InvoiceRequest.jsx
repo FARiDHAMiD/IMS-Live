@@ -2,6 +2,7 @@ import Spinner from "../../Components/Spinner";
 import {
   FaBilibili,
   FaCashRegister,
+  FaFileCirclePlus,
   FaMoneyBill,
   FaMoneyBill1Wave,
   FaMoneyBillTransfer,
@@ -70,6 +71,17 @@ const InvoiceRequest = () => {
                       style={{ alignContent: "center" }}
                     />
                     <h3 className="mt-2">إستلام نقدية</h3>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-md-8 mt-2">
+                <Link to="/invoice/expenses" style={{ textDecoration: "none" }}>
+                  <div className="card p-3" style={{ alignItems: "center" }}>
+                    <FaFileCirclePlus
+                      size={30}
+                      style={{ alignContent: "center" }}
+                    />
+                    <h3 className="mt-2">مصروفات</h3>
                   </div>
                 </Link>
               </div>

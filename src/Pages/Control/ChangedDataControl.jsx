@@ -24,7 +24,9 @@ const ChangedDataControl = () => {
           , يتم تسجيل / تعديل البيانات لأول مرة طبقاً لصلاحيات المستخدم بالنظام
           .
         </h5>
-        <button className="btn btn-outline-light mt-2">تعليمات التسجيل</button>
+        <Link className="btn btn-outline-light mt-2" to={`/working`}>
+          تعليمات التسجيل
+        </Link>
       </div>
     </>
   );

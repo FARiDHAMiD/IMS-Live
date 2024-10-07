@@ -3,10 +3,9 @@ import { useContext, useEffect, useState } from "react";
 
 import {
   FaFileInvoiceDollar,
-  FaGear,
   FaHouse,
   FaMoon,
-  FaSun,
+  FaSuperpowers,
   FaUserLarge,
   FaUsers,
 } from "react-icons/fa6";
@@ -134,7 +133,7 @@ const Nav = () => {
                           className={linkClass}
                           onClick={changeCollapseState}
                         >
-                          <FaGear size={30} />
+                          <FaSuperpowers size={30} />
                           <h4>التحكم</h4>
                         </NavLink>
                       </li>

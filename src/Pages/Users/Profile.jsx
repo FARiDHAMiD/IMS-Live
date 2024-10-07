@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import AuthContext from "../../context/AuthContext";
 import "../Users/profile.css";
 import { Link, useParams } from "react-router-dom";
@@ -11,6 +12,8 @@ import {
 } from "react-icons/fa6";
 import UserInvoices from "./UserInvoices";
 import { useTheme } from "../../context/ThemeProvider";
+import { toast } from "react-toastify";
+import CashCollectRequestUser from "../Treasury/CashCollectRequestUser";
 
 const Profile = () => {
   let { user, logoutUser } = useContext(AuthContext);
@@ -18,10 +21,24 @@ const Profile = () => {
   let { id } = useParams();
   let [profile, setProfile] = useState([]);
   let [userStocks, setUserStocks] = useState([]);
+  let [superusers, SetSuperusers] = useState([]);
+  let [lastCashStatus, SetlastCashStatus] = useState(false);
 
   let getProfile = async () => {
     let response = await AxiosInstance.get(`profile/${user.profile}/`);
     setProfile(response.data);
+  };
+
+  let get_superusers = async () => {
+    let response = await AxiosInstance.get(`get_superusers/`);
+    SetSuperusers(response.data);
+  };
+
+  let userLastCashStatus = async () => {
+    let response = await AxiosInstance.get(
+      `userLastCashStatus/${user.profile}`
+    );
+    SetlastCashStatus(response.data.pending);
   };
 
   let getUserStocks = async () => {
@@ -30,9 +47,50 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    get_superusers();
     getProfile();
+    userLastCashStatus();
     getUserStocks();
   }, []);
+
+  const defaultValues = {
+    from_user: user.user_id,
+    approved_user: "",
+    credit_collected: "",
+  };
+
+  // Use Form hook
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: defaultValues,
+  });
+
+  let cashCollect = (data) => {
+    AxiosInstance.post(`cash-collect/`, {
+      from_user: user.username,
+      approved_by: "fariid", // when update only
+      approved_user: data.approved_user,
+      credit_collected: data.credit_collected,
+      current_credit: profile.credit,
+      notes: data.notes,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`تم طلب مراجعة الرصيد`);
+          window.location.reload();
+        } else {
+          toast.error(`خطأ بالطلب`);
+        }
+        reset();
+      })
+      .catch(() => {
+        toast.error(`خطأ بالطلب`);
+      });
+  };
 
   return (
     <>
@@ -64,31 +122,45 @@ const Profile = () => {
                     <div className="row d-flex justify-content-center">
                       {user.is_superuser ? (
                         <div className="col-12 my-2">
-                          <Link
-                            className={`btn ${
-                              theme == "dark"
-                                ? `btn-outline-light`
-                                : `btn-outline-dark`
-                            } w-100`}
-                            onClick={`logoutUser`}
-                          >
-                            توريد الرصيد للخزنة الرئيسية
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="col-12 my-2">
                           <button
                             className={`btn ${
                               theme == "dark"
                                 ? `btn-outline-light`
                                 : `btn-outline-dark`
                             } w-100`}
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#creditOutRequestModal"
+                            onClick={cashCollect}
                           >
-                            طلب توريد الرصيد للخزنة الرئيسية
+                            توريد الرصيد للخزنة الرئيسية
                           </button>
+                        </div>
+                      ) : (
+                        <div className="col-12 my-2">
+                          {lastCashStatus ? (
+                            <h6
+                              className={
+                                theme == "dark" ? "text-warning" : "text-danger"
+                              }
+                            >
+                              تم طلب مراجعة توريد رصيد للخزنة
+                            </h6>
+                          ) : (
+                            <button
+                              className={`btn ${
+                                theme == "dark"
+                                  ? `btn-outline-light`
+                                  : `btn-outline-dark`
+                              } w-100`}
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target={
+                                profile.credit != 0
+                                  ? `#creditOutRequestModal`
+                                  : "#noCreditModal"
+                              }
+                            >
+                              توريد / تحصيل من الخزنة
+                            </button>
+                          )}
                         </div>
                       )}
                       <div className="col-6">
@@ -222,88 +294,29 @@ const Profile = () => {
                         theme == `dark` ? `text-info` : `text-navy`
                       } text-center`}
                     >
-                      حركات الرصيد <FaMoneyBillTransfer size={25} />
+                      حركات الرصيد للخزنة <FaMoneyBillTransfer size={25} />
                     </h5>
                   </div>
                   <div className=" d-flex justify-content-center">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th
-                            scope="col"
-                            className={
-                              theme == `dark`
-                                ? `text-warning`
-                                : `text-light bg-primary`
-                            }
-                          >
-                            #
-                          </th>
-                          <th
-                            scope="col"
-                            className={
-                              theme == `dark`
-                                ? `text-warning`
-                                : `text-light bg-primary`
-                            }
-                          >
-                            الرصيد
-                          </th>
-                          <th
-                            scope="col"
-                            className={
-                              theme == `dark`
-                                ? `text-warning`
-                                : `text-light bg-primary`
-                            }
-                          >
-                            تاريخ
-                          </th>
-                          <th
-                            scope="col"
-                            className={
-                              theme == `dark`
-                                ? `text-warning`
-                                : `text-light bg-primary`
-                            }
-                          >
-                            قبل التغيير
-                          </th>
-                          <th
-                            scope="col"
-                            className={
-                              theme == `dark`
-                                ? `text-warning`
-                                : `text-light bg-primary`
-                            }
-                          >
-                            لحساب
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className=" d-flex justify-content-center">
-                    <h4 className="mb-2">...Working on it</h4>
+                    <CashCollectRequestUser profile_view limited />
                   </div>
                   <div className="d-flex justify-content-center my-1">
-                    <button
+                    <Link
                       className={`btn btn-sm ${
                         theme == `dark`
                           ? `btn-outline-info`
                           : `btn-outline-dark`
                       } text-center`}
+                      to={`/cash-collect-user/${profile.id}`}
                     >
                       المزيد ...
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
           {/* Credit Out Request Modal - طلب توريد الرصيد للخزينة الرئيسية */}
           <div
             className="modal fade modal-lg"
@@ -358,27 +371,58 @@ const Profile = () => {
                   </div>
                   <div className="row">
                     <div className="col-md-4 col-6 mb-2">
-                      <label>طلب من مستخدم</label>
-                      <select className="form-select" name="" id="">
+                      <label>مراجعة المستخدم</label>
+                      <select
+                        className={`form-select ${
+                          errors.approved_user && "is-invalid"
+                        }`}
+                        name="approved_user"
+                        {...register("approved_user", {
+                          required: true,
+                        })}
+                      >
                         <option value="">---</option>
+                        {superusers.map((suser) => (
+                          <option key={suser.id} value={suser.username}>
+                            {suser.username}
+                          </option>
+                        ))}
                       </select>
                     </div>
                     <div className="col-md-4 col-6 mb-2">
                       <label>توريد مبلغ</label>
                       <input
                         type="number"
-                        name=""
-                        id=""
-                        className="form-control"
+                        name="credit_collected"
+                        defaultValue={profile.credit}
+                        className={`form-control ${
+                          errors.credit_collected && "is-invalid"
+                        }`}
+                        {...register("credit_collected", {
+                          required: true,
+                          max: {
+                            value: profile.credit,
+                            message: "لا يمكن توريد هذا المبلغ",
+                          },
+                          min: {
+                            value: 1,
+                            message: "لا يمكن توريد هذا المبلغ",
+                          },
+                        })}
                       />
+                      {errors.credit_collected && (
+                        <div role="alert" className="text-danger">
+                          {errors.credit_collected.message}
+                        </div>
+                      )}
                     </div>
                     <div className="col-md-4 col-12 mb-2">
                       <label>ملاحظات</label>
                       <input
                         type="text"
-                        name=""
-                        id=""
+                        name="notes"
                         className="form-control"
+                        {...register("notes")}
                       />
                     </div>
                   </div>
@@ -388,20 +432,48 @@ const Profile = () => {
                   <button
                     type="button"
                     className="btn btn-sm btn-link fs-6 text-decoration-none text-light bg-success col-6 m-0 rounded-0 border-end"
-                    data-bs-dismiss="modal"
-                    onClick={`destroy`}
+                    id="requestCashCollectButton"
+                    onClick={handleSubmit(cashCollect)}
                   >
                     <strong>تأكيد الطلب</strong>
                   </button>
 
                   <button
                     type="button"
-                    className={`btn btn-sm btn-link fs-6 text-decoration-none ${
-                      theme == "dark" ? "text-light" : "text-dark"
-                    } col-6 m-0 rounded-0`}
+                    className={`btn btn-sm btn-link fs-6 text-decoration-none 
+                      text-light bg-secondary
+                     col-6 m-0 rounded-0`}
                     data-bs-dismiss="modal"
                   >
                     إلغاء
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* No Credit Modal  */}
+
+          <div
+            className="modal fade"
+            id="noCreditModal"
+            tabIndex="-1"
+            aria-labelledby="noCreditModalLabel"
+          >
+            <div className="modal-dialog rounded-3 shadow">
+              <div className="modal-content">
+                <div className="modal-title p-3 text-center">
+                  <div className="col-md-12">
+                    <h4>رصيدك الحالى 0</h4>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className={`btn w-100 text-light bg-primary`}
+                    data-bs-dismiss="modal"
+                  >
+                    موافقة
                   </button>
                 </div>
               </div>

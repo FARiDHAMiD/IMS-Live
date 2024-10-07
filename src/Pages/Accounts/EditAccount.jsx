@@ -203,7 +203,15 @@ const EditAccount = () => {
                   <div className="modal-content rounded-4 shadow">
                     <div className="p-3 pb-4 border-bottom-0 text-center">
                       <h1 className="fw-bold mb-0 fs-2">
-                        {account.name} | {account.credit} £
+                        {account.name} <br /> {account.credit.toLocaleString()}{" "}
+                        EGP{" "}
+                        {account.credit > 0 ? (
+                          <span className="text-success">(دائن)</span>
+                        ) : account.credit < 0 ? (
+                          <span className="text-danger">(مدين)</span>
+                        ) : (
+                          ""
+                        )}
                       </h1>
                       {account.isActive == false && (
                         <h2 className="text-danger mt-1">حساب معطل</h2>

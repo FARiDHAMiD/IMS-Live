@@ -69,9 +69,10 @@ const Stocks = () => {
                       <FaStoreSlash size={30} />
                     )}
                     <div style={{ float: "left" }}>
-                      {!stock.isActive && "مخزن معطل |"} EGP{" "}
+                      {!stock.isActive && "مخزن معطل |"}
                       {stock.credit.total &&
-                        stock.credit.total.toLocaleString()}
+                        stock.credit.total.toLocaleString()}{" "}
+                      ج.م.
                     </div>
                   </div>
                   <div className="card-body">

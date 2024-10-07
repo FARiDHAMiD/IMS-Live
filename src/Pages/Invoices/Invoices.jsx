@@ -70,7 +70,8 @@ const Invoices = (props) => {
               <div className="d-flex gap-2 w-100 justify-content-between">
                 <div>
                   <h6 className="mb-0">
-                    فاتورة {invoice.type} (EGP {parseFloat(invoice.total)})
+                    فاتورة {invoice.type} ({invoice.total.toLocaleString()}{" "}
+                    ج.م.)
                   </h6>
                   <p className="mb-0 opacity-75">
                     # {invoice.invoice_no}

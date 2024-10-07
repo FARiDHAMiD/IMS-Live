@@ -106,7 +106,7 @@ const Accounts = () => {
                                     account.credit < 0 && "text-danger"
                                   }`}
                                 >
-                                  {account.credit.toLocaleString()} EGP
+                                  {account.credit.toLocaleString()} {account.credit.toLocaleString() != 0 && `ج.م.`}
                                 </span>
                               </li>
                             </Link>
@@ -115,10 +115,14 @@ const Accounts = () => {
                     )}
                   </div>
                   <br className="mt-2" />
-                  <li className="list-group-item d-flex justify-content-between bg-light">
+                  <li
+                    className={`list-group-item d-flex justify-content-between ${
+                      theme == "dark" ? "bg-light" : "bg-primary"
+                    }`}
+                  >
                     <div
                       className={
-                        theme == "dark" ? "text-success" : "text-primary"
+                        theme == "dark" ? "text-success" : "text-light"
                       }
                     >
                       <h6 className="my-0">
@@ -128,14 +132,23 @@ const Accounts = () => {
                     {type.count_credit >= 0 ? (
                       <span
                         className={
-                          theme == "dark" ? "text-success" : "text-primary"
+                          theme == "dark" ? "text-success" : "text-light"
                         }
                       >
-                        {type.count_credit.toLocaleString()} EGP
+                        {type.count_credit
+                          ? type.count_credit.toLocaleString()
+                          : 0}{" "}
+                        ج.م.
                       </span>
                     ) : (
-                      <span className="text-danger">
-                        {type.count_credit.toLocaleString()} EGP
+                      <span
+                        className={
+                          theme == "dark" ? "text-danger" : "text-warning"
+                        }
+                      >
+                        {type.count_credit &&
+                          type.count_credit.toLocaleString()}{" "}
+                        ج.م.
                       </span>
                     )}
                   </li>

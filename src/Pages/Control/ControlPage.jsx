@@ -4,6 +4,7 @@ import {
   FaFolderClosed,
   FaServer,
   FaUserCheck,
+  FaVault,
 } from "react-icons/fa6";
 import { useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthContext";
@@ -27,6 +28,27 @@ const ControlPage = () => {
             </div>
           </Link>
         </div>
+
+        {user.is_superuser && (
+          <>
+            <div className="col-md-6 mt-2">
+              <Link to="/control/user" style={{ textDecoration: "none" }}>
+                <div className="card p-3" style={{ alignItems: "center" }}>
+                  <FaUserCheck size={80} style={{ alignContent: "center" }} />
+                  <h3 className="mt-2">مستخدمين النظام</h3>
+                </div>
+              </Link>
+            </div>
+            <div className="col-md-6 mt-2">
+              <Link to="/control/treausry" style={{ textDecoration: "none" }}>
+                <div className="card p-3" style={{ alignItems: "center" }}>
+                  <FaVault size={80} style={{ alignContent: "center" }} />
+                  <h3 className="mt-2">حركات الخزنة</h3>
+                </div>
+              </Link>
+            </div>
+          </>
+        )}
         <div className="col-md-6 mt-2">
           <Link to="/control/changedControl" style={{ textDecoration: "none" }}>
             <div className="card p-3" style={{ alignItems: "center" }}>
@@ -35,16 +57,6 @@ const ControlPage = () => {
             </div>
           </Link>
         </div>
-        {user.is_superuser && (
-          <div className="col-md-6 mt-2">
-            <Link to="/control/user" style={{ textDecoration: "none" }}>
-              <div className="card p-3" style={{ alignItems: "center" }}>
-                <FaUserCheck size={80} style={{ alignContent: "center" }} />
-                <h3 className="mt-2">التحكم بالمستخدمين</h3>
-              </div>
-            </Link>
-          </div>
-        )}
         <div className="col-md-6 mt-2">
           <Link to="/control/archive" style={{ textDecoration: "none" }}>
             <div className="card p-3" style={{ alignItems: "center" }}>

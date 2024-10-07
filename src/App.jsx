@@ -5,7 +5,6 @@ import MainLayout from "./Pages/Layouts/MainLayout";
 import WelcomePage from "./Pages/WelcomePage";
 import PrivateRoute from "./utils/PrivateRoute";
 import AdminPrivateRoute from "./utils/AdminPrivateRoute";
-import AdminPage from "./Pages/Control/AdminPage";
 import ReportsPage from "./Pages/Reports/ReportsPage";
 import PageNotFound from "./Pages/StatusCodes/PageNotFound";
 import LoginPage from "./Pages/Auth/LoginPage";
@@ -56,6 +55,10 @@ import CashOutInvoice from "./Pages/Invoices/CashOutInvoice";
 import CashInInvoice from "./Pages/Invoices/CashInInvoice";
 import InvoicePreview from "./Pages/Invoices/InvoicePreview";
 import SystemInfo from "./Pages/SystemInfo";
+import Treasury from "./Pages/Treasury/Treasury";
+import CashCollectRequestDetails from "./Pages/Treasury/CashCollectRequestDetails";
+import CashCollectRequestUser from "./Pages/Treasury/CashCollectRequestUser";
+import ExpensesInvoice from "./Pages/Invoices/ExpensesInvoice";
 
 const App = () => {
   const controlData = [
@@ -80,9 +83,25 @@ const App = () => {
               {/* // private routes - must be logged in */}
               <Route element={<PrivateRoute />}>
                 {/* Superadmin Admin Routers - logged in as superuser */}
+
+                <Route
+                  path="/cash-collect-user/:id"
+                  element={<CashCollectRequestUser />}
+                />
+
                 <Route element={<AdminPrivateRoute />}>
-                  <Route path="/admin" element={<AdminPage />} />
-                  {/* control data - reports - credit */}
+                  {/* Treasury Control - الخزينة */}
+                  <Route path="/control/treausry" element={<Treasury />} />
+                  <Route
+                    path="/control/cash-collect/:id"
+                    element={<CashCollectRequestDetails />}
+                  />
+
+                  <Route
+                    path="/control/cash-collect-user/:id"
+                    element={<CashCollectRequestUser />}
+                  />
+
                   {/* Users and Profile  */}
                   <Route path="/control/user" element={<Users />} />
                   <Route path="/control/user/create" element={<CreateUser />} />
@@ -218,6 +237,7 @@ const App = () => {
                 <Route path="/invoice/purchase" element={<PurchaseInvoice />} />
                 <Route path="/invoice/cashOut" element={<CashOutInvoice />} />
                 <Route path="/invoice/cashIn" element={<CashInInvoice />} />
+                <Route path="/invoice/expenses" element={<ExpensesInvoice />} />
                 <Route path="/invoice/test" element={<TestInvoice />} />
 
                 <Route path="/userInvoices/:id" element={<UserInvoices />} />

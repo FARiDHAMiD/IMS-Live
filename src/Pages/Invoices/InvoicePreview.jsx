@@ -313,9 +313,13 @@ const InvoicePreview = () => {
                                       </strong>
                                     </td>
                                     <td className="f-w-200 text-end">
-                                      {parseFloat(-invoice.prevCredit).toFixed(
-                                        2
-                                      )}{" "}
+                                      {invoice.prevCredit < 0
+                                        ? parseFloat(
+                                            -invoice.prevCredit
+                                          ).toFixed(2)
+                                        : parseFloat(
+                                            invoice.prevCredit
+                                          ).toFixed(2)}{" "}
                                       <br />
                                       {parseFloat(invoice.paid).toFixed(2)}{" "}
                                       <br />
@@ -326,7 +330,7 @@ const InvoicePreview = () => {
                                         {invoice.payMethod}
                                       </span>
                                       <br />
-                                      {parseFloat(-invoice.remain).toFixed(2)}
+                                      {invoice.remain < 0 ? parseFloat(-invoice.remain).toFixed(2) : parseFloat(invoice.remain).toFixed(2)}
                                     </td>
                                   </>
                                 )}

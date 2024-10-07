@@ -10,8 +10,8 @@ const BasicDataControl = (props) => {
   const linkClass = ({ isActive }) => isActive && "active";
 
   const controlData = [
-    { url: "itemUnit", label: "وحدات القياس" },
     { url: "itemCat", label: "فئات الأصناف" },
+    { url: "itemUnit", label: "وحدات القياس" },
     { url: "itemType", label: "أنواع الأصناف" },
     { url: "payType", label: "طرق السداد" },
     { url: "accountType", label: "أنواع الحسابات" },

@@ -481,7 +481,9 @@ const BillInvoice = () => {
                   hidden={hideAccountDetails}
                   name="pay_type"
                   id="pay_type"
-                  {...register("pay_type")}
+                  {...register("pay_type", {
+                    required: accountData.id && true,
+                  })}
                   className="form-control"
                   onChange={(e) => setPayType(e.target.value)}
                 >
