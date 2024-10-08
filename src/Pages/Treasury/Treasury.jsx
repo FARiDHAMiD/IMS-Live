@@ -7,7 +7,8 @@ import {
   FaCoins,
   FaFilterCircleDollar,
   FaMagnifyingGlass,
-  FaSitemap,
+  FaMoneyBillWave,
+  FaPeopleGroup,
   FaUsers,
 } from "react-icons/fa6";
 import dayjs from "dayjs";
@@ -15,14 +16,42 @@ import dayjs from "dayjs";
 const Treasury = () => {
   let { theme } = useTheme();
   let [cashCollectPending, setCashCollectPending] = useState([]);
+  let [accountsCredit, setAccountsCredit] = useState(0);
+  let [profilesCredit, setProfilesCredit] = useState(0);
+  let [treasury, setTreasury] = useState(0);
 
+  const totalBalance =
+    parseInt(treasury) + parseInt(accountsCredit) + parseInt(profilesCredit);
+
+  // pending cash collect requests table
   let get_cashCollectPending = async () => {
     let response = await AxiosInstance.get("cashCollectPending/");
     setCashCollectPending(response.data);
   };
 
+  // total accounts credit
+  let get_treasury = async () => {
+    let response = await AxiosInstance.get("treasury/1/");
+    setTreasury(response.data.balance);
+  };
+
+  // total accounts credit
+  let get_accountsCredit = async () => {
+    let response = await AxiosInstance.get("sumAccountsCredit/");
+    setAccountsCredit(response.data);
+  };
+
+  // total accounts credit
+  let get_profilesCredit = async () => {
+    let response = await AxiosInstance.get("sumProfilesCredit/");
+    setProfilesCredit(response.data);
+  };
+
   useEffect(() => {
     get_cashCollectPending();
+    get_accountsCredit();
+    get_profilesCredit();
+    get_treasury();
   }, []);
 
   return (
@@ -39,13 +68,55 @@ const Treasury = () => {
                   style={{ alignItems: "center" }}
                 >
                   <FaCoins size={45} style={{ alignContent: "center" }} />
-                  <h3 className="mt-2">إجمالى رصيد الخزنة</h3>
+                  <h3 className="mt-2">إجمالى الرصيد</h3>
                   <br />
-                  <h3>{`...Working on it`}</h3>
+                  <h3 className={totalBalance < 0 ? "text-warning" : ""}>
+                    {totalBalance.toLocaleString()} جنيه
+                  </h3>
                 </div>
               </Link>
             </div>
-            <div className="col-md-10 mt-2">
+            <div className="col-md-9 text-center text-center col-9 mt-2">
+              <Link to="" style={{ textDecoration: "none" }}>
+                <div
+                  className={`card p-3 text-light  ${
+                    theme == "dark" ? "bg-secondary" : "bg-success"
+                  }`}
+                  style={{ alignItems: "center" }}
+                >
+                  <FaMoneyBillWave
+                    size={45}
+                    style={{ alignContent: "center" }}
+                  />
+                  <h4 className="mt-2">أوراق نقدية (كاش)</h4>
+                  <br />
+                  <h3>{treasury.toLocaleString()} جنيه</h3>
+                </div>
+              </Link>
+            </div>
+            <div className="col-md-9 text-center col-9 mt-2">
+              <Link to="" style={{ textDecoration: "none" }}>
+                <div
+                  className={`card p-3 text-light  ${
+                    theme == "dark" ? "bg-secondary" : "bg-success"
+                  }`}
+                  style={{ alignItems: "center" }}
+                >
+                  <FaPeopleGroup size={45} style={{ alignContent: "center" }} />
+                  <h4 className="mt-2">مستخدمين النظام</h4>
+                  <br />
+                  <h3>
+                    {profilesCredit.toLocaleString()}{" "}
+                    {profilesCredit > 0
+                      ? `دائن`
+                      : profilesCredit < 0
+                      ? `مدين`
+                      : ``}
+                  </h3>
+                </div>
+              </Link>
+            </div>
+            <div className="col-md-9 text-center col-9 mt-2">
               <Link to="" style={{ textDecoration: "none" }}>
                 <div
                   className={`card p-3 text-light  ${
@@ -54,28 +125,20 @@ const Treasury = () => {
                   style={{ alignItems: "center" }}
                 >
                   <FaUsers size={45} style={{ alignContent: "center" }} />
-                  <h3 className="mt-2">إجمالى أرصدة العملاء</h3>
+                  <h3 className="mt-2">الأرصدة الخارجية</h3>
                   <br />
-                  <h3>{`...Working on it`}</h3>
+                  <h3>
+                    {accountsCredit.toLocaleString()}{" "}
+                    {accountsCredit > 0
+                      ? `دائن`
+                      : accountsCredit < 0
+                      ? `مدين`
+                      : ``}
+                  </h3>
                 </div>
               </Link>
             </div>
-            <div className="col-md-10 mt-2">
-              <Link to="" style={{ textDecoration: "none" }}>
-                <div
-                  className={`card p-3 text-light  ${
-                    theme == "dark" ? "bg-secondary" : "bg-success"
-                  }`}
-                  style={{ alignItems: "center" }}
-                >
-                  <FaSitemap size={45} style={{ alignContent: "center" }} />
-                  <h3 className="mt-2">إجمالى أرصدة المستخدمين</h3>
-                  <br />
-                  <h3>{`...Working on it`}</h3>
-                </div>
-              </Link>
-            </div>
-            <div className="col-md-10 mt-2">
+            <div className="col-md-9 text-center col-9 mt-2">
               <Link to="" style={{ textDecoration: "none" }}>
                 <div
                   className={`card p-3 text-light  ${

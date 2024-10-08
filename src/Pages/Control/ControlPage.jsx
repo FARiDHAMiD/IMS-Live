@@ -43,7 +43,7 @@ const ControlPage = () => {
               <Link to="/control/treausry" style={{ textDecoration: "none" }}>
                 <div className="card p-3" style={{ alignItems: "center" }}>
                   <FaVault size={80} style={{ alignContent: "center" }} />
-                  <h3 className="mt-2">حركات الخزنة</h3>
+                  <h3 className="mt-2">الخزنة الرئيسية</h3>
                 </div>
               </Link>
             </div>

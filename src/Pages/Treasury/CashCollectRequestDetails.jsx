@@ -14,6 +14,7 @@ const CashCollectRequestDetails = () => {
   let { theme } = useTheme();
   let [loading, setLoading] = useState(true);
   let [profile, setProfile] = useState([]);
+  let [treasury, setTreasury] = useState([]);
 
   // passed from previous request to get user profile id
   const location = useLocation();
@@ -32,9 +33,16 @@ const CashCollectRequestDetails = () => {
     setProfile(response.data);
   };
 
+  // total accounts credit
+  let get_treasury = async () => {
+    let response = await AxiosInstance.get("treasury/");
+    setTreasury(response.data[0].balance);
+  };
+
   useEffect(() => {
     get_cashRequestDetails();
     get_profile();
+    get_treasury();
   }, []);
 
   // accept user request
@@ -49,6 +57,12 @@ const CashCollectRequestDetails = () => {
           approved_by: user.username,
           approved_time: dayjs().format(),
         });
+        AxiosInstance.put(`treasury/1/`, {
+          balance: treasury + cashCollectRequest.credit_collected,
+          updated_by: user.user_id,
+          approved_time: dayjs().format(),
+          notes: "",
+        });
         if (res.status === 200) {
           toast.success(`تم قبول الطلب وتوريد الرصيد للخزنة`);
           navigate(-1);
@@ -56,8 +70,8 @@ const CashCollectRequestDetails = () => {
           toast.error(`خطأ بالطلب`);
         }
       })
-      .catch(() => {
-        toast.error(`خطأ بالطلب`);
+      .catch((e) => {
+        toast.error(`خطأ بالطلب`, e.message);
       });
   };
 

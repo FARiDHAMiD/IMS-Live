@@ -35,10 +35,12 @@ const Profile = () => {
   };
 
   let userLastCashStatus = async () => {
-    let response = await AxiosInstance.get(
-      `userLastCashStatus/${user.profile}`
-    );
-    SetlastCashStatus(response.data.pending);
+    if (!user.is_superuser) {
+      let response = await AxiosInstance.get(
+        `userLastCashStatus/${user.profile}`
+      );
+      SetlastCashStatus(response.data.pending);
+    }
   };
 
   let getUserStocks = async () => {
