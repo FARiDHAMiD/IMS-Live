@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "../../context/ThemeProvider";
 import AxiosInstance from "../../Components/AxiosInstance";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import AuthContext from "../../context/AuthContext";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const CashCollectRequestUser = (props) => {
   let { user } = useContext(AuthContext);
@@ -12,6 +13,7 @@ const CashCollectRequestUser = (props) => {
   let { id } = useParams();
   let { theme } = useTheme();
   let [profileName, setProfileName] = useState();
+  let navigate = useNavigate();
 
   const apiURL = limited ? "cashUserLimited" : `cashUser`;
   const request_id = user.is_superuser ? id : user.profile;
@@ -30,17 +32,22 @@ const CashCollectRequestUser = (props) => {
   }, []);
   return (
     <div className="container my-1">
-      <h4
-        className={
-          theme == "dark" ? "text-center text-green" : "text-center text-navy"
-        }
-      >
-        {profile_view
-          ? ""
-          : profileName
-          ? user.is_superuser && `طلبات التوريد للمستخدم ${profileName}`
-          : `لا يوجد طلبات توريد سابقة لهذا المسخدم`}
-      </h4>
+      <div className="row">
+        <div className="col-10">
+          <h4 className={theme == "dark" ? "text-green" : "text-navy"}>
+            {profile_view
+              ? ""
+              : profileName
+              ? user.is_superuser && `طلبات التوريد للمستخدم ${profileName}`
+              : `لا يوجد طلبات توريد سابقة لهذا المسخدم`}
+          </h4>
+        </div>
+        <div className="col-2 d-flex justify-content-end">
+          <button className="btn" onClick={() => navigate(-1)}>
+            <FaArrowLeft />
+          </button>
+        </div>
+      </div>
       <div className="table-responsive">
         <table className="table table-hover">
           <thead>

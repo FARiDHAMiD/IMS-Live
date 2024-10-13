@@ -38,7 +38,7 @@ const DefaultCreateForm = () => {
         } else {
           toast.error(`خطأ بالتسجيل`);
         }
-        navigate(`/control/${page}`);
+        // navigate(`/control/${page}`);
       })
       .catch(() => {
         toast.error(`خطأ بالتسجيل`);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import dayjs from "dayjs";
 import { FaArrowLeft, FaDownload, FaPrint, FaXmark } from "react-icons/fa6";
@@ -39,7 +39,7 @@ const InvoicePreview = () => {
   };
 
   let getInvoice = async () => {
-    let response = await AxiosInstance(`invoice/${id}`);
+    let response = await AxiosInstance.get(`invoice/${id}`);
     setInvoice(response.data);
     setLoading(false);
   };
@@ -330,7 +330,9 @@ const InvoicePreview = () => {
                                         {invoice.payMethod}
                                       </span>
                                       <br />
-                                      {invoice.remain < 0 ? parseFloat(-invoice.remain).toFixed(2) : parseFloat(invoice.remain).toFixed(2)}
+                                      {invoice.remain < 0
+                                        ? parseFloat(-invoice.remain).toFixed(2)
+                                        : parseFloat(invoice.remain).toFixed(2)}
                                     </td>
                                   </>
                                 )}

@@ -47,8 +47,19 @@ const CashCollectRequestDetails = () => {
 
   // accept user request
   let accept = () => {
+    // check توريد / تحصيل
+    let newProfileCredit =
+      cashCollectRequest.request_type == 1
+        ? parseInt(profile.credit) -
+          parseInt(cashCollectRequest.credit_collected)
+        : parseInt(profile.credit) +
+          parseInt(cashCollectRequest.credit_collected);
+    let newBalance =
+      cashCollectRequest.request_type == 1
+        ? parseInt(treasury) + parseInt(cashCollectRequest.credit_collected)
+        : parseInt(treasury) - parseInt(cashCollectRequest.credit_collected);
     AxiosInstance.put(`profile/${profile_id}/`, {
-      credit: profile.credit - cashCollectRequest.credit_collected,
+      credit: newProfileCredit,
     })
       .then((res) => {
         AxiosInstance.put(`cash-collect/${id}/`, {
@@ -58,13 +69,13 @@ const CashCollectRequestDetails = () => {
           approved_time: dayjs().format(),
         });
         AxiosInstance.put(`treasury/1/`, {
-          balance: treasury + cashCollectRequest.credit_collected,
+          balance: newBalance,
           updated_by: user.user_id,
           approved_time: dayjs().format(),
           notes: "",
         });
         if (res.status === 200) {
-          toast.success(`تم قبول الطلب وتوريد الرصيد للخزنة`);
+          toast.success(`تم قبول الطلب بنجاح`);
           navigate(-1);
         } else {
           toast.error(`خطأ بالطلب`);
@@ -105,11 +116,12 @@ const CashCollectRequestDetails = () => {
           <div className="container">
             <div className="text-center my-1">
               <h3>
-                طلب توريد مبلغ EGP{" "}
+                طلب {cashCollectRequest.request_type == 1 ? "توريد" : "تحصيل"}{" "}
+                مبلغ EGP{" "}
                 <span className={theme == "dark" ? "text-green" : "text-navy"}>
                   {cashCollectRequest.credit_collected.toLocaleString()}
                 </span>{" "}
-                من المستخدم{" "}
+                المستخدم{" "}
                 <span className={theme == "dark" ? "text-green" : "text-navy"}>
                   {cashCollectRequest.from_user}
                 </span>
@@ -191,32 +203,63 @@ const CashCollectRequestDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div className=" d-flex justify-content-center">
-                  <button
-                    onClick={accept}
-                    className="btn btn-success p-1 shadow rounded-5 col-3 m-1 "
-                  >
-                    قبول
-                  </button>
-                  <button
-                    onClick={reject}
-                    className="btn btn-warning p-1 shadow rounded-5 col-3 m-1 "
-                  >
-                    رفض
-                  </button>
-                  <button
-                    className="btn btn-secondary p-1 shadow rounded-5 col-3 m-1 "
-                    onClick={() => navigate(-1)}
-                  >
-                    إلغاء
-                  </button>
-                </div>
-                <div>
-                  <p className="text-muted">
-                    ملحوظة: لا يمكن للمستخدم إجراء طلب آخر قبل الإنتهاء من الرد
-                    على هذا الطلب
-                  </p>
-                </div>
+                {cashCollectRequest.pending == true ? (
+                  <>
+                    <div className=" d-flex justify-content-center">
+                      <button
+                        onClick={accept}
+                        className="btn btn-success p-1 shadow rounded-5 col-3 m-1 "
+                      >
+                        قبول
+                      </button>
+                      <button
+                        onClick={reject}
+                        className="btn btn-warning p-1 shadow rounded-5 col-3 m-1 "
+                      >
+                        رفض
+                      </button>
+                      <button
+                        className="btn btn-secondary p-1 shadow rounded-5 col-3 m-1 "
+                        onClick={() => navigate(-1)}
+                      >
+                        إلغاء
+                      </button>
+                    </div>
+
+                    <div className="d-flex justify-content-center">
+                      <p className="text-muted">
+                        ملحوظة: لا يمكن للمستخدم إجراء طلب آخر قبل الإنتهاء من
+                        الرد على هذا الطلب
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="row text-center">
+                    <div className="col-8">
+                      <h5>
+                        تم الرد على هذا الطلب
+                        {cashCollectRequest.approved == true ? (
+                          <span className="text-success"> بالقبول </span>
+                        ) : (
+                          <span className="text-danger"> بالرفض </span>
+                        )}
+                        من {cashCollectRequest.approved_by}@
+                      </h5>
+                    </div>
+                    <div className="col-4 d-flex justify-content-end">
+                      <button
+                        className={
+                          theme == "dark"
+                            ? "btn btn-sm btn-outline-light"
+                            : "btn btn-sm btn-outline-dark"
+                        }
+                        onClick={() => navigate(-1)}
+                      >
+                        عودة{" "}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

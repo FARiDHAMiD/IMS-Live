@@ -343,8 +343,8 @@ const BillInvoice = () => {
               let item_data = {
                 // invoice: // try to get last invoice id ; handled from backend
                 item: invoiceItems.map((itm) => parseInt(itm.name))[i], // use as item id
-                item_name: invoiceItems.map((itm) => itm.item_name)[i], // item previous qty
-                main_qty: invoiceItems.map((itm) => itm.main_qty)[i],
+                item_name: invoiceItems.map((itm) => itm.item_name)[i], // item name
+                main_qty: invoiceItems.map((itm) => itm.main_qty)[i], // item previous qty
                 price: invoiceItems.map((itm) =>
                   itm.unitRef == 1
                     ? parseFloat(itm.selling_price)
@@ -357,7 +357,9 @@ const BillInvoice = () => {
                     : parseFloat(itm.qty / itm.small_in_large).toFixed(3)
                 )[i],
               };
+              // store invoice items *** need fixes
               AxiosInstance.post(`invoices/storeInvoiceItems/`, item_data);
+
               // update item qty
               AxiosInstance.put(`item/${item_data.item}/`, {
                 name: item_data.item_name,

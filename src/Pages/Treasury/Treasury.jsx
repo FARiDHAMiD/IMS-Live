@@ -77,7 +77,10 @@ const Treasury = () => {
               </Link>
             </div>
             <div className="col-md-9 text-center text-center col-9 mt-2">
-              <Link to="" style={{ textDecoration: "none" }}>
+              <Link
+                to="/control/allCashReview"
+                style={{ textDecoration: "none" }}
+              >
                 <div
                   className={`card p-3 text-light  ${
                     theme == "dark" ? "bg-secondary" : "bg-success"
@@ -158,9 +161,9 @@ const Treasury = () => {
           </div>
         </div>
         <div className="col-md-7 mt-3">
-          <h3 className="text-center mt-2">
-            طلبات توريد الرصيد للخزنة <FaBusinessTime size={40} />
-          </h3>
+          <h4 className="text-center mt-2">
+            طلبات توريد/تحصيل الرصيد للخزنة <FaBusinessTime size={30} />
+          </h4>
           <div className="table-responsive">
             <table className="table table-hover">
               <thead>
@@ -191,6 +194,13 @@ const Treasury = () => {
                       theme == "dark" ? "text-warning" : "text-light bg-primary"
                     }
                   >
+                    نوع الطلب
+                  </th>
+                  <th
+                    className={
+                      theme == "dark" ? "text-warning" : "text-light bg-primary"
+                    }
+                  >
                     المبلغ
                   </th>
                   <th
@@ -215,6 +225,7 @@ const Treasury = () => {
                     <td>{index + 1}</td>
                     <td>{item.from_user}</td>
                     <td>{dayjs(item.request_time).format("M/D h:mma")}</td>
+                    <td>{item.request_type == 1 ? "توريد" : "تحصيل"}</td>
                     <td>{item.credit_collected}</td>
                     <td>{item.approved_user}</td>
                     <td>

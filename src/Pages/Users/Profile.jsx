@@ -74,6 +74,7 @@ const Profile = () => {
   let cashCollect = (data) => {
     AxiosInstance.post(`cash-collect/`, {
       from_user: user.username,
+      request_type: profile.credit > 0 ? 1 : 2, // توريد أو تحصيل على حسب الرصيد
       approved_by: "fariid", // when update only
       approved_user: data.approved_user,
       credit_collected: data.credit_collected,
@@ -146,22 +147,24 @@ const Profile = () => {
                               تم طلب مراجعة توريد رصيد للخزنة
                             </h6>
                           ) : (
-                            <button
-                              className={`btn ${
-                                theme == "dark"
-                                  ? `btn-outline-light`
-                                  : `btn-outline-dark`
-                              } w-100`}
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target={
-                                profile.credit != 0
-                                  ? `#creditOutRequestModal`
-                                  : "#noCreditModal"
-                              }
-                            >
-                              توريد / تحصيل من الخزنة
-                            </button>
+                            profile.credit != 0 && (
+                              <button
+                                className={`btn ${
+                                  theme == "dark"
+                                    ? `btn-outline-light`
+                                    : `btn-outline-dark`
+                                } w-100`}
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#creditOutRequestModal"
+                              >
+                                {profile.credit > 0
+                                  ? "توريد الرصيد إلى الخزنة"
+                                  : profile.credit < 0
+                                  ? "تحصيل الرصيد من الخزنة"
+                                  : ""}
+                              </button>
+                            )
                           )}
                         </div>
                       )}
@@ -319,7 +322,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Credit Out Request Modal - طلب توريد الرصيد للخزينة الرئيسية */}
+          {/* Credit Out Request Modal - طلب توريد / تحصيل الرصيد للخزينة الرئيسية */}
           <div
             className="modal fade modal-lg"
             id="creditOutRequestModal"
@@ -332,7 +335,8 @@ const Profile = () => {
                   <div className="row">
                     <div className="col-md-10">
                       <h4>
-                        طلب توريد رصيد المستخدم{" "}
+                        طلب {profile.credit > 0 ? "توريد" : "تحصيل"} رصيد
+                        المستخدم{" "}
                         <span
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -340,7 +344,7 @@ const Profile = () => {
                         >
                           {user.username}@
                         </span>{" "}
-                        للخزينة الرئيسية
+                        {profile.credit > 0 ? "إلى" : "من"} الخزنة الرئيسية
                       </h4>
                     </div>
                     <div className="col-md-2">
@@ -392,7 +396,9 @@ const Profile = () => {
                       </select>
                     </div>
                     <div className="col-md-4 col-6 mb-2">
-                      <label>توريد مبلغ</label>
+                      <label>
+                        {profile.credit > 0 ? "توريد" : "تحصيل"} مبلغ
+                      </label>
                       <input
                         type="number"
                         name="credit_collected"
@@ -403,12 +409,15 @@ const Profile = () => {
                         {...register("credit_collected", {
                           required: true,
                           max: {
-                            value: profile.credit,
-                            message: "لا يمكن توريد هذا المبلغ",
+                            value:
+                              profile.credit > 0
+                                ? profile.credit
+                                : -profile.credit,
+                            message: "خطأ بالمبلغ المطلوب",
                           },
                           min: {
                             value: 1,
-                            message: "لا يمكن توريد هذا المبلغ",
+                            message: "خطأ بالمبلغ المطلوب",
                           },
                         })}
                       />
@@ -448,34 +457,6 @@ const Profile = () => {
                     data-bs-dismiss="modal"
                   >
                     إلغاء
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* No Credit Modal  */}
-
-          <div
-            className="modal fade"
-            id="noCreditModal"
-            tabIndex="-1"
-            aria-labelledby="noCreditModalLabel"
-          >
-            <div className="modal-dialog rounded-3 shadow">
-              <div className="modal-content">
-                <div className="modal-title p-3 text-center">
-                  <div className="col-md-12">
-                    <h4>رصيدك الحالى 0</h4>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className={`btn w-100 text-light bg-primary`}
-                    data-bs-dismiss="modal"
-                  >
-                    موافقة
                   </button>
                 </div>
               </div>

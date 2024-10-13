@@ -42,7 +42,6 @@ const CreateAccount = () => {
   let getAccountType = async () => {
     let response = await AxiosInstance.get(`accountType`);
     setAccountType(response.data);
-    console.log(response.data);
   };
 
   let getCompany = async () => {

@@ -59,6 +59,11 @@ import Treasury from "./Pages/Treasury/Treasury";
 import CashCollectRequestDetails from "./Pages/Treasury/CashCollectRequestDetails";
 import CashCollectRequestUser from "./Pages/Treasury/CashCollectRequestUser";
 import ExpensesInvoice from "./Pages/Invoices/ExpensesInvoice";
+import AllCashReview from "./Pages/Treasury/AllCashReview";
+import ReprHoto from "./Pages/Treasury/Represntatives/ReprHoto";
+import PendingRepr from "./Pages/Treasury/Represntatives/PendingRepr";
+import AllRepr from "./Pages/Treasury/Represntatives/AllRepr";
+import ReprDetails from "./Pages/Treasury/Represntatives/ReprDetails";
 
 const App = () => {
   const controlData = [
@@ -91,10 +96,26 @@ const App = () => {
 
                 <Route element={<AdminPrivateRoute />}>
                   {/* Treasury Control - الخزينة */}
+                  <Route
+                    path="/control/PendingRepr"
+                    element={<PendingRepr />}
+                  />
+                  <Route path="/control/AllRepr" element={<AllRepr />} />
+                  <Route
+                    path="/control/reprDetails/:id"
+                    element={<ReprDetails />}
+                  />
+                  <Route path="/control/reprhoto" element={<ReprHoto />} />
+
+                  {/* Treasury Control - الخزينة */}
                   <Route path="/control/treausry" element={<Treasury />} />
                   <Route
                     path="/control/cash-collect/:id"
                     element={<CashCollectRequestDetails />}
+                  />
+                  <Route
+                    path="/control/allCashReview"
+                    element={<AllCashReview />}
                   />
 
                   <Route
