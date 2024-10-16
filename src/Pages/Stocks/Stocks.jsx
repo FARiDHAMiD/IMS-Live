@@ -71,7 +71,7 @@ const Stocks = () => {
                     <div style={{ float: "left" }}>
                       {!stock.isActive && "مخزن معطل |"}
                       {stock.credit.total &&
-                        stock.credit.total.toLocaleString()}{" "}
+                        parseInt(stock.credit.total).toLocaleString()}{" "}
                       ج.م.
                     </div>
                   </div>

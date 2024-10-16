@@ -22,6 +22,7 @@ const DefaultCreateForm = () => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -39,6 +40,7 @@ const DefaultCreateForm = () => {
           toast.error(`خطأ بالتسجيل`);
         }
         // navigate(`/control/${page}`);
+        reset();
       })
       .catch(() => {
         toast.error(`خطأ بالتسجيل`);

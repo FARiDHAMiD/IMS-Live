@@ -146,7 +146,7 @@ const CreateItem = () => {
                   <form>
                     <div className="row">
                       {/* item name */}
-                      <div className="form-group col-md-4 col-8 mb-2">
+                      <div className="form-group col-md-6 col-12 mb-2">
                         <label
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -178,7 +178,7 @@ const CreateItem = () => {
                       </div>
 
                       {/* qty  */}
-                      <div className="form-group col-md-2 col-4 mb-2">
+                      {/* <div className="form-group col-md-2 col-4 mb-2">
                         <label
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -204,7 +204,7 @@ const CreateItem = () => {
                             {errors.qty.message}
                           </div>
                         )}
-                      </div>
+                      </div> */}
 
                       {/* scale unit */}
                       <div className="form-group col-md-3 col-6 mb-2">
@@ -579,7 +579,7 @@ const CreateItem = () => {
                       </div>
 
                       {/* minimum limit of qty in stock */}
-                      <div className="form-group col-md-3 col-6 mb-2">
+                      <div className="form-group col-md-3 col-12 mb-2">
                         <label
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -609,7 +609,7 @@ const CreateItem = () => {
                       </div>
 
                       {/* stock  */}
-                      <div className="form-group col-md-9 col-6 mb-2">
+                      {/* <div className="form-group col-md-9 col-6 mb-2">
                         <label
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -633,10 +633,10 @@ const CreateItem = () => {
                             <option key={stock.id}>{stock.name}</option>
                           ))}
                         </select>
-                      </div>
+                      </div> */}
 
                       {/* notes */}
-                      <div className="form-group col-md-12 mb-2">
+                      <div className="form-group col-md-9 mb-2">
                         <label
                           className={
                             theme == "dark" ? "text-warning" : "text-navy"
@@ -645,8 +645,7 @@ const CreateItem = () => {
                         >
                           ملاحظات
                         </label>
-                        <textarea
-                          rows={2}
+                        <input
                           type="text"
                           className={`form-control form-control-lg rounded-3 mt-1 ${
                             errors.notes && "is-invalid"

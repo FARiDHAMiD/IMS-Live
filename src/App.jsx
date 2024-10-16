@@ -64,6 +64,7 @@ import ReprHoto from "./Pages/Treasury/Represntatives/ReprHoto";
 import PendingRepr from "./Pages/Treasury/Represntatives/PendingRepr";
 import AllRepr from "./Pages/Treasury/Represntatives/AllRepr";
 import ReprDetails from "./Pages/Treasury/Represntatives/ReprDetails";
+import InvoiceByItem from "./Pages/Items/InvoiceByItem";
 
 const App = () => {
   const controlData = [
@@ -253,6 +254,8 @@ const App = () => {
                   path="/invoice/preview/:id"
                   element={<InvoicePreview />}
                 />
+
+                <Route path="/control/invoiceByItem/:id" element={<InvoiceByItem />} />
 
                 <Route path="/invoice/bill" element={<BillInvoice />} />
                 <Route path="/invoice/purchase" element={<PurchaseInvoice />} />

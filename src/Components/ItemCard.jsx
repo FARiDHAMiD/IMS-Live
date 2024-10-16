@@ -17,7 +17,7 @@ const ItemCard = ({ item }) => {
           <div className="col-9">
             <h5 className={theme == "dark" ? "text-warning" : "text-navy"}>
               {item.name} | إجمالى رصيد الصنف (
-              {parseInt(item.selling_price * item.qty).toLocaleString()} EGP)
+              {parseInt(item.selling_price * item.qty).toLocaleString()} ج.م.)
             </h5>
             <h6>أقل حد بالمخزن ({item.min_limit + item.scale_unit})</h6>
           </div>
@@ -38,7 +38,7 @@ const ItemCard = ({ item }) => {
         <p className="card-text">
           المتاح بالمخزن (
           <span className={theme == "dark" ? "text-warning" : "text-navy"}>
-            {item.qty} {item.scale_unit} /{" "}
+            {item.qty || 0} {item.scale_unit} /{" "}
             {parseFloat(item.qty * item.small_in_large).toLocaleString()}{" "}
             {item.small_unit}
           </span>

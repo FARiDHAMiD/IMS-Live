@@ -19,6 +19,8 @@ import {
   FaArrowRight,
   FaArrowLeft,
   FaRepeat,
+  FaFillDrip,
+  FaScroll,
 } from "react-icons/fa6";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -44,7 +46,7 @@ const EditItem = () => {
   };
 
   let getInvoiceByItem = async () => {
-    let response = await AxiosInstance.get(`invoiceByItem/${id}`);
+    let response = await AxiosInstance.get(`invoiceByItemLimited/${id}`);
     setInvoiceByItem(response.data);
     setLoading(false);
   };
@@ -161,7 +163,7 @@ const EditItem = () => {
     getItem();
     getUnit();
     getItemLog();
-  }, [setValue("stock", item.stock)]);
+  }, []);
 
   const update = (data) => {
     AxiosInstance.put(`item/${id}/`, {
@@ -262,7 +264,7 @@ const EditItem = () => {
           <div className="container-fluid">
             <div className="row">
               {/* Edit Item Card */}
-              <div className="col-md-9">
+              <div className="col-md-8">
                 <div className="modal-dialog" role="document">
                   <div className="modal-content rounded-4 shadow">
                     <div className="p-3 pb-4 border-bottom-0 text-center">
@@ -279,10 +281,9 @@ const EditItem = () => {
                           <div className="col-md-6 text-nowrap">
                             {item.name}
                             <br />
-                            EGP{" "}
-                            {(
-                              item.purchasing_price * item.qty
-                            ).toLocaleString()}
+                            {item.selling_price &&
+                              item.selling_price.toLocaleString()}{" "}
+                            ج.م.
                           </div>
                           <div
                             onClick={() => {
@@ -303,7 +304,7 @@ const EditItem = () => {
                       <form>
                         <div className="row">
                           {/* item name */}
-                          <div className="form-group col-md-4 col-8 mb-2">
+                          <div className="form-group col-md-6 col-12 mb-2">
                             <label
                               className={
                                 theme == "dark" ? "text-warning" : "text-navy"
@@ -335,7 +336,7 @@ const EditItem = () => {
                           </div>
 
                           {/* qty  */}
-                          <div className="form-group col-md-2 col-4 mb-2">
+                          {/* <div className="form-group col-md-2 col-4 mb-2">
                             <label
                               className={
                                 theme == "dark" ? "text-warning" : "text-navy"
@@ -361,7 +362,7 @@ const EditItem = () => {
                                 {errors.qty.message}
                               </div>
                             )}
-                          </div>
+                          </div> */}
 
                           {/* scale unit */}
                           <div className="form-group col-md-3 col-6 mb-2">
@@ -740,7 +741,7 @@ const EditItem = () => {
                           </div>
 
                           {/* minimum limit of qty in stock */}
-                          <div className="form-group col-md-3 col-6 mb-2">
+                          <div className="form-group col-md-3 col-12 mb-2">
                             <label
                               className={
                                 theme == "dark" ? "text-warning" : "text-navy"
@@ -770,7 +771,7 @@ const EditItem = () => {
                           </div>
 
                           {/* stock  */}
-                          <div className="form-group col-md-9 col-6 mb-2">
+                          {/* <div className="form-group col-md-9 col-6 mb-2">
                             <label
                               className={
                                 theme == "dark" ? "text-warning" : "text-navy"
@@ -787,18 +788,18 @@ const EditItem = () => {
                               }`}
                               id="stock"
                               name="stock"
-                              {...register("stock", {
-                                required: true,
-                              })}
+                              {...register("stock")}
                             >
                               {stock.map((stock) => (
-                                <option key={stock.id}>{stock.name}</option>
+                                <option key={stock.id} value={stock.id}>
+                                  {stock.name}
+                                </option>
                               ))}
                             </select>
-                          </div>
+                          </div> */}
 
                           {/* notes */}
-                          <div className="form-group col-md-12 mb-2">
+                          <div className="form-group col-md-9 mb-2">
                             <label
                               className={
                                 theme == "dark" ? "text-warning" : "text-navy"
@@ -807,8 +808,7 @@ const EditItem = () => {
                             >
                               ملاحظات
                             </label>
-                            <textarea
-                              rows={4}
+                            <input
                               type="text"
                               className={`form-control form-control-lg rounded-3 mt-1 ${
                                 errors.notes && "is-invalid"
@@ -879,8 +879,75 @@ const EditItem = () => {
                 </div>
               </div>
 
-              {/* last price change  */}
-              <div className="col-md-3">
+              {/* Item related info   */}
+              <div className="col-md-4">
+                {/* quantity per stock */}
+                <h3 className="text-center mt-2">
+                  التوزيع <FaFillDrip size={30} />
+                </h3>
+
+                <table className="table table-hover table-bordered text-center">
+                  <thead>
+                    <tr>
+                      <th
+                        className={
+                          theme == "dark"
+                            ? " text-warning"
+                            : " text-light bg-primary"
+                        }
+                      >
+                        المخزن
+                      </th>
+                      <th
+                        className={
+                          theme == "dark"
+                            ? " text-warning"
+                            : " text-light bg-primary"
+                        }
+                      >
+                        الكمية
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.stock &&
+                      item.stock.map((itm) => (
+                        <tr
+                          key={itm.stock__name}
+                          onClick={() =>
+                            navigate(`/control/stock/${itm.stock}`)
+                          }
+                        >
+                          <td>{itm.stock__name}</td>
+                          <td>{parseFloat(itm.item_qty).toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    <tr>
+                      <td
+                        className={
+                          theme == "dark"
+                            ? "text-info"
+                            : "text-light bg-primary"
+                        }
+                      >
+                        إجمالى
+                      </td>
+                      <td
+                        className={
+                          theme == "dark"
+                            ? "text-info"
+                            : "text-light bg-primary"
+                        }
+                      >
+                        {parseFloat(item.qty).toFixed(1) || 0}{" "}
+                        {item.qty ? item.scale_unit : ""}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <br />
+
                 <h3 className="text-center mt-2">
                   تغييرات السعر <FaChartSimple size={30} />
                 </h3>
@@ -931,6 +998,8 @@ const EditItem = () => {
                   ))}
                 </div>
 
+                <br />
+                {/* latest invoices  */}
                 <h3 className="text-center mt-2">
                   آخر الفواتير <FaFileInvoice size={30} />
                 </h3>
@@ -948,8 +1017,7 @@ const EditItem = () => {
                       )}
                       <div className="text-center">
                         <h6>
-                          {invoice.type} |{" "}
-                          {`EGP ` + invoice.total.toLocaleString()}
+                          {invoice.type} | {invoice.total.toLocaleString()} ج.م.
                           <br />
                           <span className=" mt-1">
                             {dayjs(invoice.invoice_time).format(`YY/MM/DD`)} |{" "}
@@ -962,6 +1030,12 @@ const EditItem = () => {
                     </Link>
                   ))}
                 </div>
+                <Link
+                  to={`/control/invoiceByItem/${id}`}
+                  className="list-group-item list-group-item-action d-flex gap-3 py-3 justify-content-center"
+                >
+                  المزيد ... <FaScroll size={20} />
+                </Link>
               </div>
             </div>
             {item.isActive ? (

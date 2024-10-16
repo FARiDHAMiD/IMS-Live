@@ -204,7 +204,7 @@ const EditAccount = () => {
                     <div className="p-3 pb-4 border-bottom-0 text-center">
                       <h1 className="fw-bold mb-0 fs-2">
                         {account.name} <br /> {account.credit.toLocaleString()}{" "}
-                        EGP{" "}
+                        ج.م.{" "}
                         {account.credit > 0 ? (
                           <span className="text-success">(دائن)</span>
                         ) : account.credit < 0 ? (
@@ -457,7 +457,7 @@ const EditAccount = () => {
                               id="credit"
                               name="credit"
                               disabled
-                              defaultValue={`${account.credit} £`}
+                              defaultValue={`${account.credit} ج.م.`}
                             />
                           </div>
                         </div>

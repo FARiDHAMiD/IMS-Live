@@ -1,13 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import AxiosInstance from "../../Components/AxiosInstance";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../../Components/Spinner";
 import AuthContext from "../../context/AuthContext";
 import ConfirmDeleteModal from "../../Components/ConfirmDeleteModal";
 import DeleteModal from "../../Components/DeleteModal";
-import { FaFill, FaMoneyBillTransfer } from "react-icons/fa6";
+import { FaCirclePlus, FaFill, FaMoneyBillTransfer } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -24,14 +24,21 @@ const EditStock = () => {
   let totalPurchase = () =>
     stockItems
       .reduce((acc, item) => {
-        return acc + parseFloat(item.purchasing_price) * parseFloat(item.qty);
+        return parseInt(
+          acc +
+            parseFloat(item.item_info.purchasing_price) *
+              parseFloat(item.item_qty)
+        );
       }, 0)
       .toLocaleString();
 
   let totalSelling = () =>
     stockItems
       .reduce((acc, item) => {
-        return acc + parseFloat(item.selling_price) * parseFloat(item.qty);
+        return parseInt(
+          acc +
+            parseFloat(item.item_info.selling_price) * parseFloat(item.item_qty)
+        );
       }, 0)
       .toLocaleString();
 
@@ -57,7 +64,7 @@ const EditStock = () => {
   });
 
   let getStockItems = async () => {
-    let response = await AxiosInstance.get(`item-stock/${id}/`);
+    let response = await AxiosInstance.get(`stock-items/${id}/`);
     setStockItems(response.data);
   };
 
@@ -188,8 +195,8 @@ const EditStock = () => {
                       <h1 className="fw-bold mb-0 fs-2">
                         {stock.name} |{" "}
                         {stock.credit.total &&
-                          stock.credit.total.toLocaleString()}{" "}
-                        EGP
+                          parseInt(stock.credit.total).toLocaleString()}{" "}
+                        ج.م.
                       </h1>
                       {stock.isActive == false && (
                         <h2 className="text-danger mt-1">مخزن غير مفعل</h2>
@@ -468,27 +475,28 @@ const EditStock = () => {
                       </thead>
                       <tbody>
                         {stockItems.map((item) => (
-                          <tr onClick={() => editItem(item.id)} key={item.id}>
-                            <td className="">{item.cat}</td>
-                            <td>{item.name}</td>
-                            <td
-                              className={
-                                item.qty <= item.min_limit
-                                  ? theme == "dark"
-                                    ? `text-warning`
-                                    : "text-danger"
-                                  : ""
-                              }
-                            >
-                              {item.qty} {item.scale_unit}
+                          <tr
+                            onClick={() => editItem(item.item_info.id)}
+                            key={item.item_info.id}
+                          >
+                            <td className="">{item.item_info.cat__name}</td>
+                            <td>{item.item_info.name}</td>
+                            <td>
+                              {parseFloat(item.item_qty).toFixed(1)}{" "}
+                              {item.item_info.scale_unit__name}
                             </td>
-                            <td>{item.purchasing_price}</td>
-                            <td>{item.selling_price}</td>
-                            <td>{item.selling_price * item.qty}</td>
+                            <td>{item.item_info.purchasing_price}</td>
+                            <td>{item.item_info.selling_price}</td>
+                            <td>
+                              {(
+                                item.item_info.selling_price * item.item_qty
+                              ).toLocaleString()}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+
                     {/* Total purchasing  */}
                     <div className="row">
                       <div className="col-md-8 col-8">
@@ -503,7 +511,7 @@ const EditStock = () => {
                               theme == "dark" ? "text-warning" : "text-navy"
                             }
                           >
-                            {`EGP ` + totalPurchase()}
+                            {totalPurchase()} ج.م.
                           </h5>
                         </div>
                       </div>
@@ -522,11 +530,24 @@ const EditStock = () => {
                               theme == "dark" ? "text-warning" : "text-navy"
                             }
                           >
-                            {`EGP ` + totalSelling()}
+                            {totalSelling()} ج.م.
                           </h5>
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Add items to stock  */}
+                  <div className="d-flex justify-content-end">
+                    <Link className="" style={{ textDecoration: "none" }}>
+                      <h3
+                        className={`text-center btn btn-sm ${
+                          theme == "dark" ? "btn-outline-info" : "btn-success"
+                        } mt-2`}
+                      >
+                        إضافة أصناف للمخزن <FaCirclePlus size={30} />
+                      </h3>
+                    </Link>
                   </div>
 
                   {/* last actions  */}

@@ -17,6 +17,8 @@ const PurchaseInvoice = () => {
   let [oneItem, setOneItem] = useState([]);
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
+  let [stocks, setStocks] = useState([]); // choose stock to add qty
+  let [selectedStock, setSelectedStock] = useState(1); // choose stock to add qty
   let [items, setItems] = useState([]); // all items for dropdown list
   let [payTypes, setPayTypes] = useState([]);
   let [hideAccountDetails, setHideAccountDetails] = useState(true);
@@ -42,6 +44,11 @@ const PurchaseInvoice = () => {
   let getUserProfile = async () => {
     let response = await AxiosInstance.get(`profile/${user.profile}`);
     setUserProfile(response.data);
+  };
+
+  let getStocks = async () => {
+    let response = await AxiosInstance.get(`stock`);
+    setStocks(response.data);
   };
 
   // // checkbox sub from account credit
@@ -91,7 +98,7 @@ const PurchaseInvoice = () => {
       id,
       item_name: "",
       name: "",
-      main_qty: "",
+      stock_qty: "",
       purchasing_price: "0.00",
       qty: 1,
       itemSubTotal: "",
@@ -162,7 +169,11 @@ const PurchaseInvoice = () => {
       const { id, name, value } = target;
       if (item.id == id) {
         item.item_name = response.data.name;
-        item.main_qty = response.data.qty;
+        response.data.stock.filter((st) => {
+          if (st.stock == selectedStock) {
+            item.stock_qty = st.item_qty;
+          }
+        });
         item.scale_unit = response.data.scale_unit;
         item.small_unit = response.data.small_unit;
         item.small_in_large = response.data.small_in_large;
@@ -198,6 +209,7 @@ const PurchaseInvoice = () => {
     getAccounts();
     getItems();
     getPayTypes();
+    getStocks();
     handleCalculateTotal();
     unitSelectRef;
   }, [handleCalculateTotal, oneItem]);
@@ -256,7 +268,6 @@ const PurchaseInvoice = () => {
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
@@ -305,7 +316,7 @@ const PurchaseInvoice = () => {
                 // invoice: // try to get last invoice id ; handled from backend
                 item: invoiceItems.map((itm) => parseInt(itm.name))[i], // use as item id
                 item_name: invoiceItems.map((itm) => itm.item_name)[i],
-                main_qty: invoiceItems.map((itm) => itm.main_qty)[i], // item previous qty
+                stock_qty: invoiceItems.map((itm) => itm.stock_qty)[i], // item previous qty
                 price: invoiceItems.map((itm) =>
                   itm.unitRef == 1
                     ? parseFloat(itm.purchasing_price)
@@ -319,12 +330,35 @@ const PurchaseInvoice = () => {
                 )[i],
               };
               AxiosInstance.post(`invoices/storeInvoiceItems/`, item_data);
-              // update item qty
+
+              // update item last order time and user
               AxiosInstance.put(`item/${item_data.item}/`, {
                 name: item_data.item_name,
-                qty: parseFloat(item_data.main_qty + item_data.qty).toFixed(2),
                 last_order_by: user.username,
                 last_order_time: dayjs().format(),
+              });
+
+              // update item qty - temp for main stock ... Stock Number # 1
+              AxiosInstance.put(
+                `updateStockItem/${selectedStock}/${item_data.item}/`,
+                {
+                  item_qty:
+                    parseFloat(item_data.stock_qty) + parseFloat(item_data.qty),
+                }
+              ).catch((e) => {
+                // create new StockItem with qty...
+                AxiosInstance.post(
+                  `createStockItem/${selectedStock}/${item_data.item}/`,
+                  {
+                    item_qty: parseFloat(item_data.qty),
+                  }
+                ).then((res) => {
+                  if (res.status === 200) {
+                    toast.success(`تم إضافة صنف جديد بالمخزن`);
+                  } else {
+                    toast.error(`خطأ بإضافة الكمية للمخزن`);
+                  }
+                });
               });
             }
 
@@ -370,14 +404,32 @@ const PurchaseInvoice = () => {
           <div className="modal-dialog" role="document">
             <div className="modal-content rounded-4 shadow">
               <div className="container-fluid row mb-2">
-                <div className="p-3 pb-4 border-bottom-0 text-center">
-                  <h3
-                    className={`fw-bold mb-0 fs-2 ${
-                      theme == "dark" ? "text-info" : "text-navy"
-                    }`}
-                  >
-                    فاتورة شراء - {user.username}
-                  </h3>
+                <div className="p-3 pb-4 border-bottom-0">
+                  <div className="row">
+                    <div className="col-md-8">
+                      <h3
+                        className={`fw-bold mb-0 fs-2 ${
+                          theme == "dark" ? "text-info" : "text-navy"
+                        }`}
+                      >
+                        فاتورة شراء
+                      </h3>
+                    </div>
+                    <div className="col-md-4 my-1">
+                      <select
+                        className={`form-select ${
+                          theme == "dark" ? "text-info" : "text-navy"
+                        }`}
+                        onChange={(e) => setSelectedStock(e.target.value)}
+                      >
+                        {stocks.map((stock) => (
+                          <option key={stock.id} value={stock.id}>
+                            {stock.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
                 {/* account data */}
@@ -418,10 +470,10 @@ const PurchaseInvoice = () => {
                     type="text"
                     defaultValue={
                       setAccountData["credit"] || setAccountData["credit"] == 0
-                        ? `EGP ` + setAccountData["credit"].toLocaleString()
+                        ? setAccountData["credit"].toLocaleString() + ` ج.م.`
                         : accountData.credit &&
                           accountData.credit.toLocaleString() &&
-                          `EGP ` + accountData.credit.toLocaleString()
+                          accountData.credit.toLocaleString() + ` ج.م.`
                     }
                     className="form-control"
                     style={
@@ -532,7 +584,7 @@ const PurchaseInvoice = () => {
                     min="0.00"
                     max={total}
                     className="form-control"
-                    placeholder="الخصم مبلغ EGP"
+                    placeholder="الخصم ج.م"
                     onChange={(e) =>
                       handleCalculateTotal(
                         setDiscountRate(
@@ -702,7 +754,7 @@ const PurchaseInvoice = () => {
                         value={item.purchasing_price}
                         id={item.name && item.id}
                         onChange={(e) =>
-                          e.target.value <= 0 ? "" : onItemizedItemEdit(e)
+                          e.target.value < 0 ? "" : onItemizedItemEdit(e)
                         }
                         disabled={!item.name && true} // temp solution ...
                       />
@@ -808,7 +860,7 @@ const PurchaseInvoice = () => {
                 >
                   <div className="d-flex flex-row align-items-start justify-content-between">
                     <span className="fw-bold">قيمة الأصناف:</span>
-                    <span>EGP {subTotal}</span>
+                    <span>{subTotal} ج.م.</span>
                   </div>
                   <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                     <span className="fw-bold">الخصم:</span>
@@ -820,7 +872,7 @@ const PurchaseInvoice = () => {
                           0}
                         %){" "}
                       </span>
-                      {`EGP ` + discountAmount || 0}
+                      {discountAmount + ` ج.م.` || 0}
                     </span>
                   </div>
                   <div className="d-flex flex-row align-items-start justify-content-between mt-2">
@@ -830,7 +882,7 @@ const PurchaseInvoice = () => {
                         ({(taxRate && parseFloat(taxRate).toFixed(2)) || 0}%){" "}
                         {` `}
                       </span>
-                      {`EGP ` + taxAmount || 0}
+                      {taxAmount + ` ج.م.` || 0}
                     </span>
                   </div>
                   <hr />
@@ -839,7 +891,7 @@ const PurchaseInvoice = () => {
                     style={{ fontSize: "1.125rem" }}
                   >
                     <span className="fw-bold">إجمالى الفاتورة:</span>
-                    <span className="fw-bold">EGP {total || 0}</span>
+                    <span className="fw-bold">{total || 0} ج.م.</span>
                   </div>
                   <hr />
                   {/* previous credit  */}
@@ -878,10 +930,10 @@ const PurchaseInvoice = () => {
                               : `text-light`
                           } `}
                         >
-                          EGP{" "}
                           {accountData.credit && accountData.credit < 0
                             ? (-accountData.credit - accountData.credit) / 2
-                            : accountData.credit}
+                            : accountData.credit}{" "}
+                          ج.م.
                         </span>
                       </div>
                       <div
@@ -902,9 +954,9 @@ const PurchaseInvoice = () => {
                             theme == "dark" ? "fw-bold text-warning" : "fw-bold"
                           }
                         >
-                          EGP{" "}
                           {(accountData.credit || accountData.credit == 0) &&
                             +total + accountData.credit}
+                          {` `}ج.م.
                         </span>
                       </div>
                       <div
@@ -927,7 +979,7 @@ const PurchaseInvoice = () => {
                               : `fw-bold text-muted`
                           }
                         >
-                          EGP {paid || 0}
+                           {paid || 0} ج.م.
                         </span>
                       </div>
                       <div
@@ -950,20 +1002,20 @@ const PurchaseInvoice = () => {
                               : `fw-bold text-muted`
                           }
                         >
-                          EGP{" "}
+                          
                           {(accountData.credit || accountData.credit == 0) &&
                             (
                               parseFloat(total) +
                               parseFloat(accountData.credit) -
                               paid
-                            ).toLocaleString()}
+                            ).toLocaleString()} ج.م.
                         </span>
                       </div>
                     </>
                   )}
                 </div>
               </div>
-              
+
               {/* save invoice  */}
               <div className="d-flex justify-content-center my-2">
                 <button
