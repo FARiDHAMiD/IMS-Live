@@ -7,7 +7,7 @@ import Spinner from "../../Components/Spinner";
 import AuthContext from "../../context/AuthContext";
 import ConfirmDeleteModal from "../../Components/ConfirmDeleteModal";
 import DeleteModal from "../../Components/DeleteModal";
-import { FaCirclePlus, FaFill, FaMoneyBillTransfer } from "react-icons/fa6";
+import { FaFill, FaMoneyBillTransfer } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -535,19 +535,6 @@ const EditStock = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Add items to stock  */}
-                  <div className="d-flex justify-content-end">
-                    <Link className="" style={{ textDecoration: "none" }}>
-                      <h3
-                        className={`text-center btn btn-sm ${
-                          theme == "dark" ? "btn-outline-info" : "btn-success"
-                        } mt-2`}
-                      >
-                        إضافة أصناف للمخزن <FaCirclePlus size={30} />
-                      </h3>
-                    </Link>
                   </div>
 
                   {/* last actions  */}

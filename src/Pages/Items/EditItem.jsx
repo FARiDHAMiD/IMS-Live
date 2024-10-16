@@ -18,9 +18,9 @@ import {
   FaFileInvoice,
   FaArrowRight,
   FaArrowLeft,
-  FaRepeat,
   FaFillDrip,
   FaScroll,
+  FaArrowsRotate,
 } from "react-icons/fa6";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -437,6 +437,7 @@ const EditItem = () => {
                                 theme == "dark" ? "text-warning" : "text-navy"
                               }
                               htmlFor="small_in_large"
+                              style={{ fontSize: "small" }}
                             >
                               نسبة الوحدة الكبرى للصغرى{" "}
                               <span className="text-danger">*</span>
@@ -946,6 +947,18 @@ const EditItem = () => {
                   </tbody>
                 </table>
 
+                {/* transefere qty  */}
+                <div className="d-flex justify-content-center">
+                  <Link to={`/working`} style={{ textDecoration: "none" }}>
+                    <h3
+                      className={`text-center btn btn-sm ${
+                        theme == "dark" ? "btn-outline-info" : "btn-outline-success"
+                      } mt-2`}
+                    >
+                      نقل كمية بين المخازن <FaArrowsRotate size={20} />
+                    </h3>
+                  </Link>
+                </div>
                 <br />
 
                 <h3 className="text-center mt-2">

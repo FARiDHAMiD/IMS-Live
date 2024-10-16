@@ -74,7 +74,7 @@ const ExpensesInvoice = () => {
                   theme == "dark" ? "text-green" : "text-navy"
                 }`}
               >
-                مصاريف نثرية
+                فاتورة مصروفات
               </h3>
             </div>
             <div className="row">

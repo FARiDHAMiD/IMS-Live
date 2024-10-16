@@ -18,6 +18,8 @@ const BillInvoice = () => {
   let [accounts, setAccounts] = useState([]);
   let [accountData, setAccountData] = useState([]);
   let [items, setItems] = useState([]); // all items for dropdown list
+  let [stocks, setStocks] = useState([]); // choose stock to add qty
+  let [selectedStock, setSelectedStock] = useState(1); // choose stock to add qty
   let [payTypes, setPayTypes] = useState([]);
   let [payType, setPayType] = useState();
   let [hideAccountDetails, setHideAccountDetails] = useState(true);
@@ -44,7 +46,7 @@ const BillInvoice = () => {
     //   id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
     //   item_name: "",
     //   name: "", // use id
-    //   main_qty: "",
+    //   stock_qty: "",
     //   qty: 1,
     //   selling_price: "0.00",
     //   itemSubTotal: "",
@@ -101,7 +103,7 @@ const BillInvoice = () => {
       id,
       item_name: "",
       name: "",
-      main_qty: "",
+      stock_qty: "",
       selling_price: "0.00",
       qty: 1,
       itemSubTotal: "",
@@ -194,7 +196,11 @@ const BillInvoice = () => {
       const { id, name, value } = target;
       if (item.id == id) {
         item.item_name = response.data.name;
-        item.main_qty = response.data.qty;
+        response.data.stock.filter((st) => {
+          if (st.stock == selectedStock) {
+            item.stock_qty = st.item_qty;
+          }
+        });
         item.scale_unit = response.data.scale_unit;
         item.small_unit = response.data.small_unit;
         item.lowest_price = response.data.lowest_price || 0;
@@ -228,11 +234,17 @@ const BillInvoice = () => {
     setAccountData["credit"] = initCredit; // temp -- will be updated on multi items
   };
 
+  let getStocks = async () => {
+    let response = await AxiosInstance.get(`stock`);
+    setStocks(response.data);
+  };
+
   useEffect(() => {
     getUserProfile();
     getAccounts();
     getItems();
     getPayTypes();
+    getStocks();
     handleCalculateTotal();
     unitSelectRef;
   }, [handleCalculateTotal, oneItem]);
@@ -255,7 +267,7 @@ const BillInvoice = () => {
   };
 
   let getItems = async () => {
-    let response = await AxiosInstance.get(`item`);
+    let response = await AxiosInstance.get(`stock-items/${selectedStock}/`);
     setItems(response.data);
   };
 
@@ -344,7 +356,7 @@ const BillInvoice = () => {
                 // invoice: // try to get last invoice id ; handled from backend
                 item: invoiceItems.map((itm) => parseInt(itm.name))[i], // use as item id
                 item_name: invoiceItems.map((itm) => itm.item_name)[i], // item name
-                main_qty: invoiceItems.map((itm) => itm.main_qty)[i], // item previous qty
+                stock_qty: invoiceItems.map((itm) => itm.stock_qty)[i], // item previous qty
                 price: invoiceItems.map((itm) =>
                   itm.unitRef == 1
                     ? parseFloat(itm.selling_price)
@@ -360,13 +372,20 @@ const BillInvoice = () => {
               // store invoice items *** need fixes
               AxiosInstance.post(`invoices/storeInvoiceItems/`, item_data);
 
-              // update item qty
+              // update item update info
               AxiosInstance.put(`item/${item_data.item}/`, {
                 name: item_data.item_name,
-                qty: parseFloat(item_data.main_qty - item_data.qty).toFixed(2),
                 last_order_by: user.username,
                 last_order_time: dayjs().format(),
               });
+              // update item qty
+              AxiosInstance.put(
+                `updateStockItem/${selectedStock}/${item_data.item}/`,
+                {
+                  item_qty:
+                    parseFloat(item_data.stock_qty) - parseFloat(item_data.qty),
+                }
+              );
             }
 
             // calculate new account balance
@@ -411,14 +430,35 @@ const BillInvoice = () => {
         <div className="modal-dialog">
           <div className="modal-content rounded-4 shadow">
             <div className="container-fluid row mb-2">
-              <div className="p-3 pb-4 border-bottom-0 text-center">
-                <h3
-                  className={`fw-bold mb-0 fs-2 ${
-                    theme == `dark` ? `text-green` : `text-navy`
-                  }`}
-                >
-                  فاتورة بيع
-                </h3>
+              <div className="p-3 pb-4 border-bottom-0">
+                <div className="row">
+                  <div className="col-7">
+                    <h3
+                      className={`fw-bold mb-0 fs-2 ${
+                        theme == `dark` ? `text-green` : `text-navy`
+                      }`}
+                    >
+                      فاتورة بيع
+                    </h3>
+                  </div>
+                  <div className="col-5 mt-2">
+                    <select
+                      className={`form-select ${
+                        theme == "dark" ? "text-info" : "text-navy"
+                      }`}
+                      onChange={(e) => {
+                        setSelectedStock(e.target.value);
+                        setInvoiceItems([]);
+                      }}
+                    >
+                      {stocks.map((stock) => (
+                        <option key={stock.id} value={stock.id}>
+                          {stock.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
               {/* account data */}
@@ -695,8 +735,11 @@ const BillInvoice = () => {
                         --- إختر صنف ---
                       </option>
                       {items.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.name}
+                        <option
+                          key={item.item_info.id}
+                          value={item.item_info.id}
+                        >
+                          {item.item_info.name}
                         </option>
                       ))}
                     </select>

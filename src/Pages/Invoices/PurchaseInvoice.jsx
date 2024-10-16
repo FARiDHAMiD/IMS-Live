@@ -338,7 +338,7 @@ const PurchaseInvoice = () => {
                 last_order_time: dayjs().format(),
               });
 
-              // update item qty - temp for main stock ... Stock Number # 1
+              // update item qty
               AxiosInstance.put(
                 `updateStockItem/${selectedStock}/${item_data.item}/`,
                 {
