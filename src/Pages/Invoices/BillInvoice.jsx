@@ -499,10 +499,10 @@ const BillInvoice = () => {
                   type="text"
                   defaultValue={
                     setAccountData["credit"] || setAccountData["credit"] == 0
-                      ? `EGP ` + setAccountData["credit"].toLocaleString()
+                      ? setAccountData["credit"].toLocaleString() + ` ج.م.`
                       : accountData.credit &&
                         accountData.credit.toLocaleString() &&
-                        `EGP ` + accountData.credit.toLocaleString()
+                        accountData.credit.toLocaleString() + ` ج.م.`
                   }
                   className="form-control"
                   style={
@@ -597,7 +597,7 @@ const BillInvoice = () => {
                   min="0.00"
                   max={total}
                   className="form-control"
-                  placeholder="الخصم مبلغ EGP"
+                  placeholder="الخصم بالجنيه"
                   onChange={(e) =>
                     handleCalculateTotal(
                       setDiscountRate(
@@ -942,7 +942,7 @@ const BillInvoice = () => {
               >
                 <div className="d-flex flex-row align-items-start justify-content-between">
                   <span className="fw-bold">قيمة الأصناف:</span>
-                  <span>EGP {subTotal}</span>
+                  <span>{subTotal} ج.م.</span>
                 </div>
                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                   <span className="fw-bold">الخصم:</span>
@@ -953,7 +953,7 @@ const BillInvoice = () => {
                         0}
                       %){" "}
                     </span>
-                    {`EGP ` + discountAmount || 0}
+                    {discountAmount + ` ج.م.` || 0}
                   </span>
                 </div>
                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
@@ -963,7 +963,7 @@ const BillInvoice = () => {
                       ({(taxRate && parseFloat(taxRate).toFixed(2)) || 0}%){" "}
                       {` `}
                     </span>
-                    {`EGP ` + taxAmount || 0}
+                    {taxAmount + ` ج.م.` || 0}
                   </span>
                 </div>
                 <hr />
@@ -972,7 +972,7 @@ const BillInvoice = () => {
                   style={{ fontSize: "1.125rem" }}
                 >
                   <span className="fw-bold">إجمالى الفاتورة:</span>
-                  <span className="fw-bold">EGP {total || 0}</span>
+                  <span className="fw-bold">{total || 0} ج.م.</span>
                 </div>
                 <hr />
                 {/* previous credit  */}
@@ -1013,10 +1013,10 @@ const BillInvoice = () => {
                             : `text-light`
                         } `}
                       >
-                        EGP{" "}
                         {accountData.credit && accountData.credit < 0
                           ? (-accountData.credit - accountData.credit) / 2
-                          : accountData.credit}
+                          : accountData.credit}{" "}
+                        ج.م.
                       </span>
                     </div>
                     <div
@@ -1037,9 +1037,9 @@ const BillInvoice = () => {
                             : "fw-bold text-muted"
                         }
                       >
-                        EGP{" "}
                         {(accountData.credit || accountData.credit == 0) &&
-                          (+total - accountData.credit).toLocaleString()}
+                          (+total - accountData.credit).toLocaleString()}{" "}
+                        ج.م.
                       </span>
                     </div>
                     <div
@@ -1058,7 +1058,7 @@ const BillInvoice = () => {
                           theme == "dark" ? "text-light" : "text-muted"
                         }`}
                       >
-                        EGP {paid || 0}
+                        {paid || 0} ج.م.
                       </span>
                     </div>
                     <div
@@ -1077,9 +1077,13 @@ const BillInvoice = () => {
                           theme == "dark" ? "text-light" : "text-muted"
                         }`}
                       >
-                        EGP{" "}
                         {(accountData.credit || accountData.credit == 0) &&
-                          (total - accountData.credit - paid).toLocaleString()}
+                          (
+                            total -
+                            accountData.credit -
+                            paid
+                          ).toLocaleString()}{" "}
+                        ج.م.
                       </span>
                     </div>
                   </>

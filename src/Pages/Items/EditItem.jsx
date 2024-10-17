@@ -37,6 +37,8 @@ const EditItem = () => {
   let [loading, setLoading] = useState(true);
   let [itemLog, setItemLog] = useState([]);
   let [invoiceByItem, setInvoiceByItem] = useState([]);
+  let [stock1Qty, setStock1Qty] = useState();
+  let [stock2Qty, setStock2Qty] = useState();
   let navigate = useNavigate();
 
   // this Item changes log
@@ -97,6 +99,42 @@ const EditItem = () => {
     formState: { errors },
   } = useForm({
     defaultValues: defaultValues,
+  });
+
+  let moveQty = (data) => {
+    if (
+      data.stockFrom == data.stockTo ||
+      parseFloat(data.qtyMoved) > parseFloat(stock1Qty)
+    ) {
+      toast.error("خطأ بالمخزن أو الكمية");
+    } else {
+      AxiosInstance.put(`updateStockItem/${data.stockFrom}/${item.id}/`, {
+        item_qty: parseFloat(stock1Qty) - parseFloat(data.qtyMoved),
+      });
+      AxiosInstance.put(`updateStockItem/${data.stockTo}/${item.id}/`, {
+        item_qty: parseFloat(stock2Qty) + parseFloat(data.qtyMoved),
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            toast.success("تم نقل الكمية بنجاح");
+          }
+          window.location.reload();
+        })
+        .catch((e) => {
+          toast.error("خطأ بالعملية", e);
+        });
+    }
+    reset();
+  };
+
+  // Use Form hook 2
+  const {
+    handleSubmit: handleSubmit2,
+    formState: { errors: errors2 },
+    reset,
+    register: register2,
+  } = useForm({
+    moveQty: moveQty,
   });
 
   let getUsers = async () => {
@@ -947,19 +985,26 @@ const EditItem = () => {
                   </tbody>
                 </table>
 
-                {/* transefere qty  */}
-                <div className="d-flex justify-content-center">
-                  <Link to={`/working`} style={{ textDecoration: "none" }}>
-                    <h3
-                      className={`text-center btn btn-sm ${
-                        theme == "dark" ? "btn-outline-info" : "btn-outline-success"
-                      } mt-2`}
-                    >
-                      نقل كمية بين المخازن <FaArrowsRotate size={20} />
-                    </h3>
-                  </Link>
-                </div>
-                <br />
+                {/* move qty  */}
+                {item.stock && item.stock.length > 1 && (
+                  <>
+                    <div className="d-flex justify-content-center">
+                      <button
+                        className={`text-center btn btn-sm ${
+                          theme == "dark"
+                            ? "btn-outline-info"
+                            : "btn-outline-success"
+                        } mt-2`}
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#moveQtyModal"
+                      >
+                        نقل كمية بين المخازن <FaArrowsRotate size={20} />
+                      </button>
+                    </div>
+                    <br />
+                  </>
+                )}
 
                 <h3 className="text-center mt-2">
                   تغييرات السعر <FaChartSimple size={30} />
@@ -1016,6 +1061,7 @@ const EditItem = () => {
                 <h3 className="text-center mt-2">
                   آخر الفواتير <FaFileInvoice size={30} />
                 </h3>
+
                 <div className="list-group w-auto">
                   {invoiceByItem.map((invoice) => (
                     <Link
@@ -1051,6 +1097,176 @@ const EditItem = () => {
                 </Link>
               </div>
             </div>
+            {/* Move from stock modal */}
+
+            <div
+              className="modal fade"
+              id="moveQtyModal"
+              tabIndex="-1"
+              aria-labelledby="moveQtyModalLabel"
+            >
+              <div className="modal-dialog rounded-3 shadow modal-lg">
+                <div className="modal-content">
+                  <div className="modal-title p-2">
+                    <div className="modal-header d-flex justify-content-center">
+                      <h4
+                        className={
+                          theme == "dark" ? "text-warning" : "text-navy"
+                        }
+                      >
+                        نقل كمية الصنف بين المخازن
+                      </h4>
+                    </div>
+                    <div className="modal-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="stockFrom"
+                          >
+                            من مخزن
+                          </label>
+                          <select
+                            className="form-select my-1"
+                            id="stockFrom"
+                            name="stockFrom"
+                            {...register2("stockFrom", {
+                              required: true,
+                            })}
+                            // Selected Stock Qty to validate with provided qty
+                            onChange={(e) =>
+                              setStock1Qty(
+                                e.target.options[
+                                  e.target.selectedIndex
+                                ].getAttribute("st1qty")
+                              )
+                            }
+                          >
+                            <option value="">---</option>
+                            {item.stock &&
+                              item.stock.map((st) => (
+                                <option
+                                  key={st.stock__name}
+                                  st1qty={st.item_qty}
+                                  value={st.stock}
+                                >
+                                  {st.stock__name} | ({st.item_qty}{" "}
+                                  {item.scale_unit})
+                                </option>
+                              ))}
+                          </select>
+                          {errors2.stockFrom && (
+                            <div role="alert" className="text-danger">
+                              {errors2.stockFrom.message}
+                            </div>
+                          )}
+                        </div>
+                        <div className="col-md-4">
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="stockTo"
+                          >
+                            إلى مخزن
+                          </label>
+                          <select
+                            className="form-select my-1"
+                            id="stockTo"
+                            name="stockTo"
+                            {...register2("stockTo", {
+                              required: true,
+                            })}
+                            // Selected Stock Qty to validate with provided qty
+                            onChange={(e) =>
+                              setStock2Qty(
+                                e.target.options[
+                                  e.target.selectedIndex
+                                ].getAttribute("st2qty")
+                              )
+                            }
+                          >
+                            <option value="">---</option>
+                            {item.stock &&
+                              item.stock.map((st) => (
+                                <option
+                                  key={st.stock__name}
+                                  st2qty={st.item_qty}
+                                  value={st.stock}
+                                >
+                                  {st.stock__name}
+                                </option>
+                              ))}
+                          </select>
+                          {errors2.stockTo && (
+                            <div role="alert" className="text-danger">
+                              {errors2.stockTo.message}
+                            </div>
+                          )}
+                        </div>
+                        <div className="col-md-4">
+                          <label
+                            className={
+                              theme == "dark" ? "text-warning" : "text-navy"
+                            }
+                            htmlFor="qtyMoved"
+                          >
+                            الكمية بال{item.scale_unit}
+                          </label>
+                          <input
+                            type="number"
+                            className="form-control my-1"
+                            name="qtyMoved"
+                            id="qtyMoved"
+                            {...register2("qtyMoved", {
+                              required: true,
+                              max: {
+                                value: stock1Qty,
+                                message: "لا يمكن نقل هذه الكمية",
+                              },
+                              min: {
+                                value: 1,
+                                message: "لا يمكن نقل هذه الكمية",
+                              },
+                            })}
+                          />
+                          {errors2.qtyMoved && (
+                            <div role="alert" className="text-danger">
+                              {errors2.qtyMoved.message}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-muted my-0 text-center mt-2">
+                        هذا الإجراء على مسئولية المستخدم الحالى للنظام
+                      </p>
+                    </div>
+                  </div>
+                  <div className="modal-footer flex-nowrap p-0">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-link fs-6 text-decoration-none text-light bg-success col-6 m-0 rounded-0 border-end"
+                      onClick={handleSubmit2(moveQty)}
+                    >
+                      <strong>تأكيد</strong>
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-sm btn-link fs-6 text-decoration-none ${
+                        theme == "dark" ? "text-light" : "text-dark"
+                      } col-6 m-0 rounded-0`}
+                      data-bs-dismiss="modal"
+                    >
+                      إلغاء
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Delete Modal  */}
             {item.isActive ? (
               <ConfirmDeleteModal
                 object={item.name}

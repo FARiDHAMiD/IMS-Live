@@ -169,10 +169,14 @@ const CreateStock = () => {
                         أمين المخزن <span className="text-danger">*</span>
                       </label>
                       <select
-                        className="form-select form-select-lg"
+                        className={`form-select form-select-lg ${
+                          errors.name && "is-invalid"
+                        }`}
                         id="keeper"
                         name="keeper"
-                        {...register("keeper")}
+                        {...register("keeper", {
+                          required: true,
+                        })}
                       >
                         <option defaultValue="">اختر...</option>
                         {users.map((user) => (

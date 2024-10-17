@@ -47,7 +47,7 @@ const EditProfile = () => {
     notes: "",
   };
 
-  // Use Form hook
+  // Use Form hook 1
   const {
     handleSubmit,
     setValue,
@@ -57,7 +57,7 @@ const EditProfile = () => {
     defaultValues: defaultValues,
   });
 
-  // Use Form hook
+  // Use Form hook 2
   const { handleSubmit: handleSubmitPassword, register: registerPassword } =
     useForm({
       changePassword: changePassword,
