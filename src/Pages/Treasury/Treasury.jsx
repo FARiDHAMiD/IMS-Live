@@ -246,6 +246,18 @@ const Treasury = () => {
               </tbody>
             </table>
           </div>
+          <div className="text-center my-2">
+            <Link
+              to="/control/allCashReview"
+              className={`${
+                theme == "dark"
+                  ? "btn btn-outline-info"
+                  : "btn btn-outline-dark"
+              }`}
+            >
+              جميع الطلبات السابقة ...
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import dayjs from "dayjs";
 import { FaArrowLeft, FaDownload, FaPrint, FaXmark } from "react-icons/fa6";
@@ -8,8 +8,10 @@ import Spinner from "../../Components/Spinner";
 import { components } from "react-select";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import AuthContext from "../../context/AuthContext";
 
 const InvoicePreview = () => {
+  let { user } = useContext(AuthContext);
   const printRef = useRef();
   let { id } = useParams();
   let [invoice, setInvoice] = useState([]);
@@ -262,7 +264,10 @@ const InvoicePreview = () => {
                                 <td></td>
                                 {invoice.account_data.name && (
                                   <>
-                                    <td className="text-start f-w-600 text-nowrap">
+                                    <td
+                                      className="text-start f-w-600 text-nowrap"
+                                      hidden={!user.is_staff && true}
+                                    >
                                       <strong>
                                         الرصيد السابق{" "}
                                         {invoice.prevCredit < 0 ? (
@@ -312,7 +317,10 @@ const InvoicePreview = () => {
                                         </span>
                                       </strong>
                                     </td>
-                                    <td className="f-w-200 text-end">
+                                    <td
+                                      className="f-w-200 text-end"
+                                      hidden={!user.is_staff && true}
+                                    >
                                       {invoice.prevCredit < 0
                                         ? parseFloat(
                                             -invoice.prevCredit

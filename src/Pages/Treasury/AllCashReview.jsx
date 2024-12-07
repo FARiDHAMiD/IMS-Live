@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../../context/ThemeProvider";
 import {
+  FaArrowLeft,
   FaBusinessTime,
   FaCheck,
   FaMagnifyingGlass,
@@ -40,7 +41,16 @@ const AllCashReview = () => {
       <h3 className="text-center mt-2">
         حركات الخزنة <FaBusinessTime size={40} />
       </h3>
-      <SearchBox searchTxt={input} setSearchTxt={setInput} />
+      <div className="row">
+        <div className="col-8">
+          <SearchBox searchTxt={input} setSearchTxt={setInput} />
+        </div>
+        <div className="col-4 text-end">
+          <Link className="btn" to={-1}>
+            <FaArrowLeft />
+          </Link>
+        </div>
+      </div>
       {loading ? (
         <Spinner />
       ) : (
@@ -151,17 +161,24 @@ const AllCashReview = () => {
             </table>
           </div>
 
-          <div className="my-1 d-flex justify-content-center">
-            <button
-              className={
-                theme == "dark"
-                  ? "btn btn-outline-light"
-                  : "btn btn-outline-dark"
-              }
-              onClick={() => setPage(page + 1)}
-            >
-              المزيد ...
-            </button>
+          <div className="my-1 text-center">
+            <div className="">
+              <button
+                className={
+                  theme == "dark"
+                    ? "btn btn-outline-light"
+                    : "btn btn-outline-dark"
+                }
+                onClick={() => setPage(page + 1)}
+              >
+                المزيد ...
+              </button>
+              <div className="text-end">
+                <Link className="btn" to={-1}>
+                  <FaArrowLeft />
+                </Link>
+              </div>
+            </div>
           </div>
         </>
       )}

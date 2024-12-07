@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import AxiosInstance from "../AxiosInstance";
 import {
+  FaArrowLeft,
   FaArrowsTurnToDots,
   FaCircleArrowDown,
   FaCircleArrowUp,
@@ -39,6 +40,11 @@ const ItemsLog = ({ limited = false }, { item }) => {
           <h3 className="text-center mt-2">
             حركات الأسعار <FaArrowsTurnToDots size={30} />
           </h3>
+          {!limited && (
+            <Link className="btn text-end w-100" to={-1}>
+              <FaArrowLeft />
+            </Link>
+          )}
           {loading ? (
             <Spinner />
           ) : (
@@ -111,6 +117,11 @@ const ItemsLog = ({ limited = false }, { item }) => {
                 </Link>
               ))}
               <br className="mt-2" />
+              {!limited && (
+                <Link className="btn text-end w-100" to={-1}>
+                  <FaArrowLeft />
+                </Link>
+              )}
               {limited && (
                 <Link
                   to={`/itemsLog`}

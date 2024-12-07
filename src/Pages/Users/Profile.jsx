@@ -75,7 +75,7 @@ const Profile = () => {
     AxiosInstance.post(`cash-collect/`, {
       from_user: user.username,
       request_type: profile.credit > 0 ? 1 : 2, // توريد أو تحصيل على حسب الرصيد
-      approved_by: "fariid", // when update only
+      approved_by: null, // when update only
       approved_user: data.approved_user,
       credit_collected: data.credit_collected,
       current_credit: profile.credit,

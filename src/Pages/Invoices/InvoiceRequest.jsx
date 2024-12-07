@@ -1,17 +1,13 @@
-import Spinner from "../../Components/Spinner";
 import {
-  FaBilibili,
-  FaCashRegister,
   FaFileCirclePlus,
   FaMoneyBill,
   FaMoneyBill1Wave,
   FaMoneyBillTransfer,
-  FaReact,
   FaRepeat,
   FaSellcast,
 } from "react-icons/fa6";
 import Invoices from "./Invoices";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import UserInvoices from "../Users/UserInvoices";

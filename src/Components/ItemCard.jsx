@@ -16,8 +16,9 @@ const ItemCard = ({ item }) => {
         <div className="row">
           <div className="col-9">
             <h5 className={theme == "dark" ? "text-warning" : "text-navy"}>
-              {item.name} | إجمالى رصيد الصنف (
-              {parseInt(item.selling_price * item.qty).toLocaleString()} ج.م.)
+              {item.name}
+              {user.is_superuser && ` | ` +
+                parseInt(item.selling_price * item.qty).toLocaleString()}
             </h5>
             <h6>أقل حد بالمخزن ({item.min_limit + item.scale_unit})</h6>
           </div>

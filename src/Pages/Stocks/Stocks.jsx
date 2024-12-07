@@ -5,7 +5,7 @@ import UseDebounce from "../../hooks/UseDebounce";
 import SearchBox from "../../Components/SearchBox";
 import Spinner from "../../Components/Spinner";
 import { Link, NavLink } from "react-router-dom";
-import { FaStore, FaStoreSlash } from "react-icons/fa6";
+import { FaCircleInfo, FaStore, FaStoreSlash } from "react-icons/fa6";
 import AuthContext from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeProvider";
 
@@ -59,6 +59,12 @@ const Stocks = () => {
           <Spinner loading={loading} />
         ) : (
           <div className="row">
+            <div className="">
+              <h5 className="text-muted mb-3">
+                <FaCircleInfo size={25} /> لإضافة أصناف لمخزن لأول مرة يجب تحرير
+                فاتورة شراء
+              </h5>
+            </div>
             {stocks.map((stock) => (
               <div key={stock.id} className="col-md-4">
                 <div className={`card ${!stock.isActive && active_style}`}>
@@ -71,8 +77,8 @@ const Stocks = () => {
                     <div style={{ float: "left" }}>
                       {!stock.isActive && "مخزن معطل |"}
                       {stock.credit.total &&
-                        parseInt(stock.credit.total).toLocaleString()}{" "}
-                      ج.م.
+                        user.is_superuser &&
+                        parseInt(stock.credit.total).toLocaleString() + ` ج.م.`}
                     </div>
                   </div>
                   <div className="card-body">

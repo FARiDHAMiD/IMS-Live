@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import AxiosInstance from "../../Components/AxiosInstance";
 import Spinner from "../../Components/Spinner";
 import {
+  FaArrowLeft,
   FaCircleArrowLeft,
   FaCircleArrowRight,
   FaRepeat,
@@ -12,8 +13,10 @@ import dayjs from "dayjs";
 import SearchBox from "../../Components/SearchBox";
 import UseDebounce from "../../hooks/UseDebounce";
 import AuthContext from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeProvider";
 
 const Invoices = (props) => {
+  const { theme } = useTheme();
   let { limited, byAccount, accountID } = props;
   let { user } = useContext(AuthContext);
   let [invoices, setInvoices] = useState([]);
@@ -41,18 +44,27 @@ const Invoices = (props) => {
     <div className="container mt-2">
       {!limited && (
         <div className="row">
-          <div className="col-md-8 col-7 d-flex justify-content-right">
+          <div className="col-md-8 col-6">
             <SearchBox searchTxt={input} setSearchTxt={setInput} width={12} />
           </div>
-          <div className="col-md-4 col-5 mt-2 d-flex justify-content-center">
-            بحث برقم الفاتورة
+          <div className="col-md-4 col-2 d-flex justify-content-end">
+            <div className="">
+              <Link
+                to={-1}
+                className={`btn mt-2 ${
+                  theme == "dark" ? "btn-outline-light" : "btn-outline-dark"
+                }`}
+              >
+                <FaArrowLeft />
+              </Link>
+            </div>
           </div>
         </div>
       )}
       {loading ? (
         <Spinner />
       ) : (
-        <div className="list-group w-auto">
+        <div className="list-group w-auto my-2">
           {invoices.map((invoice) => (
             <Link
               key={invoice.id}

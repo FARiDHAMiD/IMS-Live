@@ -101,11 +101,12 @@ const BillInvoice = () => {
     const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
     const newItem = {
       id,
+      item_id: "",
       item_name: "",
       name: "",
       stock_qty: "",
       selling_price: "0.00",
-      qty: 1,
+      qty: 0,
       itemSubTotal: "",
       scale_unit: "",
       small_unit: "",
@@ -126,13 +127,31 @@ const BillInvoice = () => {
     document.getElementById("discountAmount").disabled = true;
   };
 
+  const options = [
+    { value: "apple", label: "Apple" },
+    { value: "banana", label: "Banana" },
+    { value: "cherry", label: "Cherry" },
+  ];
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  const handleItemChange = (selectedOption, event) => {
+    setSelectedOption(selectedOption);
+    // You can access the `event` here, which contains target details
+    console.log(selectedOption); // Logs the event object
+    console.log(event); // Logs the event object
+    console.log(event.target); // Logs the target DOM element if needed
+    // const selectNode = selectRef.current;
+    // console.log(selectNode);  // You can now interact with the DOM element directly
+  };
+
   // edit field in row
   const onItemizedItemEdit = (evt) => {
     const { id, name, value } = evt.target;
-
     const updatedItems = invoiceItems.map((item) => {
       if (item.id === id) {
         if (name === "name") {
+          getItem(evt.target);
+        } else if (name == "itemInput_name") {
           getItem(evt.target);
         } else if (name === "unitSelect") {
           if (value == 1) {
@@ -151,20 +170,19 @@ const BillInvoice = () => {
             ? (item.qty = NaN)
             : "";
         }
-
         return { ...item, [name]: value };
       } else {
         return item;
       }
     });
-
     setInvoiceItems(updatedItems);
   };
 
   // get one item for one row
   let getItem = async (target) => {
-    let response = await AxiosInstance.get(`item/${target.value}`);
-
+    // let response = await AxiosInstance.get(`item/${target.value}`);
+    // Get Item By name not id --- temp solution .....
+    let response = await AxiosInstance.get(`itemByName/${target.value}/`);
     // get selected item last price from previous client invoices
     // review performance later .............
     let invoiceItemResponse = await AxiosInstance.get(
@@ -195,6 +213,7 @@ const BillInvoice = () => {
     const updatedItems = invoiceItems.map((item) => {
       const { id, name, value } = target;
       if (item.id == id) {
+        item.item_id = response.data.id;
         item.item_name = response.data.name;
         response.data.stock.filter((st) => {
           if (st.stock == selectedStock) {
@@ -276,11 +295,26 @@ const BillInvoice = () => {
     setPayTypes(response.data);
   };
 
+  items.map((item) => (
+    <option key={item.item_info.id} value={item.item_info.id}>
+      {item.item_info.name}
+    </option>
+  ));
+
+  // items options
+  const itemOptions = items.map((item) => {
+    return {
+      id: item.item_info.id,
+      label: item.item_info.cat__name + " | " + item.item_info.name,
+      value: item.item_info.name,
+    };
+  });
+
   // account options
   const accountOptions = accounts.map((account) => {
     return {
       id: account.id,
-      label: account.name,
+      label: account.name + " | " + account.account_type,
       value: account.name,
     };
   });
@@ -336,25 +370,34 @@ const BillInvoice = () => {
 
     // check if no items selected
     if (
-      invoiceItems.map((item) => item.name)[0] == "" ||
+      invoiceItems.map((item) => item.item_name)[0] == "" ||
       invoiceItems.length < 1
     ) {
       toast.error(`يجب تسجيل صنف عالأقل`);
     } else {
       try {
         // check duplicate invoice items
-        let array = invoiceItems.map((itm) => itm.name);
+        let array = invoiceItems.map((itm) => itm.item_name);
         const duplicates = array.filter(
           (item, index) => array.indexOf(item) !== index
         );
-        // check total is not null & no duplicates
-        if (!isNaN(total) && total >= 0 && duplicates.length == 0) {
+
+        // check if any qty = 0
+        const invoiceItemsQtys = invoiceItems.map((itm) => itm.qty);
+
+        // check total is not null & no duplicates & no items with 0 qty
+        if (
+          !isNaN(total) &&
+          total >= 0 &&
+          duplicates.length == 0 &&
+          !invoiceItemsQtys.includes(0)
+        ) {
           // store items data in last invoice
           AxiosInstance.post(`invoice/`, saved_data).then((res) => {
             for (let i = 0; i < invoiceItems.length; i++) {
               let item_data = {
                 // invoice: // try to get last invoice id ; handled from backend
-                item: invoiceItems.map((itm) => parseInt(itm.name))[i], // use as item id
+                item: invoiceItems.map((itm) => parseInt(itm.item_id))[i], // use as item id
                 item_name: invoiceItems.map((itm) => itm.item_name)[i], // item name
                 stock_qty: invoiceItems.map((itm) => itm.stock_qty)[i], // item previous qty
                 price: invoiceItems.map((itm) =>
@@ -407,22 +450,13 @@ const BillInvoice = () => {
             navigate(`/invoice`);
           });
         } else {
-          toast.error(`خطأ بالأصناف ...`);
+          toast.error(`خطأ بالأصناف ... أصناف مكررة - كمية 0`);
         }
       } catch (error) {
         toast.error(`خطأ بالتسجيل`, error);
       }
     }
   };
-
-  const itemsOptions = items.map((item) => {
-    return {
-      id: item.id,
-      label: item.name,
-      value: item.name,
-      barcode: item.barcode,
-    };
-  });
 
   return (
     <>
@@ -514,7 +548,7 @@ const BillInvoice = () => {
                       : { borderColor: setAccountData["credit"] < 0 && `red` }
                   }
                   disabled
-                  hidden={hideAccountDetails}
+                  hidden={hideAccountDetails || (!user.is_staff && true)}
                 />
               </div>
 
@@ -582,7 +616,7 @@ const BillInvoice = () => {
                     e.target.value > 100 || e.target.value < 0
                       ? handleCalculateTotal(setDiscountRate(0))
                       : handleCalculateTotal(
-                          setDiscountRate(parseInt(e.target.value))
+                          setDiscountRate(parseFloat(e.target.value) || 0)
                         )
                   }
                   onFocus={disableDiscountAmount}
@@ -657,7 +691,7 @@ const BillInvoice = () => {
               {/* paid */}
               <div className="col-md-4 col-6 mb-2">
                 <input
-                  hidden={hideAccountDetails}
+                  // hidden={hideAccountDetails}
                   type="number"
                   name="paid"
                   id="paid"
@@ -686,50 +720,13 @@ const BillInvoice = () => {
                     >
                       الصنف
                     </label>
-                    {/* <Select
-                        id={item.id}
-                        name="name"
-                        onChange={(e) =>
-                          e
-                            ? onItemizedItemEdit({
-                                target: {
-                                  name: "name",
-                                  value: e.value,
-                                  id: item.id,
-                                },
-                              })
-                            : setHideItemDetails(true)
-                        }
-                        options={itemsOptions}
-                        placeholder={`الصنف...`}
-                        styles={{
-                          control: (baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: "#212529",
-                            borderColor: "#32373c",
-                            fontSize: "14px",
-                            width: "100%",
-                            height: 30,
-                            minHeight: 30,
-                          }),
-                          singleValue: (provided) => ({
-                            ...provided,
-                            color: "yellow",
-                          }),
-                          menu: (provided) => ({
-                            ...provided,
-                            background: "#212529",
-                            color: "yellow",
-                          }),
-                        }}
-                        menuPosition="fixed"
-                      /> */}
                     <select
                       name="name"
                       id={item.id}
                       onChange={onItemizedItemEdit}
                       value={item.name}
                       className="form-control form-control-sm"
+                      hidden // temp for testing get item by name
                     >
                       <option value="" disabled>
                         --- إختر صنف ---
@@ -743,6 +740,57 @@ const BillInvoice = () => {
                         </option>
                       ))}
                     </select>
+                    <input
+                      className="form-control form-control-sm"
+                      list="data"
+                      id={item.id}
+                      onChange={(e) => onItemizedItemEdit(e)}
+                      name="itemInput_name"
+                    />
+                    <datalist id="data">
+                      {items.map((item) => (
+                        <option
+                          key={item.item_info.id}
+                          value={item.item_info.name}
+                        >
+                          {item.item_info.cat__name +
+                            " | " +
+                            item.item_info.name}
+                        </option>
+                      ))}
+                    </datalist>
+                    {/* temp for testing get item by name */}
+                    <div hidden>
+                      <Select
+                        hidden // temp for testing get item by name
+                        isClearable
+                        options={options}
+                        value={selectedOption}
+                        onChange={handleItemChange}
+                        placeholder={`إختر الصنف`}
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            backgroundColor: `${
+                              theme == "dark" ? "#212529" : ""
+                            }`,
+                            borderColor: "navy",
+                            fontSize: "18px",
+                            width: "100%",
+                          }),
+                          singleValue: (provided) => ({
+                            ...provided,
+                            color: `${theme == "dark" ? "white" : "black"}`,
+                          }),
+                          menu: (provided) => ({
+                            ...provided,
+                            background: "",
+                            color: "black",
+                          }),
+                        }}
+                        menuPosition="fixed"
+                      />
+                    </div>
                   </div>
 
                   {/* item unit */}
@@ -783,7 +831,7 @@ const BillInvoice = () => {
                       value={item.qty}
                       id={item.id}
                       onChange={(e) =>
-                        e.target.value <= 0 ? "" : onItemizedItemEdit(e)
+                        e.target.value < 0 ? "" : onItemizedItemEdit(e)
                       }
                       disabled={
                         (item.unitRef == 1 &&
@@ -834,7 +882,7 @@ const BillInvoice = () => {
                   </div>
 
                   {/* item sub total */}
-                  <div className="col-md-1 col-4">
+                  <div className="col-md-2 col-4">
                     <label
                       style={{ fontSize: "small" }}
                       className={theme == "dark" ? "text-info" : "text-navy"}
@@ -846,12 +894,12 @@ const BillInvoice = () => {
                       className="form-control form-control-sm"
                       placeholder="قيمة..."
                       name="itemSubTotal"
-                      defaultValue={
+                      value={
                         (item.unitRef == 1 &&
                           item.selling_price >= item.lowest_price) ||
                         (item.unitRef == 2 &&
                           item.selling_price >= item.lowest_price_small)
-                          ? item.itemSubTotal.toString()
+                          ? parseFloat(item.itemSubTotal).toFixed(2)
                           : NaN
                       }
                       id={item.id}
@@ -860,12 +908,12 @@ const BillInvoice = () => {
                   </div>
 
                   {/* item last price */}
-                  <div className="col-md-2 col-5">
+                  <div className="col-md-1 col-5">
                     <label
                       style={{ fontSize: "small" }}
                       className={theme == "dark" ? "text-info" : "text-navy"}
                     >
-                      آخر سعر للعميل
+                      آخر سعر
                     </label>
                     <br />
                     <label
@@ -975,119 +1023,123 @@ const BillInvoice = () => {
                   <span className="fw-bold">{total || 0} ج.م.</span>
                 </div>
                 <hr />
-                {/* previous credit  */}
-                {accountData.id && (
-                  <>
-                    <div
-                      className="d-flex flex-row align-items-start justify-content-between"
-                      style={{ fontSize: "1.125rem" }}
-                    >
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
+
+                {/* hide previous account credit if not staff  */}
+                <div hidden={!user.is_staff && true}>
+                  {/* previous credit  */}
+                  {accountData.id && (
+                    <>
+                      <div
+                        className="d-flex flex-row align-items-start justify-content-between"
+                        style={{ fontSize: "1.125rem" }}
                       >
-                        حساب سابق:{" "}
-                        {accountData.credit > 0 ? (
-                          <span
-                            className={
-                              theme == `dark` ? "text-info" : "text-muted"
-                            }
-                          >
-                            له
-                          </span>
-                        ) : (
-                          accountData.credit && (
-                            <span className={`text-danger`}>عليه</span>
-                          )
-                        )}
-                      </span>
-                      <span
-                        className={`fw-bold ${
-                          accountData.credit > 0
-                            ? theme == `dark`
-                              ? "text-info"
-                              : "text-muted"
-                            : accountData.credit
-                            ? `text-danger`
-                            : `text-light`
-                        } `}
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          حساب سابق:{" "}
+                          {accountData.credit > 0 ? (
+                            <span
+                              className={
+                                theme == `dark` ? "text-info" : "text-muted"
+                              }
+                            >
+                              له
+                            </span>
+                          ) : (
+                            accountData.credit && (
+                              <span className={`text-danger`}>عليه</span>
+                            )
+                          )}
+                        </span>
+                        <span
+                          className={`fw-bold ${
+                            accountData.credit > 0
+                              ? theme == `dark`
+                                ? "text-info"
+                                : "text-muted"
+                              : accountData.credit
+                              ? `text-danger`
+                              : `text-light`
+                          } `}
+                        >
+                          {accountData.credit && accountData.credit < 0
+                            ? (-accountData.credit - accountData.credit) / 2
+                            : accountData.credit}{" "}
+                          ج.م.
+                        </span>
+                      </div>
+                      <div
+                        className="d-flex flex-row align-items-start justify-content-between"
+                        style={{ fontSize: "1.125rem" }}
                       >
-                        {accountData.credit && accountData.credit < 0
-                          ? (-accountData.credit - accountData.credit) / 2
-                          : accountData.credit}{" "}
-                        ج.م.
-                      </span>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-start justify-content-between"
-                      style={{ fontSize: "1.125rem" }}
-                    >
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          إجمالى الحساب:
+                        </span>
+                        <span
+                          className={
+                            theme == `dark`
+                              ? "fw-bold text-warning"
+                              : "fw-bold text-muted"
+                          }
+                        >
+                          {(accountData.credit || accountData.credit == 0) &&
+                            (+total - accountData.credit).toLocaleString()}{" "}
+                          ج.م.
+                        </span>
+                      </div>
+                      <div
+                        className="d-flex flex-row align-items-start justify-content-between"
+                        style={{ fontSize: "1.125rem" }}
                       >
-                        إجمالى الحساب:
-                      </span>
-                      <span
-                        className={
-                          theme == `dark`
-                            ? "fw-bold text-warning"
-                            : "fw-bold text-muted"
-                        }
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          مدفوع:{" "}
+                        </span>
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          {paid || 0} ج.م.
+                        </span>
+                      </div>
+                      <div
+                        className="d-flex flex-row align-items-start justify-content-between"
+                        style={{ fontSize: "1.125rem" }}
                       >
-                        {(accountData.credit || accountData.credit == 0) &&
-                          (+total - accountData.credit).toLocaleString()}{" "}
-                        ج.م.
-                      </span>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-start justify-content-between"
-                      style={{ fontSize: "1.125rem" }}
-                    >
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
-                      >
-                        مدفوع:{" "}
-                      </span>
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
-                      >
-                        {paid || 0} ج.م.
-                      </span>
-                    </div>
-                    <div
-                      className="d-flex flex-row align-items-start justify-content-between"
-                      style={{ fontSize: "1.125rem" }}
-                    >
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
-                      >
-                        متبقى:{" "}
-                      </span>
-                      <span
-                        className={`fw-bold ${
-                          theme == "dark" ? "text-light" : "text-muted"
-                        }`}
-                      >
-                        {(accountData.credit || accountData.credit == 0) &&
-                          (
-                            total -
-                            accountData.credit -
-                            paid
-                          ).toLocaleString()}{" "}
-                        ج.م.
-                      </span>
-                    </div>
-                  </>
-                )}
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          متبقى:{" "}
+                        </span>
+                        <span
+                          className={`fw-bold ${
+                            theme == "dark" ? "text-light" : "text-muted"
+                          }`}
+                        >
+                          {(accountData.credit || accountData.credit == 0) &&
+                            (
+                              total -
+                              accountData.credit -
+                              paid
+                            ).toLocaleString()}{" "}
+                          ج.م.
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -100,7 +100,7 @@ const PurchaseInvoice = () => {
       name: "",
       stock_qty: "",
       purchasing_price: "0.00",
-      qty: 1,
+      qty: 0,
       itemSubTotal: "",
       scale_unit: "",
       small_unit: "",
@@ -246,7 +246,7 @@ const PurchaseInvoice = () => {
   const accountOptions = accounts.map((account) => {
     return {
       id: account.id,
-      label: account.name,
+      label: account.name + " | " + account.account_type,
       value: account.name,
     };
   });
@@ -485,7 +485,7 @@ const PurchaseInvoice = () => {
                         : { borderColor: setAccountData["credit"] < 0 && `red` }
                     }
                     disabled
-                    hidden={hideAccountDetails}
+                    hidden={hideAccountDetails || (!user.is_staff && true)}
                   />
                 </div>
 
@@ -733,7 +733,7 @@ const PurchaseInvoice = () => {
                         value={item.qty}
                         id={item.id}
                         onChange={(e) =>
-                          e.target.value <= 0 ? "" : onItemizedItemEdit(e)
+                          e.target.value < 0 ? "" : onItemizedItemEdit(e)
                         }
                       />
                     </div>
@@ -761,7 +761,7 @@ const PurchaseInvoice = () => {
                     </div>
 
                     {/* item subtotal */}
-                    <div className="col-md-1 col-4">
+                    <div className="col-md-2 col-4">
                       <label
                         style={{ fontSize: "small" }}
                         className={theme == "dark" ? "text-info" : "text-navy"}
@@ -773,19 +773,19 @@ const PurchaseInvoice = () => {
                         className="form-control form-control-sm"
                         placeholder="قيمة..."
                         name="itemSubTotal"
-                        defaultValue={item.itemSubTotal}
+                        value={parseFloat(item.itemSubTotal).toFixed(2)}
                         id={item.id}
                         disabled
                       />
                     </div>
 
                     {/* item last price */}
-                    <div className="col-md-2 col-5">
+                    <div className="col-md-1 col-5">
                       <label
                         style={{ fontSize: "small" }}
                         className={theme == "dark" ? "text-info" : "text-navy"}
                       >
-                        آخر سعر للعميل
+                        آخر سعر
                       </label>
                       <br />
                       <label
@@ -894,125 +894,130 @@ const PurchaseInvoice = () => {
                     <span className="fw-bold">{total || 0} ج.م.</span>
                   </div>
                   <hr />
-                  {/* previous credit  */}
-                  {accountData.id && (
-                    <>
-                      <div
-                        className="d-flex flex-row align-items-start justify-content-between"
-                        style={{ fontSize: "1.125rem" }}
-                      >
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
+                  {/* hide previous account credit if not staff  */}
+                  <div hidden={!user.is_staff && true}>
+                    {/* previous credit  */}
+                    {accountData.id && (
+                      <>
+                        <div
+                          className="d-flex flex-row align-items-start justify-content-between"
+                          style={{ fontSize: "1.125rem" }}
                         >
-                          حساب سابق:{" "}
-                          {accountData.credit > 0 ? (
-                            <span className={theme == "dark" && `text-info`}>
-                              له
-                            </span>
-                          ) : (
-                            accountData.credit && (
-                              <span className={`text-danger`}>عليه</span>
-                            )
-                          )}
-                        </span>
-                        <span
-                          className={`fw-bold ${
-                            accountData.credit > 0
-                              ? theme == "dark"
-                                ? `text-info`
-                                : "text-muted"
-                              : accountData.credit
-                              ? `text-danger`
-                              : `text-light`
-                          } `}
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            حساب سابق:{" "}
+                            {accountData.credit > 0 ? (
+                              <span className={theme == "dark" && `text-info`}>
+                                له
+                              </span>
+                            ) : (
+                              accountData.credit && (
+                                <span className={`text-danger`}>عليه</span>
+                              )
+                            )}
+                          </span>
+                          <span
+                            className={`fw-bold ${
+                              accountData.credit > 0
+                                ? theme == "dark"
+                                  ? `text-info`
+                                  : "text-muted"
+                                : accountData.credit
+                                ? `text-danger`
+                                : `text-light`
+                            } `}
+                          >
+                            {accountData.credit && accountData.credit < 0
+                              ? (-accountData.credit - accountData.credit) / 2
+                              : accountData.credit}{" "}
+                            ج.م.
+                          </span>
+                        </div>
+                        <div
+                          className="d-flex flex-row align-items-start justify-content-between"
+                          style={{ fontSize: "1.125rem" }}
                         >
-                          {accountData.credit && accountData.credit < 0
-                            ? (-accountData.credit - accountData.credit) / 2
-                            : accountData.credit}{" "}
-                          ج.م.
-                        </span>
-                      </div>
-                      <div
-                        className="d-flex flex-row align-items-start justify-content-between"
-                        style={{ fontSize: "1.125rem" }}
-                      >
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            إجمالى الحساب:
+                          </span>
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-warning"
+                                : "fw-bold"
+                            }
+                          >
+                            {(accountData.credit || accountData.credit == 0) &&
+                              +total + accountData.credit}
+                            {` `}ج.م.
+                          </span>
+                        </div>
+                        <div
+                          className="d-flex flex-row align-items-start justify-content-between"
+                          style={{ fontSize: "1.125rem" }}
                         >
-                          إجمالى الحساب:
-                        </span>
-                        <span
-                          className={
-                            theme == "dark" ? "fw-bold text-warning" : "fw-bold"
-                          }
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            مدفوع:{" "}
+                          </span>
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            {paid || 0} ج.م.
+                          </span>
+                        </div>
+                        <div
+                          className="d-flex flex-row align-items-start justify-content-between"
+                          style={{ fontSize: "1.125rem" }}
                         >
-                          {(accountData.credit || accountData.credit == 0) &&
-                            +total + accountData.credit}
-                          {` `}ج.م.
-                        </span>
-                      </div>
-                      <div
-                        className="d-flex flex-row align-items-start justify-content-between"
-                        style={{ fontSize: "1.125rem" }}
-                      >
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
-                        >
-                          مدفوع:{" "}
-                        </span>
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
-                        >
-                           {paid || 0} ج.م.
-                        </span>
-                      </div>
-                      <div
-                        className="d-flex flex-row align-items-start justify-content-between"
-                        style={{ fontSize: "1.125rem" }}
-                      >
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
-                        >
-                          متبقى:
-                        </span>
-                        <span
-                          className={
-                            theme == "dark"
-                              ? "fw-bold text-light"
-                              : `fw-bold text-muted`
-                          }
-                        >
-                          
-                          {(accountData.credit || accountData.credit == 0) &&
-                            (
-                              parseFloat(total) +
-                              parseFloat(accountData.credit) -
-                              paid
-                            ).toLocaleString()} ج.م.
-                        </span>
-                      </div>
-                    </>
-                  )}
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            متبقى:
+                          </span>
+                          <span
+                            className={
+                              theme == "dark"
+                                ? "fw-bold text-light"
+                                : `fw-bold text-muted`
+                            }
+                          >
+                            {(accountData.credit || accountData.credit == 0) &&
+                              (
+                                parseFloat(total) +
+                                parseFloat(accountData.credit) -
+                                paid
+                              ).toLocaleString()}{" "}
+                            ج.م.
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 

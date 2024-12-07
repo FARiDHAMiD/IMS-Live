@@ -65,6 +65,7 @@ const EditStock = () => {
 
   let getStockItems = async () => {
     let response = await AxiosInstance.get(`stock-items/${id}/`);
+    console.log(response.data);
     setStockItems(response.data);
   };
 
