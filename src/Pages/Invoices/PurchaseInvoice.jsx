@@ -307,8 +307,18 @@ const PurchaseInvoice = () => {
         const duplicates = array.filter(
           (item, index) => array.indexOf(item) !== index
         );
-        // check total is not null & no duplicates
-        if (!isNaN(total) && total >= 0 && duplicates.length == 0) {
+
+        // check if any qty = 0
+        const invoiceItemsQtys = invoiceItems.map((itm) => itm.qty);
+
+        // check total is not null & no duplicates & no items with 0 qty
+        if (
+          !isNaN(total) &&
+          total >= 0 &&
+          duplicates.length == 0 &&
+          !invoiceItemsQtys.includes(0) &&
+          !invoiceItemsQtys.includes("0") // arabic numeric 0
+        ) {
           // store items data in last invoice
           AxiosInstance.post(`invoice/`, saved_data).then((res) => {
             for (let i = 0; i < invoiceItems.length; i++) {
@@ -380,13 +390,14 @@ const PurchaseInvoice = () => {
             navigate(`/invoice`);
           });
         } else {
-          toast.error(`خطأ بالأصناف ...`);
+          toast.error(`خطأ بالأصناف ... أصناف مكررة - كمية 0`);
         }
       } catch (error) {
         toast.error(`خطأ بالتسجيل`, error);
       }
     }
   };
+
 
   const itemsOptions = items.map((item) => {
     return {
@@ -727,7 +738,9 @@ const PurchaseInvoice = () => {
                       <input
                         ref={qtyRef}
                         type="number"
-                        className="form-control form-control-sm"
+                        className={`form-control form-control-sm ${
+                          item.qty == 0 && "is-invalid"
+                        }`}
                         placeholder="الكمية..."
                         name="qty"
                         value={item.qty}

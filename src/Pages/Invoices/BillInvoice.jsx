@@ -390,7 +390,8 @@ const BillInvoice = () => {
           !isNaN(total) &&
           total >= 0 &&
           duplicates.length == 0 &&
-          !invoiceItemsQtys.includes(0)
+          !invoiceItemsQtys.includes(0) &&
+          !invoiceItemsQtys.includes("0") // arabic numeric 0
         ) {
           // store items data in last invoice
           AxiosInstance.post(`invoice/`, saved_data).then((res) => {
@@ -825,7 +826,9 @@ const BillInvoice = () => {
                     <input
                       ref={qtyRef}
                       type="number"
-                      className="form-control form-control-sm"
+                      className={`form-control form-control-sm ${
+                        item.qty == 0 && "is-invalid"
+                      }`}
                       placeholder="الكمية..."
                       name="qty"
                       value={item.qty}
